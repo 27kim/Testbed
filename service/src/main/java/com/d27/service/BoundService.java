@@ -18,11 +18,17 @@ public class BoundService extends Service {
     private IBinder mBinder = new MyBinder();
     private Chronometer mChronometer;
 
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.v(LOG_TAG, "in onBind");
         return mBinder;
+    }
+
+    public class MyBinder extends Binder{
+        BoundService getService(){
+            return BoundService.this;
+        }
     }
 
     @Override
@@ -62,11 +68,5 @@ public class BoundService extends Service {
     public void onRebind(Intent intent) {
         Log.v(LOG_TAG, "in onRebind");
         super.onRebind(intent);
-    }
-
-    public class MyBinder extends Binder{
-        BoundService getService(){
-            return BoundService.this;
-        }
     }
 }

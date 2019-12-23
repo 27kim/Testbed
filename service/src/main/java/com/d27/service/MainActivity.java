@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         startServiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            startService(new Intent(v.getContext(), ForegroundService.class));
+                startService(new Intent(v.getContext(), ForegroundService.class));
             }
         });
 
@@ -55,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (mServiceBound) {
                     timestampText.setText(mBoundService.getTimestamp());
-                }else{
-                    Toast.makeText(getApplicationContext() , "mServiceBound not bound ", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "mServiceBound not bound ", Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -96,16 +97,18 @@ public class MainActivity extends AppCompatActivity {
             mServiceBound = false;
         }
     }
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
+
+    ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mServiceBound = false;
-        }
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            BoundService.MyBinder myBinder = (BoundService.MyBinder) service;
-            mBoundService = myBinder.getService();
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             mServiceBound = true;
+            BoundService.MyBinder myBinder = (BoundService.MyBinder) iBinder;
+            mBoundService = myBinder.getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mServiceBound = false;
         }
     };
 }
