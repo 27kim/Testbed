@@ -4,22 +4,39 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Foreground service"
+        android:textStyle="bold" />
+
     <Button
+        android:id="@+id/start_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/start_button"
         android:text="Start Service" />
 
     <Button
+        android:id="@+id/stop_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/stop_button"
         android:text="Stop Service" />
 
     <View
-        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bound service"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/bind"
@@ -37,7 +54,6 @@
         android:id="@+id/timestamp_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="40dp"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -46,4 +62,44 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Print Timestamp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Intent service"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/inputText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:hint="Enter your message"
+        android:imeOptions="actionDone"
+        android:inputType="text"
+        android:padding="30dp"
+        android:singleLine="true" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Send Message" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Message received from the Service is:\n" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary" />
 </LinearLayout>
