@@ -30,6 +30,8 @@ public class ForegroundService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, 0);
 
+        MediaPlayer.TrackInfo[] trackInfo = myPlayer.getTrackInfo();
+
         //Build a notification
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Forground Service")
