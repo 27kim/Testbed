@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         init{
             itemView.setOnClickListener{
                 Toast.makeText(applicationContext, "clicked", Toast.LENGTH_SHORT).show()
+                recyclerView.adapter?.notifyItemMoved(0,3)
             }
         }
         val textView : TextView = itemView.findViewById(R.id.main_item_title)

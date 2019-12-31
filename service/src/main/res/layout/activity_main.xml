@@ -102,4 +102,11 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/colorPrimary" />
+
+    <Button
+        android:id="@+id/buttonForAlarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Start Alarm" />
 </LinearLayout>

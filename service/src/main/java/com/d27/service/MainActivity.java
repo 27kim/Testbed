@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -19,8 +20,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.d27.service.Adjoe.AlarmUtils;
+
 public class MainActivity extends AppCompatActivity {
     public static final String FILTER_ACTION_KEY = "999";
+    public static final String TAG = "MainActivity";
     private Button startServiceButton;
     private Button stopServiceButton;
 
@@ -33,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     Button button;
     EditText editText;
     MyReceiver myReceiver;
+
+    Button buttonForAlarm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +131,15 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("message", message);
                 //Starting the IntentService
                 startService(intent);
+            }
+        });
+
+        buttonForAlarm = findViewById(R.id.buttonForAlarm);
+        buttonForAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "buttonForAlarm  pressed");
+                new AlarmUtils().getInstance().startFiveSecondAlram(getApplicationContext());
             }
         });
     }
