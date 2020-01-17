@@ -11,6 +11,9 @@ import android.widget.Toast
 import com.d27.testbed.list.RoomListFragment
 import java.lang.AssertionError
 import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class MainActivity : AppCompatActivity()
@@ -37,13 +40,11 @@ class MainActivity : AppCompatActivity()
     fun readCalendarEvent(context: Context){
         val contentResolver = context.contentResolver
 
-        val startTime = Calendar.getInstance()
-        startTime.set(2020,1,1)
+        val startTime = Calendar.getInstance().timeInMillis
 
-        val endTime = Calendar.getInstance()
-        endTime.set(2020,3,1)
+        val endTime = startTime + 604800000
 
-        val selection = "(( " + CalendarContract.Events.DTSTART + " >= " + startTime.timeInMillis + " ) AND ( " + CalendarContract.Events.DTSTART + " <= " + endTime.timeInMillis + " ))"
+        val selection = "(( " + CalendarContract.Events.DTSTART + " >= " + startTime + " ) AND ( " + CalendarContract.Events.DTSTART + " <= " + endTime + " ))"
 
         val cursor = contentResolver.query(
             Uri.parse("content://com.android.calendar/events")
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity()
                 , CalendarContract.Events.DTEND
                 , CalendarContract.Events.EVENT_LOCATION
             )
-            , null //selection
+            , selection //selection
             , null
             , CalendarContract.Events.DTSTART + " DESC")
 
@@ -68,10 +69,11 @@ class MainActivity : AppCompatActivity()
                         var id = cursor.getInt(0).toString()
                         var title = cursor.getString(1)
                         var organizer = cursor.getString(2)
-                        var dtstart = cursor.getString(3)
-                        var dtend = cursor.getString(4)
-//                        var dtstart = DateUtils.formatDateTime(this, cursor.getString(3).toLong(),DateUtils.FORMAT_SHOW_DATE)
-//                        var dtend = DateUtils.formatDateTime(this, cursor.getString(4).toLong(),DateUtils.FORMAT_SHOW_DATE)
+//                        var dtstart = cursor.getString(3)
+//                        var dtend = cursor.getString(4)
+                        Log.i("tbtbtb",SimpleDateFormat("M월 d일", Locale.KOREA).format(Date(cursor.getString(3).toLong())))
+                        var dtstart = DateUtils.formatDateTime(this, cursor.getString(3).toLong(),DateUtils.FORMAT_SHOW_DATE)
+                        var dtend = DateUtils.formatDateTime(this, cursor.getString(4).toLong(),DateUtils.FORMAT_SHOW_DATE)
                         var location : String? = cursor.getString(5)
                         var item = GoogleCalendar(
                             id,
