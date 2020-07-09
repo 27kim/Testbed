@@ -13,6 +13,8 @@ import java.lang.AssertionError
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -37,13 +39,19 @@ class MainActivity : AppCompatActivity()
 //            .commit()
     }
 
-    fun readCalendarEvent(context: Context){
+    private fun readCalendarEvent(context: Context){
         val contentResolver = context.contentResolver
 
-        val startTime = Calendar.getInstance().timeInMillis
 
+
+        val cal = Calendar.getInstance()
+        val year = cal.get(Calendar.YEAR)
+        val month = cal.get(Calendar.MONTH)
+        val date = cal.get(Calendar.DATE)
+        cal.clear()
+        cal.set(year, month, date)
+        val startTime = cal.timeInMillis
         val endTime = startTime + 604800000
-
         val selection = "(( " + CalendarContract.Events.DTSTART + " >= " + startTime + " ) AND ( " + CalendarContract.Events.DTSTART + " <= " + endTime + " ))"
 
         val cursor = contentResolver.query(
@@ -98,5 +106,5 @@ class MainActivity : AppCompatActivity()
         }
     }
 
-    data class GoogleCalendar(val _id : String, val title : String, val organizer : String, val dtstart : String, val dtend : String, val location : String)
+    data class GoogleCalendar(val _id : String, val title : String, val organizer : String, val dtStart : String, val dtEnd : String, val location : String)
 }
