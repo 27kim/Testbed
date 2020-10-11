@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import kotlinx.android.synthetic.main.fragment_first.*
 
 class MainFragment : Fragment() {
     override fun onCreateView(
@@ -23,22 +24,17 @@ class MainFragment : Fragment() {
 
         val argument = requireArguments().getInt(ARG_POSITION)
 
-        Toast.makeText(activity, "$argument", Toast.LENGTH_SHORT).show()
-
+        testTv.text = "$argument"
     }
 
     companion object {
         const val ARG_POSITION = "position"
 
-        fun getInstance(position: Int): MainFragment {
-            val mainFragment = MainFragment()
-            var bundle = Bundle()
-            bundle.apply {
-                putInt(ARG_POSITION, position)
+        fun getInstance(position: Int) =
+            MainFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(ARG_POSITION, position)
+                }
             }
-            mainFragment.arguments = bundle
-            return mainFragment
-
-        }
     }
 }
