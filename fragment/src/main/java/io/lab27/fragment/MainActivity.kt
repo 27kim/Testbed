@@ -2,10 +2,9 @@ package io.lab27.fragment
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),
+    FragmentListener {
     private val ft by lazy {
         supportFragmentManager.beginTransaction()
     }
@@ -13,32 +12,26 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        window.statusBarColor = resources.getColor(R.color.colorGreen)
-        setupBottomAppBarMenuAndNavigation()
+        window.statusBarColor = resources.getColor(R.color.green)
+
+        ft.add(R.id.mainContainer, FragmentBase())
+            .commit()
     }
 
-    private fun setupBottomAppBarMenuAndNavigation() {
-        bottomAppBar.replaceMenu(R.menu.menu_bottom_app_bar)
-        bottomAppBar.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.item1 -> {
-//                    ft.replace()
-                    Toast.makeText(this, "Clicked menu item 1", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.item2 -> {
-                    Toast.makeText(this, "Clicked menu item 2", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.item3 -> {
-                    Toast.makeText(this, "Clicked menu item 3", Toast.LENGTH_SHORT).show()
-                    true
-                }
-                else -> false
+    override fun onChangeFragment(fragmentName: String) {
+        val ft = supportFragmentManager.beginTransaction()
+        when (fragmentName) {
+            "f1" -> {
+                ft
+                    .replace(R.id.mainContainer, Fragment0.newInstance("jane", 6))
+                    .addToBackStack(null)
+                    .commit()
             }
         }
-        bottomAppBar.setNavigationOnClickListener {
-            Toast.makeText(this, "Clicked navigation item", Toast.LENGTH_SHORT).show()
-        }
     }
+
+}
+
+interface FragmentListener {
+    fun onChangeFragment(fragmentName: String)
 }
