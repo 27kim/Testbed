@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
@@ -37,5 +38,17 @@ dependencies {
     //viewpager2
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
     //TabLayout
-    implementation 'com.google.android.material:material:1.2.0'
+    implementation 'com.google.android.material:material:1.2.1'
+    //retrofit2
+    implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
+    //logging-interceptor
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.4.0'
+    //converter-gson
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    //room
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    kapt "android.arch.persistence.room:compiler:$room_version"
 }

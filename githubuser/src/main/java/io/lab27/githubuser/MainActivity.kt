@@ -12,16 +12,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mainViewPager.adapter = ViewPagerAdapter(this, 2)
-        mainViewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        mainViewPager.apply {
+            adapter = ViewPagerAdapter(this@MainActivity, 2)
+        }
+
         TabLayoutMediator(tabLayout, mainViewPager) { tab, position ->
-            //To get the first name of doppelganger celebrities
-            var tabTitle = when(position){
-                0 -> "API"
-                1 -> "LOCAL"
-                else -> ""
+            when (position) {
+                0 -> tab.text = "API"
+                1 -> tab.text = "LOCAL"
             }
-            tab.text = tabTitle
         }.attach()
     }
 }
