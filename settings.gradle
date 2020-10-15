@@ -1,0 +1,5 @@
+include ':githubuser'
+include ':fragment'
+include ':MediatorLiveData'
+include ':app', ':service', ':recyclerview', ':productFlavor'
+rootProject.name='Testbed'
