@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -18,9 +17,10 @@ import kotlinx.android.synthetic.main.fragment_first.*
 import kotlinx.android.synthetic.main.layout_recyclerview.view.*
 
 class MainFragment : Fragment() {
-    lateinit var userViewModel: UserViewModel
-    lateinit var recyclerViewAdapter: MainAdapter
-    lateinit var progressBar: ProgressBar
+    private lateinit var userViewModel: UserViewModel
+    private lateinit var recyclerViewAdapter: MainAdapter
+//    private lateinit var progressBar: ProgressBar
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         userViewModel = ViewModelProvider(requireActivity(), ViewModelProvider.NewInstanceFactory())[UserViewModel::class.java]
@@ -38,7 +38,6 @@ class MainFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireActivity())
             adapter = recyclerViewAdapter
         }
-        progressBar = view.findViewById(R.id.progressBar)
         return view
     }
 
@@ -90,7 +89,8 @@ class MainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
 class MainAdapter :
     RecyclerView.Adapter<MainViewHolder>() {
-    var items = mutableListOf<User>()
+    private var items: MutableList<User> = mutableListOf<User>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.layout_recyclerview, parent, false)
