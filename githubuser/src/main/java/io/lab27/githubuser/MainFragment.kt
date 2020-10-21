@@ -1,11 +1,14 @@
 package io.lab27.githubuser
 
+import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.widget.ProgressBar
+import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,14 +19,18 @@ import io.lab27.githubuser.network.User
 import kotlinx.android.synthetic.main.fragment_first.*
 import kotlinx.android.synthetic.main.layout_recyclerview.view.*
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), OnUserSelected {
     private lateinit var userViewModel: UserViewModel
     private lateinit var recyclerViewAdapter: MainAdapter
-//    private lateinit var progressBar: ProgressBar
+    private lateinit var searchView: SearchView
+    private lateinit var queryTextListener: SearchView.OnQueryTextListener
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        userViewModel = ViewModelProvider(requireActivity(), ViewModelProvider.NewInstanceFactory())[UserViewModel::class.java]
+        userViewModel = ViewModelProvider(
+            requireActivity(),
+            ViewModelProvider.NewInstanceFactory()
+        )[UserViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -33,31 +40,55 @@ class MainFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_first, container, false)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+
+        initRecyclerView(recyclerView)
+
+        return view
+    }
+
+    private fun initRecyclerView(recyclerView: RecyclerView?) {
         recyclerViewAdapter = MainAdapter()
-        recyclerView.apply {
+        recyclerViewAdapter.apply {
+            onItemClick = { user ->
+                Toast.makeText(requireContext(), "$user", Toast.LENGTH_SHORT).show()
+
+                val intent = Intent(requireActivity(), UserDetailActivity::class.java)
+                intent.apply {
+                    putExtra("user", user.login)
+                }.also {
+                    startActivity(it)
+                }
+
+            }
+        }
+        recyclerView?.apply {
             layoutManager = LinearLayoutManager(requireActivity())
             adapter = recyclerViewAdapter
         }
-        return view
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /**
-         * 여기 주석
-         * */
-//        val argument = requireArguments().getInt(ARG_POSITION)
-//        testTv.text = "$argument"
-
-        userViewModel.fetchUserList("27kim")
         userViewModel.userList.observe(this, Observer { result ->
             run {
-                recyclerViewAdapter.submitList(result.items)
+                if (result.items.isNotEmpty()) {
+                    recyclerViewAdapter.submitList(result.items)
+                    tvListEmpty.visibility = View.GONE
+                    recyclerView.visibility = View.VISIBLE
+                } else {
+                    tvListEmpty.visibility = View.VISIBLE
+                    recyclerView.visibility = View.GONE
+                }
             }
         })
-        userViewModel.isLoading.observe(this, Observer {
-            isLoading ->
+
+        userViewModel.isLoading.observe(this, Observer { isLoading ->
             run {
                 when (isLoading) {
                     true -> progressBar.visibility = View.VISIBLE
@@ -67,8 +98,53 @@ class MainFragment : Fragment() {
         })
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.main_menu, menu)
+        val searchItem = menu.findItem(R.id.actionSearch)
+        val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+
+        searchItem?.let {
+            searchView = searchItem.actionView as SearchView
+        }
+
+        searchView?.let {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
+        }
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let {
+                    Log.i("queryTextListener", it)
+                    userViewModel.fetchUserList(query)
+                }
+                searchView.clearFocus()
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let {
+                    Log.i("queryTextListener", it)
+                }
+                return true
+            }
+        })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.actionSearch -> return false
+        }
+        searchView.setOnQueryTextListener(queryTextListener)
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onUserSelected(user: User) {
+
+    }
+
     companion object {
-        const val ARG_POSITION = "position"
+        private const val ARG_POSITION = "position"
 
         fun getInstance(position: Int) =
             MainFragment().apply {
@@ -79,17 +155,11 @@ class MainFragment : Fragment() {
     }
 }
 
-class MainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    fun onBind(user: User) {
-        itemView.tvTitle.text = user.login
-        itemView.tvUrl.text = user.html_url
-        Glide.with(itemView.context).load(user.avatar_url).into(itemView.ivImage)
-    }
-}
 
 class MainAdapter :
-    RecyclerView.Adapter<MainViewHolder>() {
-    private var items: MutableList<User> = mutableListOf<User>()
+    RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
+    private var items = mutableListOf<User>()
+    var onItemClick: ((User) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         val view =
@@ -111,4 +181,22 @@ class MainAdapter :
         this.items.addAll(items)
         notifyDataSetChanged()
     }
+
+    inner class MainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.setOnClickListener {
+                onItemClick?.invoke(items[adapterPosition])
+            }
+        }
+
+        fun onBind(user: User) {
+            itemView.tvTitle.text = user.login
+            itemView.tvUrl.text = user.html_url
+            Glide.with(itemView.context).load(user.avatar_url).into(itemView.ivImage)
+        }
+    }
+}
+
+interface OnUserSelected {
+    fun onUserSelected(user: User)
 }

@@ -1,5 +1,6 @@
 package io.lab27.githubuser.network
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
