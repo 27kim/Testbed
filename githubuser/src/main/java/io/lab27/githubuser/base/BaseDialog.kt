@@ -15,6 +15,7 @@ import androidx.fragment.app.DialogFragment
 import io.lab27.githubuser.R
 import io.lab27.githubuser.UserDetailActivity
 import io.lab27.githubuser.databinding.DialogBaseBinding
+import kotlinx.android.synthetic.main.dialog_base.*
 
 class BaseDialog : DialogFragment() {
     lateinit var binding: DialogBaseBinding
@@ -25,63 +26,36 @@ class BaseDialog : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_base, container, false)
+        //배경 투명 및 하위 호환성
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
 
         val args = arguments
-        args?.let {
-            binding.apply {
-                tvTitle.text = args.getString("title")
-                tvMessage.text = args.getString("message")
-                dialogCancel.text = getText(R.string.dialog_cancel)
-                dialogOkay.text = getText(R.string.dialog_okay)
-                dialogOkay.setOnClickListener {
+
+        binding.apply {
+            tvTitle.text = args?.getString("title") ?: getString(R.string.dialog_title)
+            tvMessage.text = args?.getString("message") ?: getString(R.string.dialog_message)
+            dialogBtnCancel.text =
+                args?.getString("cancel") ?: getText(R.string.dialog_cancel)
+            dialogBtnOkay.text = args?.getString("okay") ?: getText(R.string.dialog_okay)
+            dialogBtnCancel.setOnClickListener {
+                dismiss()
+            }
+            dialogBtnOkay.setOnClickListener {
+                args?.let {
                     val intent = Intent(requireActivity(), UserDetailActivity::class.java)
                     intent.apply {
                         putExtra("user", args.getString("title"))
                     }.also {
                         startActivity(it)
                     }
-                    dismiss()
                 }
-            }
-
-        } ?: run {
-            binding.apply {
-                tvTitle.text = getText(R.string.dialog_title)
-                tvMessage.text = getText(R.string.dialog_message)
-                dialogCancel.text = getText(R.string.dialog_cancel)
-                dialogOkay.text = getText(R.string.dialog_okay)
-            }
-        }
-
-        binding.apply {
-            dialogCancel.setOnClickListener {
                 dismiss()
             }
         }
-
         return binding.root
     }
 
-    //    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-//        return activity?.let {
-//            // Use the Builder class for convenient dialog construction
-//            val builder = AlertDialog.Builder(it)
-////            builder.apply {
-////                setTitle(R.string.dialog_title)
-////                setMessage(R.string.dialog_message)
-////                setPositiveButton(R.string.dialog_okay) { dialog, id ->
-////                    // FIRE ZE MISSILES!
-////                }
-////                setNegativeButton(R.string.dialog_cancel) { dialog, id ->
-////                    // User cancelled the dialog
-////                }
-////            }
-//            // Create the AlertDialog object and return it
-//            builder.create()
-//        } ?: throw IllegalStateException("Activity cannot be null")
-//    }
     companion object {
         fun getInstance(bundle: Bundle): BaseDialog {
             val fragment = BaseDialog()

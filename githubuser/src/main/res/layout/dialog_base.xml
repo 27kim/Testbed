@@ -31,27 +31,25 @@
             tools:text="@string/dialog_message" />
 
         <TextView
-            android:id="@+id/dialog_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:id="@+id/dialog_btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/dialog_okay"
+            app:layout_constraintEnd_toStartOf="@id/dialog_btn_okay"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvMessage"
+            android:gravity="center|center_vertical"
             tools:text="@string/dialog_cancel" />
 
         <TextView
-            android:id="@+id/dialog_okay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:id="@+id/dialog_btn_okay"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/dialog_cancel"
+            app:layout_constraintStart_toEndOf="@id/dialog_btn_cancel"
+            android:gravity="center"
             tools:text="@string/dialog_okay"
-
             />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

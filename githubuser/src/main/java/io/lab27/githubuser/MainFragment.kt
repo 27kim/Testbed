@@ -2,29 +2,30 @@ package io.lab27.githubuser
 
 import android.app.SearchManager
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.Fragment
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import io.lab27.githubuser.base.BaseDialog
+import io.lab27.githubuser.base.BaseFragment
+import io.lab27.githubuser.databinding.FragmentFirstBinding
+import io.lab27.githubuser.databinding.LayoutRecyclerviewBinding
 import io.lab27.githubuser.network.User
 import kotlinx.android.synthetic.main.fragment_first.*
 import kotlinx.android.synthetic.main.layout_recyclerview.view.*
 
-class MainFragment : Fragment(), OnUserSelected {
+class MainFragment : BaseFragment() {
     private lateinit var userViewModel: UserViewModel
     private lateinit var recyclerViewAdapter: MainAdapter
     private lateinit var searchView: SearchView
     private lateinit var queryTextListener: SearchView.OnQueryTextListener
+    private lateinit var binding: FragmentFirstBinding
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -39,30 +40,30 @@ class MainFragment : Fragment(), OnUserSelected {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_first, container, false)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_first, container, false)
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
 
-        initRecyclerView(recyclerView)
-
-        return view
+        }
+        initRecyclerView()
+        return binding.root
     }
 
-    private fun initRecyclerView(recyclerView: RecyclerView?) {
+    private fun initRecyclerView() {
         recyclerViewAdapter = MainAdapter()
         recyclerViewAdapter.apply {
             onItemClick = { user ->
-//                Toast.makeText(requireContext(), "$user", Toast.LENGTH_SHORT).show()
                 //DIALOG
                 val args = Bundle()
                 args.apply {
                     putString("title", user.login)
                     putString("message", user.avatar_url)
                 }
-
                 BaseDialog.getInstance(args).show(childFragmentManager, "TEST")
             }
         }
-        recyclerView?.apply {
+
+        binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireActivity())
             adapter = recyclerViewAdapter
         }
@@ -75,7 +76,15 @@ class MainFragment : Fragment(), OnUserSelected {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        observe()
+    }
 
+    private fun observe() {
+        observeUserList()
+        observeLoadingStatus()
+    }
+
+    private fun observeUserList() {
         userViewModel.userList.observe(this, Observer { result ->
             run {
                 if (result.items.isNotEmpty()) {
@@ -88,14 +97,11 @@ class MainFragment : Fragment(), OnUserSelected {
                 }
             }
         })
+    }
 
+    private fun observeLoadingStatus() {
         userViewModel.isLoading.observe(this, Observer { isLoading ->
-            run {
-                when (isLoading) {
-                    true -> progressBar.visibility = View.VISIBLE
-                    false -> progressBar.visibility = View.GONE
-                }
-            }
+            this.isLoading = isLoading
         })
     }
 
@@ -111,25 +117,25 @@ class MainFragment : Fragment(), OnUserSelected {
 
         searchView?.let {
             searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
+            it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    query?.let {
+                        Log.i("onQueryTextSubmit", query)
+                        userViewModel.fetchUserList(query)
+                    }
+                    it.onActionViewCollapsed()
+//                    it.clearFocus()
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    newText?.let {
+                        Log.i("onQueryTextChange", newText)
+                    }
+                    return false
+                }
+            })
         }
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                query?.let {
-                    Log.i("queryTextListener", it)
-                    userViewModel.fetchUserList(query)
-                }
-                searchView.clearFocus()
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                newText?.let {
-                    Log.i("queryTextListener", it)
-                }
-                return true
-            }
-        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -138,10 +144,6 @@ class MainFragment : Fragment(), OnUserSelected {
         }
         searchView.setOnQueryTextListener(queryTextListener)
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onUserSelected(user: User) {
-
     }
 
     companion object {
@@ -156,17 +158,16 @@ class MainFragment : Fragment(), OnUserSelected {
     }
 }
 
-
 class MainAdapter :
     RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
     private var items = mutableListOf<User>()
     var onItemClick: ((User) -> Unit)? = null
+    lateinit var itemBinding: LayoutRecyclerviewBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.layout_recyclerview, parent, false)
+        itemBinding = LayoutRecyclerviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return MainViewHolder(view)
+        return MainViewHolder(itemBinding)
     }
 
     override fun getItemCount(): Int {
@@ -183,21 +184,19 @@ class MainAdapter :
         notifyDataSetChanged()
     }
 
-    inner class MainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class MainViewHolder(private val binding: LayoutRecyclerviewBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
-            itemView.setOnClickListener {
+            binding.root.setOnClickListener {
                 onItemClick?.invoke(items[adapterPosition])
+            }
+            binding.isStarred.setOnClickListener {
+                Log.i("isStarred", "isStarred clicked : ${binding.user?.isFavorite}")
             }
         }
 
         fun onBind(user: User) {
-            itemView.tvTitle.text = user.login
-            itemView.tvUrl.text = user.html_url
+            binding.user = user
             Glide.with(itemView.context).load(user.avatar_url).into(itemView.ivImage)
         }
     }
-}
-
-interface OnUserSelected {
-    fun onUserSelected(user: User)
 }
