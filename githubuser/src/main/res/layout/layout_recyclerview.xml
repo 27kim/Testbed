@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
             name="user"
-            type="io.lab27.githubuser.network.User" />
+            type="io.lab27.githubuser.data.dao.User" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -16,8 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         app:cardCornerRadius="6dp"
-        app:cardElevation="6dp"
-        >
+        app:cardElevation="6dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -28,6 +25,7 @@
                 android:layout_width="75dp"
                 android:layout_height="75dp"
                 android:layout_margin="10dp"
+                app:imageUrl="@{user.avatar_url}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/tvTitle"
                 app:layout_constraintStart_toStartOf="parent"

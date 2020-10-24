@@ -2,9 +2,10 @@
 <layout>
     <data>
         <import type="android.view.View"/>
+
         <variable
             name="isLoading"
-            type="boolean" />
+            type="Boolean" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"

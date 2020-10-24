@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import io.lab27.githubuser.base.BaseDialog
 import io.lab27.githubuser.base.BaseFragment
+import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.databinding.FragmentFirstBinding
 import io.lab27.githubuser.databinding.LayoutRecyclerviewBinding
-import io.lab27.githubuser.network.User
 import kotlinx.android.synthetic.main.fragment_first.*
 import kotlinx.android.synthetic.main.layout_recyclerview.view.*
 
@@ -43,7 +43,6 @@ class MainFragment : BaseFragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_first, container, false)
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
-
         }
         initRecyclerView()
         return binding.root
@@ -87,8 +86,8 @@ class MainFragment : BaseFragment() {
     private fun observeUserList() {
         userViewModel.userList.observe(this, Observer { result ->
             run {
-                if (result.items.isNotEmpty()) {
-                    recyclerViewAdapter.submitList(result.items)
+                if (result.isNotEmpty()) {
+                    recyclerViewAdapter.submitList(result)
                     tvListEmpty.visibility = View.GONE
                     recyclerView.visibility = View.VISIBLE
                 } else {
@@ -101,7 +100,7 @@ class MainFragment : BaseFragment() {
 
     private fun observeLoadingStatus() {
         userViewModel.isLoading.observe(this, Observer { isLoading ->
-            this.isLoading = isLoading
+            binding.isLoading = isLoading
         })
     }
 
@@ -196,7 +195,6 @@ class MainAdapter :
 
         fun onBind(user: User) {
             binding.user = user
-            Glide.with(itemView.context).load(user.avatar_url).into(itemView.ivImage)
         }
     }
 }
