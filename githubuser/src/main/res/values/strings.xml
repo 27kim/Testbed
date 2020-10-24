@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">githubUser</string>
     <string name="list_is_empty">List is empty</string>
+    <string name="dialog_title">다이얼로그 제목</string>
+    <string name="dialog_message">다이얼로그 내용</string>
+    <string name="dialog_okay">OK</string>
+    <string name="dialog_cancel">Cancel</string>
 </resources>

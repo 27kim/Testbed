@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import io.lab27.githubuser.base.BaseDialog
 import io.lab27.githubuser.network.User
 import kotlinx.android.synthetic.main.fragment_first.*
 import kotlinx.android.synthetic.main.layout_recyclerview.view.*
@@ -50,15 +51,15 @@ class MainFragment : Fragment(), OnUserSelected {
         recyclerViewAdapter = MainAdapter()
         recyclerViewAdapter.apply {
             onItemClick = { user ->
-                Toast.makeText(requireContext(), "$user", Toast.LENGTH_SHORT).show()
-
-                val intent = Intent(requireActivity(), UserDetailActivity::class.java)
-                intent.apply {
-                    putExtra("user", user.login)
-                }.also {
-                    startActivity(it)
+//                Toast.makeText(requireContext(), "$user", Toast.LENGTH_SHORT).show()
+                //DIALOG
+                val args = Bundle()
+                args.apply {
+                    putString("title", user.login)
+                    putString("message", user.avatar_url)
                 }
 
+                BaseDialog.getInstance(args).show(childFragmentManager, "TEST")
             }
         }
         recyclerView?.apply {
