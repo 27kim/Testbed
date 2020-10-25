@@ -17,9 +17,9 @@ import io.lab27.githubuser.databinding.FragmentRemoteBinding
 import io.lab27.githubuser.databinding.LayoutRecyclerviewBinding
 import kotlinx.android.synthetic.main.fragment_remote.*
 
-class MainFragment : BaseFragment() {
+class LocalFragment : BaseFragment() {
     val userViewModel: UserViewModel by viewModels()
-    private lateinit var recyclerViewAdapter: MainAdapter
+    private lateinit var recyclerViewAdapter: LocalAdapter
     private lateinit var searchView: SearchView
     private lateinit var queryTextListener: SearchView.OnQueryTextListener
     private lateinit var binding: FragmentRemoteBinding
@@ -38,19 +38,11 @@ class MainFragment : BaseFragment() {
     }
 
     private fun initRecyclerView() {
-        recyclerViewAdapter = MainAdapter()
+        recyclerViewAdapter = LocalAdapter()
         recyclerViewAdapter.apply {
             onItemClick = { user ->
                 Log.i("onItemClick", "$user")
                 userViewModel.insertUser(user)
-//                recyclerViewAdapter.updateItem(position)
-                //DIALOG
-//                val args = Bundle()
-//                args.apply {
-//                    putString("title", user.login)
-//                    putString("message", user.avatar_url)
-//                }
-//                BaseDialog.getInstance(args).show(childFragmentManager, "TEST")
             }
         }
 
@@ -71,15 +63,21 @@ class MainFragment : BaseFragment() {
     }
 
     private fun observe() {
-        observeUserList()
+        observeUserListFromDb()
         observeLoadingStatus()
     }
 
-    private fun observeUserList() {
-        userViewModel.userList.observe(viewLifecycleOwner, Observer { result ->
+    private fun observeUserListFromDb() {
+        userViewModel.queryUserList().observe(viewLifecycleOwner, Observer { result ->
             run {
                 if (result.isNotEmpty()) {
-                    recyclerViewAdapter.submitList(result)
+
+                    result.filter {
+                        it.isFavorite
+                    }.apply {
+                        recyclerViewAdapter.submitList(this)
+                    }
+
                     tvListEmpty.visibility = View.GONE
                     recyclerView.visibility = View.VISIBLE
                 } else {
@@ -141,7 +139,7 @@ class MainFragment : BaseFragment() {
         private const val ARG_POSITION = "position"
 
         fun getInstance(position: Int) =
-            MainFragment().apply {
+            LocalFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_POSITION, position)
                 }
@@ -149,29 +147,25 @@ class MainFragment : BaseFragment() {
     }
 }
 
-class MainAdapter :
-    RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
+class LocalAdapter :
+    RecyclerView.Adapter<LocalAdapter.LocalViewHolder>() {
     private var items = mutableListOf<User>()
     var onItemClick: ((User) -> Unit)? = null
     lateinit var itemBinding: LayoutRecyclerviewBinding
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocalViewHolder {
         itemBinding =
             LayoutRecyclerviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return MainViewHolder(itemBinding)
+        return LocalViewHolder(itemBinding)
     }
 
     override fun getItemCount(): Int {
         return items.size
     }
 
-    override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: LocalViewHolder, position: Int) {
         holder.onBind(items[position])
-    }
-
-    fun updateItem(position : Int){
-        notifyDataSetChanged()
     }
 
     fun submitList(items: List<User>) {
@@ -180,7 +174,7 @@ class MainAdapter :
         notifyDataSetChanged()
     }
 
-    inner class MainViewHolder(private val binding: LayoutRecyclerviewBinding) :
+    inner class LocalViewHolder(private val binding: LayoutRecyclerviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener {

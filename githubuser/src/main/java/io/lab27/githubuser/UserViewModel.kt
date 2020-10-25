@@ -24,6 +24,10 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     val userList: LiveData<List<User>>
         get() = _userList
 
+    private var _localUserList = MutableLiveData<List<User>>()
+    val localUserList: LiveData<List<User>>
+        get() = _localUserList
+
     private var _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
         get() = _isLoading
@@ -42,6 +46,12 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
                 { result -> _userList.value = result.items },
                 { e -> Log.e("fetchUserList", "${e.message}") }
             )
+    }
 
+    fun queryUserList(): LiveData<List<User>> {
+        return userRepository.queryUserLists()
+    }
+    fun insertUser(user : User){
+        userRepository.insertUser(user)
     }
 }

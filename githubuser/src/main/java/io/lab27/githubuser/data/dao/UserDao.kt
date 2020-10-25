@@ -1,9 +1,7 @@
 package io.lab27.githubuser.data.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.lifecycle.LiveData
+import androidx.room.*
 import io.lab27.githubuser.base.BaseDao
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -11,8 +9,8 @@ import io.reactivex.Single
 @Dao
 interface UserDao : BaseDao<User>{
     @Query("Select * from User")
-    fun select(): Single<List<User>>
+    fun select(): LiveData<List<User>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     override fun insert(obj: User)
 }
