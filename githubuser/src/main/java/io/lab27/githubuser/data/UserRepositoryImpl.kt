@@ -11,5 +11,6 @@ class UserRepositoryImpl constructor(
     UserRepository {
     override fun fetchUserList(query: String) = remote.getUser(query)
     override fun queryUserLists() = local.queryUsers()
-    override fun insertUser(user: User) = local.insertUser(user)
+    override fun addFavorite(user: User) = local.addFavorite(user)
+    override fun deleteFavorite(user: User) = local.deleteFavorite(user)
 }

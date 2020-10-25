@@ -43,14 +43,6 @@ class MainFragment : BaseFragment() {
             onItemClick = { user ->
                 Log.i("onItemClick", "$user")
                 userViewModel.insertUser(user)
-//                recyclerViewAdapter.updateItem(position)
-                //DIALOG
-//                val args = Bundle()
-//                args.apply {
-//                    putString("title", user.login)
-//                    putString("message", user.avatar_url)
-//                }
-//                BaseDialog.getInstance(args).show(childFragmentManager, "TEST")
             }
         }
 
@@ -76,7 +68,7 @@ class MainFragment : BaseFragment() {
     }
 
     private fun observeUserList() {
-        userViewModel.userList.observe(viewLifecycleOwner, Observer { result ->
+        userViewModel.combinedResult.observe(viewLifecycleOwner, Observer { result ->
             run {
                 if (result.isNotEmpty()) {
                     recyclerViewAdapter.submitList(result)

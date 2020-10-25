@@ -8,5 +8,6 @@ import io.reactivex.Single
 interface UserRepository {
     fun fetchUserList(query: String) : Single<UserResponse>
     fun queryUserLists(): LiveData<List<User>>
-    fun insertUser(user : User)
+    fun addFavorite(user : User)
+    fun deleteFavorite(user : User)
 }

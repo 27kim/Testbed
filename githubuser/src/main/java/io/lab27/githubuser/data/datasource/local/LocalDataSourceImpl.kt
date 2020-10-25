@@ -15,7 +15,7 @@ class LocalDataSourceImpl(private val db: UserDataBase) : LocalDataSource {
         return db.userDao().select()
     }
 
-    override fun insertUser(user: User) {
+    override fun addFavorite(user: User) {
         Completable.fromAction {
             db.userDao().insert(user)
         }
@@ -24,6 +24,18 @@ class LocalDataSourceImpl(private val db: UserDataBase) : LocalDataSource {
             .subscribe(
                 {Log.i("insertUser","onComplete")},
                 {e -> Log.e("insertUser", "${e.message}")}
+            )
+    }
+
+    override fun deleteFavorite(user: User) {
+        Completable.fromAction {
+            db.userDao().delete(user)
+        }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                {Log.i("deleteUser","onComplete")},
+                {e -> Log.e("deleteUser", "${e.message}")}
             )
     }
 }

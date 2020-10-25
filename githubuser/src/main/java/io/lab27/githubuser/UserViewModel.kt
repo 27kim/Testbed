@@ -2,9 +2,7 @@ package io.lab27.githubuser
 
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.*
 import io.lab27.githubuser.data.UserRepositoryImpl
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.data.datasource.UserDataBase
@@ -32,6 +30,33 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
+
+    val combinedResult = Transformations.switchMap(_userList) { list ->
+        var result = MutableLiveData<List<User>>()
+//        list.forEach { remoteUser ->
+//            _localUserList.value?.forEach { localUser ->
+//                if (remoteUser.id == localUser.id) {
+//                    remoteUser.isFavorite = true
+//                }
+//            }
+//        }
+        val localUser = _localUserList.value!!
+        val userList = mutableListOf<User>()
+        for (j in 0.._localUserList.value!!.size) {
+            val localUser = localUser[j]
+
+            for (i in 0..list.size) {
+                var remoteUser = list[i]
+                if (localUser.id == remoteUser.id) {
+                    remoteUser.isFavorite = true
+                    userList.add(remoteUser)
+                }
+            }
+        }
+        result.value = userList
+        result
+    }
+
     fun fetchUserList(name: String) {
         val remote = userRepository.fetchUserList(name)
         val local = userRepository.queryUserLists()
@@ -48,10 +73,20 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
             )
     }
 
+
     fun queryUserList(): LiveData<List<User>> {
+        _localUserList.value = userRepository.queryUserLists().value
         return userRepository.queryUserLists()
+//        val mediatorLiveData = MediatorLiveData<List<User>>()
+//        mediatorLiveData.addSource(userRepository.queryUserLists()) {_localUserList.value = it}
+//        _localUserList.value = mediatorLiveData.value
     }
-    fun insertUser(user : User){
-        userRepository.insertUser(user)
+
+    fun insertUser(user: User) {
+        userRepository.addFavorite(user)
+    }
+
+    fun deleteUser(user: User) {
+        userRepository.deleteFavorite(user)
     }
 }

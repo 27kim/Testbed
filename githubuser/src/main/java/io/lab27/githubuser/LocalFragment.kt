@@ -42,7 +42,10 @@ class LocalFragment : BaseFragment() {
         recyclerViewAdapter.apply {
             onItemClick = { user ->
                 Log.i("onItemClick", "$user")
-                userViewModel.insertUser(user)
+                when (user.isFavorite) {
+                    true -> userViewModel.insertUser(user)
+                    false -> userViewModel.deleteUser(user)
+                }
             }
         }
 
@@ -71,13 +74,7 @@ class LocalFragment : BaseFragment() {
         userViewModel.queryUserList().observe(viewLifecycleOwner, Observer { result ->
             run {
                 if (result.isNotEmpty()) {
-
-                    result.filter {
-                        it.isFavorite
-                    }.apply {
-                        recyclerViewAdapter.submitList(this)
-                    }
-
+                    recyclerViewAdapter.submitList(result)
                     tvListEmpty.visibility = View.GONE
                     recyclerView.visibility = View.VISIBLE
                 } else {
@@ -183,15 +180,14 @@ class LocalAdapter :
         }
 
         fun onBind(user: User) {
+            binding.user = user
+
             binding.isStarred.setOnClickListener {
                 binding.user?.let { user ->
-                    Log.i("isStarred", "isStarred clicked : ${user.isFavorite}")
                     user.isFavorite = !user.isFavorite
-                    Log.i("isStarred", "isStarred modified : ${user.isFavorite}")
                     onItemClick?.invoke(user)
                 }
             }
-            binding.user = user
         }
     }
 }
