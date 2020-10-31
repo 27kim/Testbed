@@ -1,4 +1,4 @@
-package io.lab27.githubuser
+package io.lab27.githubuser.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.*
@@ -8,13 +8,7 @@ import io.lab27.githubuser.util.L
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class UserViewModel(private val userRepository : UserRepository) : ViewModel(){
-//    private val userRepository =
-//        UserRepositoryImpl(
-//            RemoteDataSourceImpl(),
-//            LocalDataSourceImpl(UserDataBase.getInstance(application)!!)
-//        )
-
+class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
     private var _userList = MutableLiveData<List<User>>()
     val userList: LiveData<List<User>>
         get() = _userList
@@ -37,20 +31,8 @@ class UserViewModel(private val userRepository : UserRepository) : ViewModel(){
                 }
             }
         }
-        L.i("$list")
-        val localUser = list?: emptyList()
+        val localUser = list ?: emptyList()
         val userList = mutableListOf<User>()
-//        for (j in 0.._localUserList.value!!.size) {
-//            val localUser = localUser[j]
-//
-//            for (i in 0..list.size) {
-//                var remoteUser = list[i]
-//                if (localUser.id == remoteUser.id) {
-//                    remoteUser.isFavorite = true
-//                    userList.add(remoteUser)
-//                }
-//            }
-//        }
         result.value = localUser
         result
     }

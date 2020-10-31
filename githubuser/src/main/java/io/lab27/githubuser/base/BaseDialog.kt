@@ -1,7 +1,5 @@
 package io.lab27.githubuser.base
 
-import android.app.Dialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -13,9 +11,8 @@ import android.view.Window
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import io.lab27.githubuser.R
-import io.lab27.githubuser.UserDetailActivity
+import io.lab27.githubuser.ui.UserDetailActivity
 import io.lab27.githubuser.databinding.DialogBaseBinding
-import kotlinx.android.synthetic.main.dialog_base.*
 
 class BaseDialog : DialogFragment() {
     lateinit var binding: DialogBaseBinding

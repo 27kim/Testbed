@@ -1,9 +1,9 @@
-package io.lab27.githubuser
+package io.lab27.githubuser.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import io.lab27.githubuser.R
 
 class UserDetailActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {

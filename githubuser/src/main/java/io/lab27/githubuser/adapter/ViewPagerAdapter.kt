@@ -1,8 +1,10 @@
-package io.lab27.githubuser
+package io.lab27.githubuser.adapter
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import io.lab27.githubuser.ui.LocalFragment
+import io.lab27.githubuser.ui.MainFragment
 import java.lang.IllegalArgumentException
 
 class ViewPagerAdapter(activity: AppCompatActivity, private val itemsCount: Int) :

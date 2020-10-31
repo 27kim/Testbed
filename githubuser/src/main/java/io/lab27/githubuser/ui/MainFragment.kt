@@ -1,4 +1,4 @@
-package io.lab27.githubuser
+package io.lab27.githubuser.ui
 
 import android.app.SearchManager
 import android.content.Context
@@ -10,6 +10,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import io.lab27.githubuser.R
+import io.lab27.githubuser.viewmodel.UserViewModel
 import io.lab27.githubuser.base.BaseFragment
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.databinding.FragmentRemoteBinding
@@ -29,7 +31,8 @@ class MainFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_remote, container, false)
+        binding = DataBindingUtil.inflate(inflater,
+            R.layout.fragment_remote, container, false)
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
         }

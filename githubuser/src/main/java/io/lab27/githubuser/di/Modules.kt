@@ -1,7 +1,7 @@
 package io.lab27.githubuser.di
 
 import androidx.room.Room
-import io.lab27.githubuser.UserViewModel
+import io.lab27.githubuser.viewmodel.UserViewModel
 import io.lab27.githubuser.data.UserRepository
 import io.lab27.githubuser.data.UserRepositoryImpl
 import io.lab27.githubuser.data.datasource.UserDataBase
