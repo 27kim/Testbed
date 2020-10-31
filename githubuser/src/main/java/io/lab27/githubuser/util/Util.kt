@@ -1,4 +1,4 @@
-package io.lab27.githubuser
+package io.lab27.githubuser.util
 
 import android.R
 import android.graphics.drawable.Drawable

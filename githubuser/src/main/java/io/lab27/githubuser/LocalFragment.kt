@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,9 +15,10 @@ import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.databinding.FragmentRemoteBinding
 import io.lab27.githubuser.databinding.LayoutRecyclerviewBinding
 import kotlinx.android.synthetic.main.fragment_remote.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LocalFragment : BaseFragment() {
-    val userViewModel: UserViewModel by viewModels()
+    val userViewModel: UserViewModel by viewModel()
     private lateinit var recyclerViewAdapter: LocalAdapter
     private lateinit var searchView: SearchView
     private lateinit var queryTextListener: SearchView.OnQueryTextListener
@@ -99,28 +99,27 @@ class LocalFragment : BaseFragment() {
 
         searchItem?.let {
             searchView = searchItem.actionView as SearchView
-        }
-
-        searchView?.let {
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
-            it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    query?.let {
-                        Log.i("onQueryTextSubmit", query)
-                        userViewModel.fetchUserList(query)
-                    }
-                    it.onActionViewCollapsed()
+            searchView?.let {
+                searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
+                it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        query?.let {
+                            Log.i("onQueryTextSubmit", query)
+                            userViewModel.fetchUserList(query)
+                        }
+                        it.onActionViewCollapsed()
 //                    it.clearFocus()
-                    return false
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    newText?.let {
-                        Log.i("onQueryTextChange", newText)
+                        return false
                     }
-                    return false
-                }
-            })
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        newText?.let {
+                            Log.i("onQueryTextChange", newText)
+                        }
+                        return false
+                    }
+                })
+            }
         }
     }
 

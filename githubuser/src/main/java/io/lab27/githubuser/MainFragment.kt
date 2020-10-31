@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,9 +15,10 @@ import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.databinding.FragmentRemoteBinding
 import io.lab27.githubuser.databinding.LayoutRecyclerviewBinding
 import kotlinx.android.synthetic.main.fragment_remote.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainFragment : BaseFragment() {
-    val userViewModel: UserViewModel by viewModels()
+    val userViewModel: UserViewModel by viewModel()
     private lateinit var recyclerViewAdapter: MainAdapter
     private lateinit var searchView: SearchView
     private lateinit var queryTextListener: SearchView.OnQueryTextListener

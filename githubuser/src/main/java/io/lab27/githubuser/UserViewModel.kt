@@ -1,22 +1,19 @@
 package io.lab27.githubuser
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
-import io.lab27.githubuser.data.UserRepositoryImpl
+import io.lab27.githubuser.data.UserRepository
 import io.lab27.githubuser.data.dao.User
-import io.lab27.githubuser.data.datasource.UserDataBase
-import io.lab27.githubuser.data.datasource.local.LocalDataSourceImpl
-import io.lab27.githubuser.data.datasource.remote.RemoteDataSourceImpl
+import io.lab27.githubuser.util.L
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
-class UserViewModel(application: Application) : AndroidViewModel(application) {
-    private val userRepository =
-        UserRepositoryImpl(
-            RemoteDataSourceImpl(),
-            LocalDataSourceImpl(UserDataBase.getInstance(application)!!)
-        )
+class UserViewModel(private val userRepository : UserRepository) : ViewModel(){
+//    private val userRepository =
+//        UserRepositoryImpl(
+//            RemoteDataSourceImpl(),
+//            LocalDataSourceImpl(UserDataBase.getInstance(application)!!)
+//        )
 
     private var _userList = MutableLiveData<List<User>>()
     val userList: LiveData<List<User>>
@@ -33,27 +30,28 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
 
     val combinedResult = Transformations.switchMap(_userList) { list ->
         var result = MutableLiveData<List<User>>()
-//        list.forEach { remoteUser ->
-//            _localUserList.value?.forEach { localUser ->
-//                if (remoteUser.id == localUser.id) {
-//                    remoteUser.isFavorite = true
-//                }
-//            }
-//        }
-        val localUser = _localUserList.value!!
-        val userList = mutableListOf<User>()
-        for (j in 0.._localUserList.value!!.size) {
-            val localUser = localUser[j]
-
-            for (i in 0..list.size) {
-                var remoteUser = list[i]
-                if (localUser.id == remoteUser.id) {
+        list.forEach { remoteUser ->
+            _localUserList.value?.forEach { localUser ->
+                if (remoteUser.id == localUser.id) {
                     remoteUser.isFavorite = true
-                    userList.add(remoteUser)
                 }
             }
         }
-        result.value = userList
+        L.i("$list")
+        val localUser = list?: emptyList()
+        val userList = mutableListOf<User>()
+//        for (j in 0.._localUserList.value!!.size) {
+//            val localUser = localUser[j]
+//
+//            for (i in 0..list.size) {
+//                var remoteUser = list[i]
+//                if (localUser.id == remoteUser.id) {
+//                    remoteUser.isFavorite = true
+//                    userList.add(remoteUser)
+//                }
+//            }
+//        }
+        result.value = localUser
         result
     }
 
