@@ -9,6 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class RetrofitManager {
@@ -21,6 +22,9 @@ class RetrofitManager {
             val client =
                 OkHttpClient.Builder()
                     .addInterceptor(interceptor)
+                    .connectTimeout(15, TimeUnit.MINUTES)
+                    .readTimeout(15, TimeUnit.SECONDS)
+                    .writeTimeout(15, TimeUnit.SECONDS)
                     .build()
 
             return Retrofit.Builder()

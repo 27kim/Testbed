@@ -5,12 +5,14 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.R
+import io.lab27.githubuser.adapter.MainAdapter
 import io.lab27.githubuser.viewmodel.UserViewModel
 import io.lab27.githubuser.base.BaseFragment
 import io.lab27.githubuser.data.dao.User
@@ -31,8 +33,13 @@ class MainFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater,
-            R.layout.fragment_remote, container, false)
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_remote,
+            container,
+            false
+
+        )
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
         }
@@ -68,6 +75,21 @@ class MainFragment : BaseFragment() {
     private fun observe() {
         observeUserList()
         observeLoadingStatus()
+        observeError()
+        observeFinishState()
+    }
+
+    private fun observeFinishState() {
+        userViewModel.finishState.observe(viewLifecycleOwner, Observer {
+            if (it) requireActivity().finish()
+            else Toast.makeText(context, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+        })
+    }
+
+    private fun observeError() {
+        userViewModel.error.observe(viewLifecycleOwner, Observer { error ->
+            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+        })
     }
 
     private fun observeUserList() {
@@ -141,58 +163,5 @@ class MainFragment : BaseFragment() {
                     putInt(ARG_POSITION, position)
                 }
             }
-    }
-}
-
-class MainAdapter :
-    RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
-    private var items = mutableListOf<User>()
-    var onItemClick: ((User) -> Unit)? = null
-    lateinit var itemBinding: LayoutRecyclerviewBinding
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
-        itemBinding =
-            LayoutRecyclerviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-
-        return MainViewHolder(itemBinding)
-    }
-
-    override fun getItemCount(): Int {
-        return items.size
-    }
-
-    override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
-        holder.onBind(items[position])
-    }
-
-    fun updateItem(position : Int){
-        notifyDataSetChanged()
-    }
-
-    fun submitList(items: List<User>) {
-        this.items.clear()
-        this.items.addAll(items)
-        notifyDataSetChanged()
-    }
-
-    inner class MainViewHolder(private val binding: LayoutRecyclerviewBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        init {
-            binding.root.setOnClickListener {
-                onItemClick?.invoke(items[adapterPosition])
-            }
-        }
-
-        fun onBind(user: User) {
-            binding.isStarred.setOnClickListener {
-                binding.user?.let { user ->
-                    Log.i("isStarred", "isStarred clicked : ${user.isFavorite}")
-                    user.isFavorite = !user.isFavorite
-                    Log.i("isStarred", "isStarred modified : ${user.isFavorite}")
-                    onItemClick?.invoke(user)
-                }
-            }
-            binding.user = user
-        }
     }
 }
