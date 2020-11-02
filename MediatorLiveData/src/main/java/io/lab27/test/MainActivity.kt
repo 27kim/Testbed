@@ -42,6 +42,12 @@ class MainActivity : AppCompatActivity() {
             mediatorLiveData.value = combineData(liveData1, liveData2)
         }
 
+        /**
+         * observe 해야 함!!!!!!!!!!!!!!!!!!!!!!!!!1
+         * observe 해야 함!!!!!!!!!!!!!!!!!!!!!!!!!1
+         * observe 해야 함!!!!!!!!!!!!!!!!!!!!!!!!!1
+         * */
+
         mediatorLiveData.observe(this, Observer {
             Log.e("tag", "got data on mediatorLiveData")
 

@@ -8,7 +8,7 @@ import io.reactivex.Single
 
 @Dao
 interface UserDao : BaseDao<User>{
-    @Query("Select * from User")
+    @Query("Select * from User where isFavorite = 1")
     fun select(): LiveData<List<User>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

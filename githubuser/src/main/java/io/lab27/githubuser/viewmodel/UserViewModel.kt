@@ -1,16 +1,19 @@
 package io.lab27.githubuser.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.*
 import io.lab27.githubuser.base.BaseViewModel
 import io.lab27.githubuser.data.UserRepository
+import io.lab27.githubuser.data.combineWith
 import io.lab27.githubuser.data.dao.User
+import io.lab27.githubuser.network.UserResponse
 import io.lab27.githubuser.util.L
 import io.reactivex.BackpressureStrategy
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
-import retrofit2.HttpException
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class UserViewModel(private val userRepository: UserRepository) : BaseViewModel() {
     private var _userList = MutableLiveData<List<User>>()
@@ -21,14 +24,20 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
     val localUserList: LiveData<List<User>>
         get() = _localUserList
 
+    private var _remoteTemp = MutableLiveData<List<User>>()
+    val remoteTemp: LiveData<List<User>>
+        get() = _remoteTemp
+
     private var _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
+    var mediatorLiveData = MediatorLiveData<List<User>>()
+
+
     private val backPressSubject =
         BehaviorSubject.createDefault(0L)
 
-    //Ext
     private val _finishState = MutableLiveData<Boolean>()
     val finishState: LiveData<Boolean>
         get() = _finishState
@@ -79,20 +88,6 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
                 { e ->
                     L.e("${e.message}")
                     _error.value = e.message
-
-
-//                        if (e instanceof HttpException) {
-//                            HttpException exception = (HttpException) e;
-//                            Response response = exception.response();
-//                            try {
-//                                JSONObject jsonObject = new  JSONObjec(response.errorBody().string());
-//                                Log.e("Error ","" + jsonObject.optString("message"));
-//                            } catch (JSONException e1) {
-//                                e1.printStackTrace();
-//                            } catch (IOException e1) {
-//                                e1.printStackTrace();
-//                            }
-//                        }
                 }
             )
             .also { compositeDisposable.add(it) }
@@ -102,9 +97,14 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
     fun queryUserList(): LiveData<List<User>> {
         _localUserList.value = userRepository.queryUserLists().value
         return userRepository.queryUserLists()
-//        val mediatorLiveData = MediatorLiveData<List<User>>()
-//        mediatorLiveData.addSource(userRepository.queryUserLists()) {_localUserList.value = it}
-//        _localUserList.value = mediatorLiveData.value
+    }
+
+    fun updateUser(user: User) {
+        L.i("is favorite ? ${user.isFavorite} / user : $user")
+        when (user.isFavorite) {
+            true -> insertUser(user)
+            false -> deleteUser(user)
+        }
     }
 
     fun insertUser(user: User) {
@@ -118,4 +118,84 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
     override fun clearDisposable() {
         compositeDisposable.clear()
     }
+
+
+    /**
+     *
+     *
+     *
+     *
+     * temp
+     * */
+    fun getUserList(query: String) {
+
+        userRepository.fetchUserList_live(query).enqueue(object : Callback<UserResponse> {
+            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                L.i("getUserList - onFailure")
+            }
+
+            override fun onResponse(
+                call: Call<UserResponse>,
+                response: Response<UserResponse>
+            ) {
+                L.e("getUserList - onResponse ${response.body()?.items}")
+                _remoteTemp.value = response.body()?.items
+            }
+        })
+
+        val local = userRepository.queryUserLists()
+
+        mediatorLiveData.addSource(local) {
+            L.i("addSource(local)")
+            mediatorLiveData.value = combine(local, _remoteTemp)
+        }
+
+        mediatorLiveData.addSource(_remoteTemp) {
+            L.i("addSource(remote)")
+            mediatorLiveData.value = combine(local, _remoteTemp)
+        }
+    }
+
+    private fun combine(
+        local: LiveData<List<User>>,
+        remoteTemp: LiveData<List<User>>
+    ): List<User>? {
+        L.e("start of combine")
+        var mutableLiveData = MutableLiveData<List<User>>()
+
+        var l = local.value ?: run { return emptyList() }
+        var r = remoteTemp.value ?: run { return emptyList() }
+
+        l.forEach {
+            if (it.isFavorite) {
+                val idx = getUserIndex(it)
+                if (idx != -1) {
+                    r[idx].isFavorite = true
+                }
+            }
+        }
+//        mutableLiveData.value = r
+
+        return r ?: emptyList()
+    }
+
+    fun getUserIndex(user: User): Int {
+        var result = -1
+
+        _remoteTemp.value?.forEachIndexed { idx, remote ->
+            if (remote.id == user.id) {
+                return idx
+            }
+        }
+        return result
+    }
+
+
+    /**
+     *
+     *
+     *
+     *
+     * temp
+     * */
 }

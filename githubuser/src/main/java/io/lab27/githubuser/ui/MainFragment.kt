@@ -10,19 +10,16 @@ import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.R
 import io.lab27.githubuser.adapter.MainAdapter
 import io.lab27.githubuser.viewmodel.UserViewModel
 import io.lab27.githubuser.base.BaseFragment
-import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.databinding.FragmentRemoteBinding
-import io.lab27.githubuser.databinding.LayoutRecyclerviewBinding
 import kotlinx.android.synthetic.main.fragment_remote.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class MainFragment : BaseFragment() {
-    val userViewModel: UserViewModel by viewModel()
+    val userViewModel: UserViewModel by sharedViewModel()
     private lateinit var recyclerViewAdapter: MainAdapter
     private lateinit var searchView: SearchView
     private lateinit var queryTextListener: SearchView.OnQueryTextListener
@@ -38,11 +35,12 @@ class MainFragment : BaseFragment() {
             R.layout.fragment_remote,
             container,
             false
-
         )
+
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
         }
+
         initRecyclerView()
         return binding.root
     }
@@ -52,7 +50,7 @@ class MainFragment : BaseFragment() {
         recyclerViewAdapter.apply {
             onItemClick = { user ->
                 Log.i("onItemClick", "$user")
-                userViewModel.insertUser(user)
+                userViewModel.updateUser(user)
             }
         }
 
@@ -93,7 +91,7 @@ class MainFragment : BaseFragment() {
     }
 
     private fun observeUserList() {
-        userViewModel.combinedResult.observe(viewLifecycleOwner, Observer { result ->
+        userViewModel.mediatorLiveData.observe(viewLifecycleOwner, Observer { result ->
             run {
                 if (result.isNotEmpty()) {
                     recyclerViewAdapter.submitList(result)
@@ -129,7 +127,8 @@ class MainFragment : BaseFragment() {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     query?.let {
                         Log.i("onQueryTextSubmit", query)
-                        userViewModel.fetchUserList(query)
+                        userViewModel.getUserList(query)
+//                        userViewModel.fetch(query)
                     }
                     it.onActionViewCollapsed()
 //                    it.clearFocus()

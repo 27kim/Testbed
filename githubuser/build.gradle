@@ -24,12 +24,14 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
     }
+
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        jvmTarget = "1.8"
     }
+
     dataBinding {
         enabled = true
     }
@@ -73,6 +75,8 @@ dependencies {
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    //lifecycle-reactivestreams
+    implementation "androidx.lifecycle:lifecycle-reactivestreams:$lifecycle_version"
     /**koin 중복으로 주석 처리
      * //fragment ktx
      * //    implementation "androidx.fragment:fragment-ktx:1.2.5"

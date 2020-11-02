@@ -16,11 +16,13 @@ import io.lab27.githubuser.base.BaseFragment
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.databinding.FragmentRemoteBinding
 import io.lab27.githubuser.databinding.LayoutRecyclerviewBinding
+import io.lab27.githubuser.util.L
 import kotlinx.android.synthetic.main.fragment_remote.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LocalFragment : BaseFragment() {
-    val userViewModel: UserViewModel by viewModel()
+    val userViewModel: UserViewModel by sharedViewModel()
     private lateinit var recyclerViewAdapter: LocalAdapter
     private lateinit var searchView: SearchView
     private lateinit var queryTextListener: SearchView.OnQueryTextListener
@@ -31,8 +33,10 @@ class LocalFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater,
-            R.layout.fragment_remote, container, false)
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_remote, container, false
+        )
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
         }
@@ -45,10 +49,7 @@ class LocalFragment : BaseFragment() {
         recyclerViewAdapter.apply {
             onItemClick = { user ->
                 Log.i("onItemClick", "$user")
-                when (user.isFavorite) {
-                    true -> userViewModel.insertUser(user)
-                    false -> userViewModel.deleteUser(user)
-                }
+                userViewModel.updateUser(user)
             }
         }
 
@@ -74,18 +75,50 @@ class LocalFragment : BaseFragment() {
     }
 
     private fun observeUserListFromDb() {
-        userViewModel.queryUserList().observe(viewLifecycleOwner, Observer { result ->
-            run {
-                if (result.isNotEmpty()) {
-                    recyclerViewAdapter.submitList(result)
-                    tvListEmpty.visibility = View.GONE
-                    recyclerView.visibility = View.VISIBLE
-                } else {
-                    tvListEmpty.visibility = View.VISIBLE
-                    recyclerView.visibility = View.GONE
+        userViewModel.mediatorLiveData.observe(viewLifecycleOwner, Observer { result ->
+            L.i("local list ? $result")
+
+            result
+                .filter { it.isFavorite }
+                .also { list ->
+                    if (result.isNotEmpty()) {
+                        recyclerViewAdapter.submitList(list)
+                        tvListEmpty.visibility = View.GONE
+                        recyclerView.visibility = View.VISIBLE
+                    } else {
+                        tvListEmpty.visibility = View.VISIBLE
+                        recyclerView.visibility = View.GONE
+                    }
                 }
-            }
+
+
+//                val list = result.filter { it.isFavorite }
+//                if (result.isNotEmpty()) {
+//                    recyclerViewAdapter.submitList(list)
+//                    tvListEmpty.visibility = View.GONE
+//                    recyclerView.visibility = View.VISIBLE
+//                } else {
+//                    tvListEmpty.visibility = View.VISIBLE
+//                    recyclerView.visibility = View.GONE
+//                }
         })
+
+        /* userViewModel.queryUserList().observe(viewLifecycleOwner, Observer { result ->
+             run {
+                 result.filter {
+                     it.isFavorite
+                 }
+
+                 if (result.isNotEmpty()) {
+                     recyclerViewAdapter.submitList(result)
+                     tvListEmpty.visibility = View.GONE
+                     recyclerView.visibility = View.VISIBLE
+                 } else {
+                     tvListEmpty.visibility = View.VISIBLE
+                     recyclerView.visibility = View.GONE
+                 }
+             }
+         })*/
     }
 
     private fun observeLoadingStatus() {
