@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import io.lab27.githubuser.ui.LocalFragment
-import io.lab27.githubuser.ui.MainFragment
+import io.lab27.githubuser.ui.RemoteFragment
 import java.lang.IllegalArgumentException
 
 class ViewPagerAdapter(activity: AppCompatActivity, private val itemsCount: Int) :
@@ -15,7 +15,7 @@ class ViewPagerAdapter(activity: AppCompatActivity, private val itemsCount: Int)
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> MainFragment.getInstance(position)
+            0 -> RemoteFragment.getInstance(position)
             1 -> LocalFragment.getInstance(position)
             else -> throw IllegalArgumentException("IllegalArgumentException createFragment")
         }

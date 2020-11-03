@@ -28,6 +28,10 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
     val remoteTemp: LiveData<List<User>>
         get() = _remoteTemp
 
+    private var _testUser = MutableLiveData<List<User>>()
+    val testUser: LiveData<List<User>>
+        get() = _testUser
+
     private var _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
         get() = _isLoading
@@ -105,13 +109,25 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
             true -> insertUser(user)
             false -> deleteUser(user)
         }
+        updateUserFavorite(user)
     }
 
-    fun insertUser(user: User) {
+    private fun updateUserFavorite(user: User) {
+        var list = mediatorLiveData.value
+        list?.let {
+            val idx = getUserIndex(user)
+            if (idx > 0) {
+                list[idx].isFavorite = user.isFavorite
+            }
+        }
+        mediatorLiveData.value = list
+    }
+
+    private fun insertUser(user: User) {
         userRepository.addFavorite(user)
     }
 
-    fun deleteUser(user: User) {
+    private fun deleteUser(user: User) {
         userRepository.deleteFavorite(user)
     }
 
@@ -128,10 +144,11 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
      * temp
      * */
     fun getUserList(query: String) {
-
+        _isLoading.value = true
         userRepository.fetchUserList_live(query).enqueue(object : Callback<UserResponse> {
             override fun onFailure(call: Call<UserResponse>, t: Throwable) {
                 L.i("getUserList - onFailure")
+                _isLoading.value = false
             }
 
             override fun onResponse(
@@ -140,6 +157,7 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
             ) {
                 L.e("getUserList - onResponse ${response.body()?.items}")
                 _remoteTemp.value = response.body()?.items
+                _isLoading.value = false
             }
         })
 
@@ -154,7 +172,50 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
             L.i("addSource(remote)")
             mediatorLiveData.value = combine(local, _remoteTemp)
         }
+
+//        mediatorLiveData.removeSource(local)
+//        mediatorLiveData.removeSource(_remoteTemp)
     }
+
+  /*  fun getUserList(query: String) {
+        _isLoading.value = true
+        userRepository.fetchUserList_live(query).enqueue(object : Callback<UserResponse> {
+            override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                L.i("getUserList - onFailure")
+                _isLoading.value = false
+            }
+
+            override fun onResponse(
+                call: Call<UserResponse>,
+                response: Response<UserResponse>
+            ) {
+                L.e("getUserList - onResponse ${response.body()?.items}")
+                _remoteTemp.value = response.body()?.items
+                _isLoading.value = false
+
+            }
+        })
+
+        val local = userRepository.queryUserLists()
+
+        val tempList = local.combineWith(_remoteTemp) { l, r ->
+            run {
+                l?.forEachIndexed { idx, localUser ->
+                    r?.forEachIndexed { i, remoteUser ->
+                        if (localUser.id == remoteUser.id) {
+                            remoteUser.isFavorite == true
+                        }
+                    }
+                }
+            }
+            r
+        }
+        _testUser.value = tempList.value
+
+//        mediatorLiveData.removeSource(local)
+//        mediatorLiveData.removeSource(_remoteTemp)
+    }*/
+
 
     private fun combine(
         local: LiveData<List<User>>,
@@ -163,8 +224,8 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
         L.e("start of combine")
         var mutableLiveData = MutableLiveData<List<User>>()
 
-        var l = local.value ?: run { return emptyList() }
-        var r = remoteTemp.value ?: run { return emptyList() }
+        var l = local.value?.toMutableList() ?: run { return emptyList() }
+        var r = remoteTemp.value?.toMutableList() ?: run { return emptyList() }
 
         l.forEach {
             if (it.isFavorite) {
@@ -174,9 +235,9 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
                 }
             }
         }
-//        mutableLiveData.value = r
+        mutableLiveData.value = r
 
-        return r ?: emptyList()
+        return mutableLiveData.value
     }
 
     fun getUserIndex(user: User): Int {

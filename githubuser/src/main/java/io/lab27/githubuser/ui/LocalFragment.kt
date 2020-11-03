@@ -75,7 +75,7 @@ class LocalFragment : BaseFragment() {
     }
 
     private fun observeUserListFromDb() {
-        userViewModel.mediatorLiveData.observe(viewLifecycleOwner, Observer { result ->
+        userViewModel.queryUserList().observe(viewLifecycleOwner, Observer { result ->
             L.i("local list ? $result")
 
             result
@@ -90,35 +90,7 @@ class LocalFragment : BaseFragment() {
                         recyclerView.visibility = View.GONE
                     }
                 }
-
-
-//                val list = result.filter { it.isFavorite }
-//                if (result.isNotEmpty()) {
-//                    recyclerViewAdapter.submitList(list)
-//                    tvListEmpty.visibility = View.GONE
-//                    recyclerView.visibility = View.VISIBLE
-//                } else {
-//                    tvListEmpty.visibility = View.VISIBLE
-//                    recyclerView.visibility = View.GONE
-//                }
         })
-
-        /* userViewModel.queryUserList().observe(viewLifecycleOwner, Observer { result ->
-             run {
-                 result.filter {
-                     it.isFavorite
-                 }
-
-                 if (result.isNotEmpty()) {
-                     recyclerViewAdapter.submitList(result)
-                     tvListEmpty.visibility = View.GONE
-                     recyclerView.visibility = View.VISIBLE
-                 } else {
-                     tvListEmpty.visibility = View.VISIBLE
-                     recyclerView.visibility = View.GONE
-                 }
-             }
-         })*/
     }
 
     private fun observeLoadingStatus() {

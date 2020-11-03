@@ -14,11 +14,12 @@ import io.lab27.githubuser.R
 import io.lab27.githubuser.adapter.MainAdapter
 import io.lab27.githubuser.viewmodel.UserViewModel
 import io.lab27.githubuser.base.BaseFragment
+import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.databinding.FragmentRemoteBinding
 import kotlinx.android.synthetic.main.fragment_remote.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class MainFragment : BaseFragment() {
+class RemoteFragment : BaseFragment() {
     val userViewModel: UserViewModel by sharedViewModel()
     private lateinit var recyclerViewAdapter: MainAdapter
     private lateinit var searchView: SearchView
@@ -30,27 +31,21 @@ class MainFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_remote,
-            container,
-            false
-        )
-
-        binding.apply {
+        FragmentRemoteBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
         }
-
         initRecyclerView()
         return binding.root
     }
 
+
     private fun initRecyclerView() {
         recyclerViewAdapter = MainAdapter()
         recyclerViewAdapter.apply {
-            onItemClick = { user ->
+            onItemClick = { user, position ->
                 Log.i("onItemClick", "$user")
                 userViewModel.updateUser(user)
+                this.updateItem(position)
             }
         }
 
@@ -58,6 +53,7 @@ class MainFragment : BaseFragment() {
             layoutManager = LinearLayoutManager(requireActivity())
             adapter = recyclerViewAdapter
         }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,20 +74,33 @@ class MainFragment : BaseFragment() {
     }
 
     private fun observeFinishState() {
-        userViewModel.finishState.observe(viewLifecycleOwner, Observer {
-            if (it) requireActivity().finish()
-            else Toast.makeText(context, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
-        })
+        userViewModel.finishState.observe(viewLifecycleOwner, finishStateObserver())
     }
 
     private fun observeError() {
-        userViewModel.error.observe(viewLifecycleOwner, Observer { error ->
-            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-        })
+        userViewModel.error.observe(viewLifecycleOwner, errorObserver())
     }
 
     private fun observeUserList() {
-        userViewModel.mediatorLiveData.observe(viewLifecycleOwner, Observer { result ->
+        userViewModel.testUser.observe(viewLifecycleOwner, userListObserver())
+//        userViewModel.mediatorLiveData.observe(viewLifecycleOwner, userListObserver())
+    }
+
+    private fun finishStateObserver(): Observer<Boolean> {
+        return Observer {
+            if (it) requireActivity().finish()
+            else Toast.makeText(context, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun errorObserver(): Observer<String> {
+        return Observer { error ->
+            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun userListObserver(): Observer<List<User>> {
+        return Observer { result ->
             run {
                 if (result.isNotEmpty()) {
                     recyclerViewAdapter.submitList(result)
@@ -102,7 +111,12 @@ class MainFragment : BaseFragment() {
                     recyclerView.visibility = View.GONE
                 }
             }
-        })
+        }
+    }
+
+    override fun onPause() {
+        userViewModel.mediatorLiveData.removeObservers(viewLifecycleOwner)
+        super.onPause()
     }
 
     private fun observeLoadingStatus() {
@@ -157,7 +171,7 @@ class MainFragment : BaseFragment() {
         private const val ARG_POSITION = "position"
 
         fun getInstance(position: Int) =
-            MainFragment().apply {
+            RemoteFragment().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_POSITION, position)
                 }

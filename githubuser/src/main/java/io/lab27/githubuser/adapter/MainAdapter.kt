@@ -6,17 +6,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.databinding.LayoutRecyclerviewBinding
+import io.lab27.githubuser.util.L
 
 class MainAdapter :
     RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
     private var items = mutableListOf<User>()
-    var onItemClick: ((User) -> Unit)? = null
+    var onItemClick: ((User, Int) -> Unit)? = null
     lateinit var itemBinding: LayoutRecyclerviewBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         itemBinding =
             LayoutRecyclerviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-
         return MainViewHolder(itemBinding)
     }
 
@@ -29,7 +29,7 @@ class MainAdapter :
     }
 
     fun updateItem(position : Int){
-        notifyDataSetChanged()
+        notifyItemChanged(position)
     }
 
     fun submitList(items: List<User>) {
@@ -40,22 +40,22 @@ class MainAdapter :
 
     inner class MainViewHolder(private val binding: LayoutRecyclerviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        init {
-            binding.root.setOnClickListener {
-                onItemClick?.invoke(items[adapterPosition])
-            }
-        }
+//        init {
+//            binding.root.setOnClickListener {
+//                onItemClick?.invoke(items[adapterPosition], adapterPosition)
+//            }
+//        }
 
         fun onBind(user: User) {
+            binding.user = user
             binding.isStarred.setOnClickListener {
                 binding.user?.let { user ->
-                    Log.i("isStarred", "isStarred clicked : ${user.isFavorite}")
                     user.isFavorite = !user.isFavorite
-                    Log.i("isStarred", "isStarred modified : ${user.isFavorite}")
-                    onItemClick?.invoke(user)
+                    L.i("isStarred modified : ${user.isFavorite}")
+                    onItemClick?.invoke(user, adapterPosition)
+                    binding.user = user
                 }
             }
-            binding.user = user
         }
     }
 }
