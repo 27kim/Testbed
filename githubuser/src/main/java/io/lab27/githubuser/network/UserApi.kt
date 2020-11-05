@@ -17,4 +17,9 @@ interface UserApi {
     fun getUser_live(
         @Query("q") q: String?
     ): Call<UserResponse>
+
+    @GET("search/users")
+    suspend fun getUser_coroutines(
+        @Query("q") q: String?
+    ): UserResponse
 }

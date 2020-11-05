@@ -1,14 +1,11 @@
 package io.lab27.githubuser.data
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MediatorLiveData
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.data.datasource.local.LocalDataSource
 import io.lab27.githubuser.data.datasource.remote.RemoteDataSource
 import io.lab27.githubuser.network.UserResponse
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import retrofit2.Call
 
 class UserRepositoryImpl constructor(
@@ -17,7 +14,7 @@ class UserRepositoryImpl constructor(
 ) :
     UserRepository {
     override fun fetchUserList(query: String) = remote.getUser(query)
-    override fun queryUserLists() = local.queryUsers()
+    override fun queryAllUsers() = local.queryAllUsers()
     override fun addFavorite(user: User) = local.addFavorite(user)
     override fun deleteFavorite(user: User) = local.deleteFavorite(user)
 
@@ -28,6 +25,21 @@ class UserRepositoryImpl constructor(
 //                .subscribeOn(Schedulers.io())
 //                .observeOn(AndroidSchedulers.mainThread()))
     }
+
+    override fun fetchUserList_result(query: String): Call<Result<UserResponse>> {
+        return remote.getUser_result(query)
+//        LiveDataReactiveStreams.fromPublisher(
+//            remote.getUser_live(query)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread()))
+    }
+
+    override suspend fun fetchUserList_coroutines(query: String): UserResponse {
+        return remote.getUser_coroutines(query)
+    }
+
+    override suspend fun queryUserLists_coroutines() = local.queryAllUsers()
+
 }
 
 fun <T, K, R> LiveData<T>.combineWith(

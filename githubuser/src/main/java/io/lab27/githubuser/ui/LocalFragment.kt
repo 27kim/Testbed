@@ -75,7 +75,7 @@ class LocalFragment : BaseFragment() {
     }
 
     private fun observeUserListFromDb() {
-        userViewModel.queryUserList().observe(viewLifecycleOwner, Observer { result ->
+        userViewModel.localUserList.observe(viewLifecycleOwner, Observer { result ->
             L.i("local list ? $result")
 
             result
@@ -113,7 +113,7 @@ class LocalFragment : BaseFragment() {
                     override fun onQueryTextSubmit(query: String?): Boolean {
                         query?.let {
                             Log.i("onQueryTextSubmit", query)
-                            userViewModel.fetchUserList(query)
+
                         }
                         it.onActionViewCollapsed()
 //                    it.clearFocus()

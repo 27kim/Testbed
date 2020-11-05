@@ -31,13 +31,13 @@ class RemoteFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        FragmentRemoteBinding.inflate(inflater, container, false).apply {
-            lifecycleOwner = viewLifecycleOwner
-        }
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_remote, container, false)
+        binding.apply {
+                lifecycleOwner = viewLifecycleOwner
+            }
         initRecyclerView()
         return binding.root
     }
-
 
     private fun initRecyclerView() {
         recyclerViewAdapter = MainAdapter()
@@ -45,7 +45,6 @@ class RemoteFragment : BaseFragment() {
             onItemClick = { user, position ->
                 Log.i("onItemClick", "$user")
                 userViewModel.updateUser(user)
-                this.updateItem(position)
             }
         }
 
@@ -53,7 +52,6 @@ class RemoteFragment : BaseFragment() {
             layoutManager = LinearLayoutManager(requireActivity())
             adapter = recyclerViewAdapter
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,7 +80,7 @@ class RemoteFragment : BaseFragment() {
     }
 
     private fun observeUserList() {
-        userViewModel.testUser.observe(viewLifecycleOwner, userListObserver())
+        userViewModel.coroutinesUser.observe(viewLifecycleOwner, userListObserver())
 //        userViewModel.mediatorLiveData.observe(viewLifecycleOwner, userListObserver())
     }
 
@@ -99,16 +97,18 @@ class RemoteFragment : BaseFragment() {
         }
     }
 
-    private fun userListObserver(): Observer<List<User>> {
+    private fun userListObserver(): Observer<List<User>?> {
         return Observer { result ->
             run {
-                if (result.isNotEmpty()) {
-                    recyclerViewAdapter.submitList(result)
-                    tvListEmpty.visibility = View.GONE
-                    recyclerView.visibility = View.VISIBLE
-                } else {
-                    tvListEmpty.visibility = View.VISIBLE
-                    recyclerView.visibility = View.GONE
+                result?.let {
+                    if (result.isNotEmpty()) {
+                        recyclerViewAdapter.submitList(result)
+                        tvListEmpty.visibility = View.GONE
+                        recyclerView.visibility = View.VISIBLE
+                    } else {
+                        tvListEmpty.visibility = View.VISIBLE
+                        recyclerView.visibility = View.GONE
+                    }
                 }
             }
         }
@@ -141,7 +141,8 @@ class RemoteFragment : BaseFragment() {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     query?.let {
                         Log.i("onQueryTextSubmit", query)
-                        userViewModel.getUserList(query)
+                        userViewModel.getUserList_courotines(query)
+//                        userViewModel.getUserList(query)
 //                        userViewModel.fetch(query)
                     }
                     it.onActionViewCollapsed()

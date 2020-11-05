@@ -11,9 +11,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class LocalDataSourceImpl(private val db: UserDataBase) : LocalDataSource {
-    override fun queryUsers(): LiveData<List<User>> {
-        return db.userDao().select()
-    }
+    override fun queryAllUsers() = db.userDao().queryAllUsers()
 
     override fun addFavorite(user: User) {
         Completable.fromAction {

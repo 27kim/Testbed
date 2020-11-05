@@ -9,9 +9,15 @@ import retrofit2.Call
 interface UserRepository {
     fun fetchUserList(query: String) : Single<UserResponse>
     fun fetchUserList_live(query: String) : Call<UserResponse>
-//    fun fetchUserList_live(query: String) : LiveData<List<User>>
+    fun fetchUserList_result(query: String) : Call<Result<UserResponse>>
 
-    fun queryUserLists(): LiveData<List<User>>
+    fun queryAllUsers(): LiveData<List<User>>
     fun addFavorite(user : User)
     fun deleteFavorite(user : User)
+
+    //coroutines test
+    suspend fun fetchUserList_coroutines(query: String) : UserResponse
+    suspend fun queryUserLists_coroutines(): LiveData<List<User>>
+
+
 }

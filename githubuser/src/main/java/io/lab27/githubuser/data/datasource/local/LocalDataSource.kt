@@ -5,7 +5,7 @@ import io.lab27.githubuser.data.dao.User
 import io.reactivex.Single
 
 interface LocalDataSource {
-    fun queryUsers() : LiveData<List<User>>
+    fun queryAllUsers() : LiveData<List<User>>
     fun addFavorite(user : User)
     fun deleteFavorite(user : User)
 }

@@ -9,5 +9,7 @@ import retrofit2.Call
 interface RemoteDataSource {
     fun getUser(query: String): Single<UserResponse>
     fun getUser_live(query: String): Call<UserResponse>
+    fun getUser_result(query: String): Call<Result<UserResponse>>
+    suspend fun getUser_coroutines(query: String) : UserResponse
 //    fun getUser_live(query: String): LiveData<List<User>>
 }

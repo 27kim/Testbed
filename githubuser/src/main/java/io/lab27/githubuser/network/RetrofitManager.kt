@@ -31,7 +31,6 @@ class RetrofitManager {
                 .baseUrl("https://api.github.com/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
         }
     }

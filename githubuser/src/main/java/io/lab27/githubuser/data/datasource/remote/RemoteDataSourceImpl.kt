@@ -20,4 +20,14 @@ class RemoteDataSourceImpl : RemoteDataSource {
             .create(UserApi::class.java)
             .getUser_live(query)
     }
+
+    override fun getUser_result(query: String): Call<Result<UserResponse>>{
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getUser_coroutines(query: String): UserResponse {
+        return RetrofitManager.build()
+            .create(UserApi::class.java)
+            .getUser_coroutines(query)
+    }
 }

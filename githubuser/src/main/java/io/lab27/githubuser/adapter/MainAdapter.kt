@@ -1,16 +1,14 @@
 package io.lab27.githubuser.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.databinding.LayoutRecyclerviewBinding
-import io.lab27.githubuser.util.L
 
 class MainAdapter :
     RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
-    private var items = mutableListOf<User>()
+    private var items = listOf<User>()
     var onItemClick: ((User, Int) -> Unit)? = null
     lateinit var itemBinding: LayoutRecyclerviewBinding
 
@@ -28,33 +26,27 @@ class MainAdapter :
         holder.onBind(items[position])
     }
 
-    fun updateItem(position : Int){
+    fun updateItem(position: Int) {
         notifyItemChanged(position)
     }
 
     fun submitList(items: List<User>) {
-        this.items.clear()
-        this.items.addAll(items)
+        this.items = items
         notifyDataSetChanged()
     }
 
     inner class MainViewHolder(private val binding: LayoutRecyclerviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
-//        init {
-//            binding.root.setOnClickListener {
-//                onItemClick?.invoke(items[adapterPosition], adapterPosition)
-//            }
-//        }
 
         fun onBind(user: User) {
             binding.user = user
             binding.isStarred.setOnClickListener {
-                binding.user?.let { user ->
-                    user.isFavorite = !user.isFavorite
-                    L.i("isStarred modified : ${user.isFavorite}")
-                    onItemClick?.invoke(user, adapterPosition)
-                    binding.user = user
-                }
+//                binding.user?.let { user ->
+                user.isFavorite = !user.isFavorite
+//                    L.i("isStarred modified : ${user.isFavorite}")
+//                    onItemClick?.invoke(user, adapterPosition)
+                binding.user = user
+//                }
             }
         }
     }
