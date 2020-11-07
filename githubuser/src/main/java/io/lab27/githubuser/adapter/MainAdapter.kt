@@ -6,9 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.databinding.LayoutRecyclerviewBinding
 
-class MainAdapter :
+class MainAdapter(private var items: List<User>) :
     RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
-    private var items = listOf<User>()
     var onItemClick: ((User, Int) -> Unit)? = null
     lateinit var itemBinding: LayoutRecyclerviewBinding
 
@@ -41,12 +40,12 @@ class MainAdapter :
         fun onBind(user: User) {
             binding.user = user
             binding.isStarred.setOnClickListener {
-//                binding.user?.let { user ->
-                user.isFavorite = !user.isFavorite
+                binding.user?.let { user ->
+                    user.isFavorite = !user.isFavorite
 //                    L.i("isStarred modified : ${user.isFavorite}")
-//                    onItemClick?.invoke(user, adapterPosition)
-                binding.user = user
-//                }
+                    onItemClick?.invoke(user, adapterPosition)
+                    binding.user = user
+                }
             }
         }
     }

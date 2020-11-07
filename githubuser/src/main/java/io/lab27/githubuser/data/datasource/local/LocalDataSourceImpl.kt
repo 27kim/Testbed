@@ -12,6 +12,7 @@ import io.reactivex.schedulers.Schedulers
 
 class LocalDataSourceImpl(private val db: UserDataBase) : LocalDataSource {
     override fun queryAllUsers() = db.userDao().queryAllUsers()
+    override suspend fun queryAllUsers_c(): List<User> = db.userDao().queryAllUsers_c()
 
     override fun addFavorite(user: User) {
         Completable.fromAction {

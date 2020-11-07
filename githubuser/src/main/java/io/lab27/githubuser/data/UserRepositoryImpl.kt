@@ -38,7 +38,7 @@ class UserRepositoryImpl constructor(
         return remote.getUser_coroutines(query)
     }
 
-    override suspend fun queryUserLists_coroutines() = local.queryAllUsers()
+    override suspend fun queryUserLists_coroutines() = local.queryAllUsers_c()
 
 }
 

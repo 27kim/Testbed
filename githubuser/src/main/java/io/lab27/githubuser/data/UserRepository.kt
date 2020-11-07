@@ -17,7 +17,7 @@ interface UserRepository {
 
     //coroutines test
     suspend fun fetchUserList_coroutines(query: String) : UserResponse
-    suspend fun queryUserLists_coroutines(): LiveData<List<User>>
+    suspend fun queryUserLists_coroutines(): List<User>
 
 
 }

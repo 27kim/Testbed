@@ -33,14 +33,14 @@ class RemoteFragment : BaseFragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_remote, container, false)
         binding.apply {
-                lifecycleOwner = viewLifecycleOwner
-            }
+            lifecycleOwner = viewLifecycleOwner
+        }
         initRecyclerView()
         return binding.root
     }
 
     private fun initRecyclerView() {
-        recyclerViewAdapter = MainAdapter()
+        recyclerViewAdapter = MainAdapter(emptyList())
         recyclerViewAdapter.apply {
             onItemClick = { user, position ->
                 Log.i("onItemClick", "$user")
@@ -80,7 +80,7 @@ class RemoteFragment : BaseFragment() {
     }
 
     private fun observeUserList() {
-        userViewModel.coroutinesUser.observe(viewLifecycleOwner, userListObserver())
+        userViewModel.userList.observe(viewLifecycleOwner, userListObserver())
 //        userViewModel.mediatorLiveData.observe(viewLifecycleOwner, userListObserver())
     }
 
@@ -101,6 +101,7 @@ class RemoteFragment : BaseFragment() {
         return Observer { result ->
             run {
                 result?.let {
+
                     if (result.isNotEmpty()) {
                         recyclerViewAdapter.submitList(result)
                         tvListEmpty.visibility = View.GONE

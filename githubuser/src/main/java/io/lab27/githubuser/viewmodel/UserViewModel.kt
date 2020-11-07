@@ -14,17 +14,9 @@ import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.launch
 
 class UserViewModel(private val userRepository: UserRepository) : BaseViewModel() {
-    private var _userList = MutableLiveData<List<User>>()
-    val userList: LiveData<List<User>>
-        get() = _userList
-
     private var _localUserList = userRepository.queryAllUsers()
     val localUserList: LiveData<List<User>>
         get() = _localUserList
-
-    private var _remoteTemp = MutableLiveData<List<User>>()
-    val remoteTemp: LiveData<List<User>>
-        get() = _remoteTemp
 
     private var _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
@@ -33,9 +25,9 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
     //mediatorLiveData 샘플
     var mediatorLiveData = MediatorLiveData<List<User>>()
 
-    private var _coroutinesUser = MutableLiveData<List<User>?>()
-    val coroutinesUser: LiveData<List<User>?>
-        get() = _coroutinesUser
+    private var _userList = MutableLiveData<List<User>?>()
+    val userList: LiveData<List<User>?>
+        get() = _userList
 
     private val backPressSubject =
         BehaviorSubject.createDefault(0L)
@@ -70,14 +62,14 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
     }
 
     private fun updateUserFavorite(user: User) {
-        var list = _coroutinesUser.value
+        var list = _userList.value
         list?.let {
-            val idx = getUserIndex(user)
+            val idx = getUserIndex(list, user)
             if (idx > -1) {
                 list[idx].isFavorite = user.isFavorite
             }
         }
-        _coroutinesUser.value = list
+        _userList.value = list
     }
 
     private fun insertUser(user: User) {
@@ -93,50 +85,44 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
     }
 
     fun getUserList_courotines(query: String) {
+        getData {
+            val remoteUser = userRepository.fetchUserList_coroutines(query).items
+            val localUser = userRepository.queryUserLists_coroutines()
+
+            localUser?.forEach { l ->
+                if (l.isFavorite) {
+                    val idx = getUserIndex(remoteUser, l)
+                    if (idx > -1) {
+                        remoteUser[idx].isFavorite = true
+                    }
+                }
+            }
+            _userList.value = remoteUser
+        }
+    }
+
+    fun getData(block: suspend () -> Unit) {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
-
-                val remoteUser = userRepository.fetchUserList_coroutines(query).items
-                val localUser = localUserList.value
-
-                val resultList = mutableListOf<User>()
-
-                localUser?.forEach { l ->
-                    if (l.isFavorite) {
-                        val idx = getUserIndex(l)
-                        if (idx != -1) {
-                            remoteUser[idx].isFavorite = true
-                        }
-                    }
-                }
-
-                _coroutinesUser.value = remoteUser
-            } catch (e: Exception) {
-                L.e("getUserList_courotines : ${e.message}")
+                block()
+            } catch (t: Throwable) {
+                _isLoading.value = false
+                _error.value = t.message
             } finally {
                 _isLoading.value = false
             }
         }
     }
 
-    private fun getUserIndex(user: User): Int {
+    private fun getUserIndex(remoteUser: List<User>, user: User): Int {
         var result = -1
 
-        _coroutinesUser.value?.forEachIndexed { idx, remote ->
+        remoteUser.forEachIndexed { idx, remote ->
             if (remote.id == user.id) {
                 return idx
             }
         }
         return result
     }
-
-
-    /**
-     *
-     *
-     *
-     *
-     * temp
-     * */
 }

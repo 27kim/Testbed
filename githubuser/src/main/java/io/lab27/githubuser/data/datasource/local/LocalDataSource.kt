@@ -6,6 +6,7 @@ import io.reactivex.Single
 
 interface LocalDataSource {
     fun queryAllUsers() : LiveData<List<User>>
+    suspend fun queryAllUsers_c() : List<User>
     fun addFavorite(user : User)
     fun deleteFavorite(user : User)
 }
