@@ -7,6 +7,7 @@ import io.lab27.githubuser.data.datasource.local.LocalDataSource
 import io.lab27.githubuser.data.datasource.remote.RemoteDataSource
 import io.lab27.githubuser.network.UserResponse
 import retrofit2.Call
+import java.lang.Exception
 
 class UserRepositoryImpl constructor(
     private val remote: RemoteDataSource,

@@ -11,6 +11,8 @@ import io.lab27.githubuser.util.L
 import io.reactivex.BackpressureStrategy
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class UserViewModel(private val userRepository: UserRepository) : BaseViewModel() {
@@ -85,20 +87,30 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
     }
 
     fun getUserList_courotines(query: String) {
-        getData {
-            val remoteUser = userRepository.fetchUserList_coroutines(query).items
-            val localUser = userRepository.queryUserLists_coroutines()
+        viewModelScope.launch {
+            try {
+                _isLoading.value = true
+                val remoteUser = async(Dispatchers.IO) { userRepository.fetchUserList_coroutines(query).items }.await()
+                val localUser = async(Dispatchers.IO) { userRepository.queryUserLists_coroutines() }.await()
 
-            localUser?.forEach { l ->
-                if (l.isFavorite) {
-                    val idx = getUserIndex(remoteUser, l)
-                    if (idx > -1) {
-                        remoteUser[idx].isFavorite = true
+                localUser?.forEach { l ->
+                    if (l.isFavorite) {
+                        val idx = getUserIndex(remoteUser, l)
+                        if (idx > -1) {
+                            remoteUser[idx].isFavorite = true
+                        }
                     }
+                    _userList.value = remoteUser
                 }
+
+            } catch (t: Throwable) {
+                _isLoading.value = false
+                _error.value = t.message
+            } finally {
+                _isLoading.value = false
             }
-            _userList.value = remoteUser
         }
+
     }
 
     fun getData(block: suspend () -> Unit) {

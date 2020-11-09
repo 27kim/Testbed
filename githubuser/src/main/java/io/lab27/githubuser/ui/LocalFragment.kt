@@ -41,6 +41,9 @@ class LocalFragment : BaseFragment() {
             lifecycleOwner = viewLifecycleOwner
         }
         initRecyclerView()
+
+
+
         return binding.root
     }
 
@@ -115,24 +118,24 @@ class LocalFragment : BaseFragment() {
                             Log.i("onQueryTextSubmit", query)
 
                         }
-                        it.onActionViewCollapsed()
-//                    it.clearFocus()
-                        return false
-                    }
-
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        newText?.let {
-                            Log.i("onQueryTextChange", newText)
+                            it.onActionViewCollapsed()
+    //                    it.clearFocus()
+                            return false
                         }
-                        return false
-                    }
-                })
+
+                        override fun onQueryTextChange(newText: String?): Boolean {
+                            newText?.let {
+                                Log.i("onQueryTextChange", newText)
+                            }
+                            return false
+                        }
+                    })
+                }
             }
         }
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        override fun onOptionsItemSelected(item: MenuItem): Boolean {
+            when (item.itemId) {
             R.id.actionSearch -> return false
         }
         searchView.setOnQueryTextListener(queryTextListener)
