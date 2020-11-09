@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,11 +18,12 @@ import io.lab27.githubuser.databinding.LayoutRecyclerviewBinding
 import io.lab27.githubuser.util.L
 import kotlinx.android.synthetic.main.fragment_remote.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LocalFragment : BaseFragment() {
-    val userViewModel: UserViewModel by sharedViewModel()
-    private lateinit var recyclerViewAdapter: LocalAdapter
+    private val userViewModel: UserViewModel by sharedViewModel()
+    private val localAdapter: LocalAdapter by lazy {
+        LocalAdapter()
+    }
     private lateinit var searchView: SearchView
     private lateinit var queryTextListener: SearchView.OnQueryTextListener
     private lateinit var binding: FragmentRemoteBinding
@@ -33,32 +33,19 @@ class LocalFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_remote, container, false
-        )
-        binding.apply {
-            lifecycleOwner = viewLifecycleOwner
-        }
-        initRecyclerView()
-
-
-
+        initView(inflater)
         return binding.root
     }
 
-    private fun initRecyclerView() {
-        recyclerViewAdapter = LocalAdapter()
-        recyclerViewAdapter.apply {
+    private fun initView(inflater: LayoutInflater) {
+        binding = FragmentRemoteBinding.inflate(inflater).apply {
+            lifecycleOwner = viewLifecycleOwner
+        }
+        localAdapter.apply {
             onItemClick = { user ->
                 Log.i("onItemClick", "$user")
                 userViewModel.updateUser(user)
             }
-        }
-
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(requireActivity())
-            adapter = recyclerViewAdapter
         }
     }
 
@@ -69,6 +56,9 @@ class LocalFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        recyclerView.apply {
+            adapter = localAdapter
+        }
         observe()
     }
 
@@ -80,12 +70,11 @@ class LocalFragment : BaseFragment() {
     private fun observeUserListFromDb() {
         userViewModel.localUserList.observe(viewLifecycleOwner, Observer { result ->
             L.i("local list ? $result")
-
             result
                 .filter { it.isFavorite }
                 .also { list ->
                     if (result.isNotEmpty()) {
-                        recyclerViewAdapter.submitList(list)
+                        localAdapter.submitList(list)
                         tvListEmpty.visibility = View.GONE
                         recyclerView.visibility = View.VISIBLE
                     } else {
@@ -118,24 +107,24 @@ class LocalFragment : BaseFragment() {
                             Log.i("onQueryTextSubmit", query)
 
                         }
-                            it.onActionViewCollapsed()
-    //                    it.clearFocus()
-                            return false
-                        }
+                        it.onActionViewCollapsed()
+                        //                    it.clearFocus()
+                        return false
+                    }
 
-                        override fun onQueryTextChange(newText: String?): Boolean {
-                            newText?.let {
-                                Log.i("onQueryTextChange", newText)
-                            }
-                            return false
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        newText?.let {
+                            Log.i("onQueryTextChange", newText)
                         }
-                    })
-                }
+                        return false
+                    }
+                })
             }
         }
+    }
 
-        override fun onOptionsItemSelected(item: MenuItem): Boolean {
-            when (item.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.actionSearch -> return false
         }
         searchView.setOnQueryTextListener(queryTextListener)

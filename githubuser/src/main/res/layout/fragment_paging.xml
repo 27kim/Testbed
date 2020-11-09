@@ -8,8 +8,6 @@
 
         <import type="android.view.View" />
 
-        <import type="androidx.databinding.ObservableArrayList" />
-
         <import type="io.lab27.githubuser.data.dao.User" />
 
         <variable
@@ -17,8 +15,9 @@
             type="Boolean" />
 
         <variable
-            name="userList"
-            type="ObservableArrayList&lt;User&gt;" />
+            name="user"
+            type="io.lab27.githubuser.data.dao.User" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,11 +28,11 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="visible"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/layout_recyclerview"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:visibility="visible" />
 
         <TextView
@@ -41,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/list_is_empty"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

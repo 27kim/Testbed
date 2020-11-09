@@ -6,10 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.databinding.LayoutRecyclerviewBinding
 
-class MainAdapter(private var items: List<User>) :
+class RemoteAdapter :
     RecyclerView.Adapter<MainViewHolder>() {
     var onItemClick: ((User, Int) -> Unit)? = null
     lateinit var itemBinding: LayoutRecyclerviewBinding
+    private var items: List<User> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         itemBinding =

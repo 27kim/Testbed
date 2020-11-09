@@ -13,6 +13,7 @@ import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.data.datasource.remote.RemoteDataSource
 import io.lab27.githubuser.data.datasource.remote.RemoteDataSourceImpl
 import io.lab27.githubuser.util.L
+import io.lab27.githubuser.util.UserDataSource
 import io.lab27.githubuser.util.UserPagingSource
 import io.reactivex.BackpressureStrategy
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -107,8 +108,6 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
             try {
                 _isLoading.value = true
 
-
-
                 val remoteUser = async(Dispatchers.IO) { userRepository.fetchUserList_coroutines(query).items }.await()
                 val localUser = async(Dispatchers.IO) { userRepository.queryUserLists_coroutines() }.await()
 
@@ -156,4 +155,8 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
         }
         return result
     }
+
+    val listData = Pager(PagingConfig(pageSize = 8)) {
+        UserDataSource(RemoteDataSourceImpl(), "asdf")
+    }.flow.cachedIn(viewModelScope)
 }

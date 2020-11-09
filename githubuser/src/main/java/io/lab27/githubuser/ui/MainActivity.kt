@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity(){
         mainViewPager.apply {
             adapter = ViewPagerAdapter(
                 this@MainActivity,
-                2
+                3
             )
         }
 
@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity(){
             when (position) {
                 0 -> tab.text = "API"
                 1 -> tab.text = "LOCAL"
+                2 -> tab.text = "PAGING"
             }
         }.attach()
     }
