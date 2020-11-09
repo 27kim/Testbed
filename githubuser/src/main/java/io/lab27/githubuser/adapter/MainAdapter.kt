@@ -7,14 +7,14 @@ import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.databinding.LayoutRecyclerviewBinding
 
 class MainAdapter(private var items: List<User>) :
-    RecyclerView.Adapter<MainAdapter.MainViewHolder>() {
+    RecyclerView.Adapter<MainViewHolder>() {
     var onItemClick: ((User, Int) -> Unit)? = null
     lateinit var itemBinding: LayoutRecyclerviewBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
         itemBinding =
             LayoutRecyclerviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return MainViewHolder(itemBinding)
+        return MainViewHolder(itemBinding, onItemClick)
     }
 
     override fun getItemCount(): Int {
@@ -34,18 +34,22 @@ class MainAdapter(private var items: List<User>) :
         notifyDataSetChanged()
     }
 
-    inner class MainViewHolder(private val binding: LayoutRecyclerviewBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+}
 
-        fun onBind(user: User) {
-            binding.user = user
-            binding.isStarred.setOnClickListener {
-                binding.user?.let { user ->
-                    user.isFavorite = !user.isFavorite
+class MainViewHolder(
+    private val binding: LayoutRecyclerviewBinding,
+    private val onItemClick: ((User, Int) -> Unit)?
+) :
+    RecyclerView.ViewHolder(binding.root) {
+
+    fun onBind(user: User) {
+        binding.user = user
+        binding.isStarred.setOnClickListener {
+            binding.user?.let { user ->
+                user.isFavorite = !user.isFavorite
 //                    L.i("isStarred modified : ${user.isFavorite}")
-                    onItemClick?.invoke(user, adapterPosition)
-                    binding.user = user
-                }
+                onItemClick?.invoke(user, adapterPosition)
+                binding.user = user
             }
         }
     }

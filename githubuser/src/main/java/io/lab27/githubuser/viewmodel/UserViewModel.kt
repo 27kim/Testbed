@@ -4,10 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import io.lab27.githubuser.base.BaseViewModel
 import io.lab27.githubuser.data.UserRepository
 import io.lab27.githubuser.data.dao.User
+import io.lab27.githubuser.data.datasource.remote.RemoteDataSource
+import io.lab27.githubuser.data.datasource.remote.RemoteDataSourceImpl
 import io.lab27.githubuser.util.L
+import io.lab27.githubuser.util.UserPagingSource
 import io.reactivex.BackpressureStrategy
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -86,10 +92,23 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
         compositeDisposable.clear()
     }
 
+    fun flow(query : String) = Pager(
+        // Configure how data is loaded by passing additional properties to
+        // PagingConfig, such as prefetchDistance.
+        PagingConfig(pageSize = 20)
+    ) {
+        UserPagingSource(RemoteDataSourceImpl(), query)
+    }.flow
+        .cachedIn(viewModelScope)
+
+
     fun getUserList_courotines(query: String) {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
+
+
+
                 val remoteUser = async(Dispatchers.IO) { userRepository.fetchUserList_coroutines(query).items }.await()
                 val localUser = async(Dispatchers.IO) { userRepository.queryUserLists_coroutines() }.await()
 

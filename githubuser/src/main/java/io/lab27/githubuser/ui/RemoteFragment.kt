@@ -9,19 +9,23 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.lab27.githubuser.R
-import io.lab27.githubuser.adapter.MainAdapter
-import io.lab27.githubuser.viewmodel.UserViewModel
+import io.lab27.githubuser.adapter.UserAdapter
 import io.lab27.githubuser.base.BaseFragment
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.databinding.FragmentRemoteBinding
+import io.lab27.githubuser.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.fragment_remote.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class RemoteFragment : BaseFragment() {
     val userViewModel: UserViewModel by sharedViewModel()
-    private lateinit var recyclerViewAdapter: MainAdapter
+    private lateinit var pagingAdapter: UserAdapter
+//    private lateinit var recyclerViewAdapter: MainAdapter
     private lateinit var searchView: SearchView
     private lateinit var queryTextListener: SearchView.OnQueryTextListener
     private lateinit var binding: FragmentRemoteBinding
@@ -40,18 +44,17 @@ class RemoteFragment : BaseFragment() {
     }
 
     private fun initRecyclerView() {
-        recyclerViewAdapter = MainAdapter(emptyList())
-        recyclerViewAdapter.apply {
-            onItemClick = { user, position ->
-                Log.i("onItemClick", "$user")
-                userViewModel.updateUser(user)
-            }
-        }
+        pagingAdapter = UserAdapter()
+//        recyclerViewAdapter = MainAdapter(emptyList())
+//        recyclerViewAdapter.apply {
+//            onItemClick = { user, position ->
+//                Log.i("onItemClick", "$user")
+//                userViewModel.updateUser(user)
+//            }
+//        }
 
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(requireActivity())
-            adapter = recyclerViewAdapter
-        }
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.adapter = pagingAdapter
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,7 +83,8 @@ class RemoteFragment : BaseFragment() {
     }
 
     private fun observeUserList() {
-        userViewModel.userList.observe(viewLifecycleOwner, userListObserver())
+
+//        userViewModel.userList.observe(viewLifecycleOwner, userListObserver())
 //        userViewModel.mediatorLiveData.observe(viewLifecycleOwner, userListObserver())
     }
 
@@ -103,7 +107,7 @@ class RemoteFragment : BaseFragment() {
                 result?.let {
 
                     if (result.isNotEmpty()) {
-                        recyclerViewAdapter.submitList(result)
+//                        pagingAdapter.submitList(result)
                         tvListEmpty.visibility = View.GONE
                         recyclerView.visibility = View.VISIBLE
                     } else {
@@ -142,7 +146,16 @@ class RemoteFragment : BaseFragment() {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     query?.let {
                         Log.i("onQueryTextSubmit", query)
-                        userViewModel.getUserList_courotines(query)
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            userViewModel.flow(query).collectLatest { pagingData ->
+                                pagingAdapter.submitData(pagingData)
+                            }
+                        }
+
+
+//                        userViewModel.getUserList_courotines(query)
+
+
 //                        userViewModel.getUserList(query)
 //                        userViewModel.fetch(query)
                     }

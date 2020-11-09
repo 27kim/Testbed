@@ -22,4 +22,10 @@ interface UserApi {
     suspend fun getUser_coroutines(
         @Query("q") q: String?
     ): UserResponse
+
+    @GET("search/users")
+    suspend fun getUser_coroutines_p(
+        @Query("q") q: String?,
+        @Query("page") p : Int
+    ): UserResponse
 }

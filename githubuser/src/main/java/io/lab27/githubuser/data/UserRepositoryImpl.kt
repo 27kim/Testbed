@@ -39,6 +39,10 @@ class UserRepositoryImpl constructor(
         return remote.getUser_coroutines(query)
     }
 
+    override suspend fun fetchUserList_coroutines_p(query: String, page: Int): UserResponse {
+        return remote.getUser_coroutines_p(query, page)
+    }
+
     override suspend fun queryUserLists_coroutines() = local.queryAllUsers_c()
 
 }

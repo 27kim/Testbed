@@ -1,7 +1,5 @@
 package io.lab27.githubuser.data.datasource.remote
 
-import androidx.lifecycle.LiveData
-import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.network.RetrofitManager
 import io.lab27.githubuser.network.UserApi
 import io.lab27.githubuser.network.UserResponse
@@ -29,5 +27,11 @@ class RemoteDataSourceImpl : RemoteDataSource {
         return RetrofitManager.build()
             .create(UserApi::class.java)
             .getUser_coroutines(query)
+    }
+
+    override suspend fun getUser_coroutines_p(query: String, page : Int): UserResponse {
+        return RetrofitManager.build()
+            .create(UserApi::class.java)
+            .getUser_coroutines_p(query, page)
     }
 }
