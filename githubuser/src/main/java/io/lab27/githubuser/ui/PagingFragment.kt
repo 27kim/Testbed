@@ -5,20 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
+import io.lab27.githubuser.adapter.UserLoadStateAdapter
 import io.lab27.githubuser.adapter.UserPagingAdapter
 import io.lab27.githubuser.base.BaseFragment
 import io.lab27.githubuser.databinding.FragmentPagingBinding
+import io.lab27.githubuser.util.L
 import io.lab27.githubuser.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.fragment_paging.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class PagingFragment : BaseFragment(){
-    lateinit var binding : FragmentPagingBinding
-    val pagingAdapter by lazy { UserPagingAdapter() }
-    val userViewModel: UserViewModel by sharedViewModel()
-
+class PagingFragment : BaseFragment() {
+    lateinit var binding: FragmentPagingBinding
+    private val pagingAdapter by lazy { UserPagingAdapter() }
+    private val userViewModel: UserViewModel by sharedViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,10 +33,17 @@ class PagingFragment : BaseFragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView.adapter = pagingAdapter
+        recyclerView.adapter = pagingAdapter.withLoadStateHeaderAndFooter(
+            /**
+             * footer/ header
+             * */
+            UserLoadStateAdapter { pagingAdapter.retry() },
+            UserLoadStateAdapter { pagingAdapter.retry() }
+
+        )
 
         viewLifecycleOwner.lifecycleScope.launch {
-            userViewModel.listData.collect{
+            userViewModel.listData.collect {
                 pagingAdapter.submitData(it)
             }
         }

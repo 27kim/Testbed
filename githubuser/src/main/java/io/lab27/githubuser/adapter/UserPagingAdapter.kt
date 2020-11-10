@@ -31,7 +31,7 @@ class UserPagingAdapter : PagingDataAdapter<User, UserPagingAdapter.PagingViewHo
 
     class PagingViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         fun onBind(user: User) {
-            view.tvTitle.text = user.id.toString()
+            view.tvTitle.text = user.login.toString()
             view.tvUrl.text = user.url
             Glide.with(view.context).load(user.avatar_url).into(view.ivImage)
         }
