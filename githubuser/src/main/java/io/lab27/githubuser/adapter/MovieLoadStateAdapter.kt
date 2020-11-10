@@ -14,25 +14,6 @@ class UserLoadStateAdapter(
     private val retry: () -> Unit
 ) : LoadStateAdapter<UserLoadStateAdapter.LoadStateViewHolder>() {
 
-    override fun onBindViewHolder(holder: LoadStateViewHolder, loadState: LoadState) {
-
-        val progress = holder.itemView.load_state_progress
-        val btnRetry = holder.itemView.load_state_retry
-        val txtErrorMessage = holder.itemView.load_state_errorMessage
-
-        btnRetry.isVisible = loadState !is LoadState.Loading
-        txtErrorMessage.isVisible = loadState !is LoadState.Loading
-        progress.isVisible = loadState is LoadState.Loading
-
-        if (loadState is LoadState.Error) {
-            txtErrorMessage.text = loadState.error.localizedMessage
-        }
-
-        btnRetry.setOnClickListener {
-            retry.invoke()
-        }
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): LoadStateViewHolder {
         return LoadStateViewHolder(
             LayoutInflater.from(parent.context)
@@ -40,5 +21,27 @@ class UserLoadStateAdapter(
         )
     }
 
-    class LoadStateViewHolder(private val view: View) : RecyclerView.ViewHolder(view)
+    override fun onBindViewHolder(holder: LoadStateViewHolder, loadState: LoadState) {
+        holder.onBind(loadState, retry)
+    }
+
+    class LoadStateViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+        private val progress = view.load_state_progress
+        private val btnRetry = view.load_state_retry
+        private val txtErrorMessage = view.load_state_errorMessage
+
+        fun onBind(loadState: LoadState, retry: () -> Unit) {
+            btnRetry.isVisible = loadState !is LoadState.Loading
+            txtErrorMessage.isVisible = loadState !is LoadState.Loading
+            progress.isVisible = loadState is LoadState.Loading
+
+            if (loadState is LoadState.Error) {
+                txtErrorMessage.text = loadState.error.localizedMessage
+            }
+
+            btnRetry.setOnClickListener {
+                retry.invoke()
+            }
+        }
+    }
 }
