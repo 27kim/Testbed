@@ -11,11 +11,13 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 
 @BindingAdapter("imageUrl")
-fun setImageResource(view : ImageView, url : String){
-    Glide.with(view.context)
-        .load(url)
-        .listener(requestListener(view))
-        .into(view)
+fun setImageResource(view : ImageView, url : String?){
+    url?.let {
+        Glide.with(view.context)
+            .load(url)
+            .listener(requestListener(view))
+            .into(view)
+    }
 }
 
 private fun requestListener(view: ImageView): RequestListener<Drawable> {

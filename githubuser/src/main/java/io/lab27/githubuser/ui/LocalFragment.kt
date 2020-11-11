@@ -21,9 +21,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class LocalFragment : BaseFragment() {
     private val userViewModel: UserViewModel by sharedViewModel()
-    private val localAdapter: LocalAdapter by lazy {
-        LocalAdapter()
-    }
+    private val localAdapter: LocalAdapter by lazy { LocalAdapter() }
     private lateinit var searchView: SearchView
     private lateinit var queryTextListener: SearchView.OnQueryTextListener
     private lateinit var binding: FragmentRemoteBinding

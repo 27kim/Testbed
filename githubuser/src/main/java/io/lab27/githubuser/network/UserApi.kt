@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import io.lab27.githubuser.data.dao.User
 import io.reactivex.Single
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -28,4 +29,10 @@ interface UserApi {
         @Query("q") q: String?,
         @Query("page") p : Int
     ): UserResponse
+
+    @GET("search/users")
+    suspend fun getUser_coroutines_result(
+        @Query("q") q: String?
+    ): Response<UserResponse>
+
 }

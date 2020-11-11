@@ -101,4 +101,7 @@ dependencies {
 
     //paging3
     implementation "androidx.paging:paging-runtime:$paging_version"
+
+    //stetho
+    compile 'com.facebook.stetho:stetho:1.5.1'
 }

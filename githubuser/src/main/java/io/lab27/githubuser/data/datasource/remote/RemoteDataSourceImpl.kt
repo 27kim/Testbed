@@ -5,6 +5,8 @@ import io.lab27.githubuser.network.UserApi
 import io.lab27.githubuser.network.UserResponse
 import io.reactivex.Single
 import retrofit2.Call
+import io.lab27.githubuser.util.Result
+import retrofit2.Response
 
 class RemoteDataSourceImpl : RemoteDataSource {
     override fun getUser(query: String): Single<UserResponse> {
@@ -19,10 +21,6 @@ class RemoteDataSourceImpl : RemoteDataSource {
             .getUser_live(query)
     }
 
-    override fun getUser_result(query: String): Call<Result<UserResponse>>{
-        TODO("Not yet implemented")
-    }
-
     override suspend fun getUser_coroutines(query: String): UserResponse {
         return RetrofitManager.build()
             .create(UserApi::class.java)
@@ -34,4 +32,11 @@ class RemoteDataSourceImpl : RemoteDataSource {
             .create(UserApi::class.java)
             .getUser_coroutines_p(query, page)
     }
+
+    override suspend fun getUser_coroutine_result(query: String): Response<UserResponse> {
+        return RetrofitManager.build()
+            .create(UserApi::class.java)
+            .getUser_coroutines_result(query)
+    }
+
 }

@@ -1,26 +1,23 @@
 package io.lab27.githubuser.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import io.lab27.githubuser.base.BaseViewModel
 import io.lab27.githubuser.data.UserRepository
 import io.lab27.githubuser.data.dao.User
-import io.lab27.githubuser.data.datasource.remote.RemoteDataSource
 import io.lab27.githubuser.data.datasource.remote.RemoteDataSourceImpl
 import io.lab27.githubuser.util.L
+import io.lab27.githubuser.util.Result
 import io.lab27.githubuser.util.UserDataSource
-import io.lab27.githubuser.util.UserPagingSource
 import io.reactivex.BackpressureStrategy
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class UserViewModel(private val userRepository: UserRepository) : BaseViewModel() {
     private var _localUserList = userRepository.queryAllUsers()
@@ -44,6 +41,10 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
     private val _finishState = MutableLiveData<Boolean>()
     val finishState: LiveData<Boolean>
         get() = _finishState
+
+    private var _query = MutableLiveData<String>()
+    val query: LiveData<String>
+        get() = _query
 
     init {
         backPressSubject
@@ -93,44 +94,47 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
         compositeDisposable.clear()
     }
 
-    fun flow(query : String) = Pager(
-        // Configure how data is loaded by passing additional properties to
-        // PagingConfig, such as prefetchDistance.
-        PagingConfig(pageSize = 20)
-    ) {
-        UserPagingSource(RemoteDataSourceImpl(), query)
-    }.flow
-        .cachedIn(viewModelScope)
-
-
-    fun getUserList_courotines(query: String) {
+    fun fetchUserListCoroutines(query: String) {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
 
-                val remoteUser = async(Dispatchers.IO) { userRepository.fetchUserList_coroutines(query).items }.await()
-                val localUser = async(Dispatchers.IO) { userRepository.queryUserLists_coroutines() }.await()
+                /**
+                 * async 사용
+                 * */
+                val remoteUser =
+                    async(Dispatchers.IO) {
+                        userRepository.fetchUserList_coroutines(query)?.items ?: emptyList()
+                    }.await()
+                val localUser =
+                    async(Dispatchers.IO) { userRepository.queryUserLists_coroutines() }.await()
 
-                localUser?.forEach { l ->
-                    if (l.isFavorite) {
-                        val idx = getUserIndex(remoteUser, l)
-                        if (idx > -1) {
-                            remoteUser[idx].isFavorite = true
+                if (localUser.isNotEmpty()) {
+                    localUser?.forEach { l ->
+                        if (l.isFavorite) {
+                            val idx = getUserIndex(remoteUser, l)
+                            if (idx > -1) {
+                                remoteUser[idx].isFavorite = true
+                            }
                         }
+                        _userList.value = remoteUser
                     }
+                } else {
                     _userList.value = remoteUser
                 }
-
             } catch (t: Throwable) {
                 _isLoading.value = false
                 _error.value = t.message
+                L.e("fetchUserListCoroutines catch : ${t.message}")
             } finally {
                 _isLoading.value = false
             }
         }
-
     }
 
+    /**
+     * launch using viewModelScopte sample
+     * */
     fun getData(block: suspend () -> Unit) {
         viewModelScope.launch {
             try {
@@ -156,7 +160,17 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
         return result
     }
 
-    val listData = Pager(PagingConfig(pageSize = 8)) {
-        UserDataSource(RemoteDataSourceImpl(), "asdf")
-    }.flow.cachedIn(viewModelScope)
+    val listData =
+        Pager(PagingConfig(pageSize = 15)) {
+            UserDataSource(RemoteDataSourceImpl(), "asdf")
+        }
+            .flow
+            .cachedIn(viewModelScope)
+
+    /**
+     * temp
+     * */
+    private val tempList = Transformations.map(query) {
+        fetchUserListCoroutines(it)
+    }
 }

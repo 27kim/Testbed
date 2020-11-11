@@ -8,18 +8,20 @@ import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
 import io.lab27.githubuser.R
 import io.lab27.githubuser.adapter.RemoteAdapter
 import io.lab27.githubuser.base.BaseFragment
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.databinding.FragmentRemoteBinding
+import io.lab27.githubuser.util.L
 import io.lab27.githubuser.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.fragment_remote.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class RemoteFragment : BaseFragment() {
     val userViewModel: UserViewModel by sharedViewModel()
-    private val remoteAdapter: RemoteAdapter by lazy { RemoteAdapter() }
+    private val remoteAdapter: RemoteAdapter by lazy { RemoteAdapter(viewLifecycleOwner, userViewModel) }
     private lateinit var searchView: SearchView
     private lateinit var queryTextListener: SearchView.OnQueryTextListener
     private lateinit var binding: FragmentRemoteBinding
@@ -36,8 +38,8 @@ class RemoteFragment : BaseFragment() {
     private fun initView(inflater: LayoutInflater) {
         binding = FragmentRemoteBinding.inflate(inflater).apply {
             lifecycleOwner = viewLifecycleOwner
-
         }
+
         remoteAdapter.apply {
             onItemClick = { user, position ->
                 Log.i("onItemClick", "$user")
@@ -55,6 +57,7 @@ class RemoteFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.apply {
             adapter = remoteAdapter
+//            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
         }
         observe()
     }
@@ -93,17 +96,13 @@ class RemoteFragment : BaseFragment() {
 
     private fun userListObserver(): Observer<List<User>?> {
         return Observer { result ->
-            run {
-                result?.let {
-
-                    if (result.isNotEmpty()) {
-                        remoteAdapter.submitList(result)
-                        tvListEmpty.visibility = View.GONE
-                        recyclerView.visibility = View.VISIBLE
-                    } else {
-                        tvListEmpty.visibility = View.VISIBLE
-                        recyclerView.visibility = View.GONE
-                    }
+            result?.let {
+                if (result.isNotEmpty()) {
+                    tvListEmpty.visibility = View.GONE
+                    recyclerView.visibility = View.VISIBLE
+                } else {
+                    tvListEmpty.visibility = View.VISIBLE
+                    recyclerView.visibility = View.GONE
                 }
             }
         }
@@ -136,7 +135,7 @@ class RemoteFragment : BaseFragment() {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     query?.let {
                         Log.i("onQueryTextSubmit", query)
-                        userViewModel.getUserList_courotines(query)
+                        userViewModel.fetchUserListCoroutines(query)
                     }
                     it.onActionViewCollapsed()
                     return false
