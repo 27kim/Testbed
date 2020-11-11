@@ -14,17 +14,17 @@ import io.lab27.githubuser.databinding.LayoutRecyclerviewBinding
 import io.lab27.githubuser.util.L
 import io.lab27.githubuser.viewmodel.UserViewModel
 
-class RemoteAdapter (private val lifecycleOwner: LifecycleOwner, viewModel: UserViewModel):
-    ListAdapter<User, RemoteAdapter.Holder>(diffCallback) {
+class RemoteAdapter (private val lifecycleOwner: LifecycleOwner):
+    ListAdapter<User, RemoteAdapter.Holder>(UserPagingAdapter.DataDiff) {
 
     var onItemClick: ((User, Int) -> Unit)? = null
 
-    init {
-        viewModel.userList.observe(lifecycleOwner, Observer {
-            L.i("Remote Adapter user list: $it")
-            submitList(it)
-        })
-    }
+//    init {
+//        viewModel.userList.observe(lifecycleOwner, Observer {
+//            L.i("Remote Adapter user list: $it")
+//            submitList(it)
+//        })
+//    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflater = LayoutInflater.from(parent.context)
@@ -47,22 +47,6 @@ class RemoteAdapter (private val lifecycleOwner: LifecycleOwner, viewModel: User
     }
 
     class Holder(val binding: LayoutRecyclerviewBinding) : RecyclerView.ViewHolder(binding.root)
-
-    companion object {
-        val diffCallback by lazy {
-            object :
-                DiffUtil.ItemCallback<User>() {
-
-                override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
-                    return oldItem == newItem
-                }
-
-                override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
-                    return oldItem == newItem
-                }
-            }
-        }
-    }
 }
 /*
 ListAdapter<User, MainViewHolder>(diffCallback)

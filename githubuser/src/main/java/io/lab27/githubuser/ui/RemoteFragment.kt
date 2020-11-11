@@ -21,7 +21,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class RemoteFragment : BaseFragment() {
     val userViewModel: UserViewModel by sharedViewModel()
-    private val remoteAdapter: RemoteAdapter by lazy { RemoteAdapter(viewLifecycleOwner, userViewModel) }
+    private val remoteAdapter: RemoteAdapter by lazy { RemoteAdapter(viewLifecycleOwner) }
     private lateinit var searchView: SearchView
     private lateinit var queryTextListener: SearchView.OnQueryTextListener
     private lateinit var binding: FragmentRemoteBinding
@@ -57,7 +57,7 @@ class RemoteFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         recyclerView.apply {
             adapter = remoteAdapter
-//            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
         }
         observe()
     }
@@ -100,6 +100,7 @@ class RemoteFragment : BaseFragment() {
                 if (result.isNotEmpty()) {
                     tvListEmpty.visibility = View.GONE
                     recyclerView.visibility = View.VISIBLE
+                    remoteAdapter.submitList(result)
                 } else {
                     tvListEmpty.visibility = View.VISIBLE
                     recyclerView.visibility = View.GONE
