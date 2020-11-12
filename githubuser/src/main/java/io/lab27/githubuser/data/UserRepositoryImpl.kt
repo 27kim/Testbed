@@ -25,10 +25,6 @@ class UserRepositoryImpl constructor(
 
     override fun fetchUserList_live(query: String): Call<UserResponse> {
         return remote.getUser_live(query)
-//        LiveDataReactiveStreams.fromPublisher(
-//            remote.getUser_live(query)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread()))
     }
 
     override suspend fun fetchUserList_coroutines(query: String): UserResponse? {
