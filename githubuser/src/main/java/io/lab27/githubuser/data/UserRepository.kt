@@ -2,11 +2,10 @@ package io.lab27.githubuser.data
 
 import androidx.lifecycle.LiveData
 import io.lab27.githubuser.data.dao.User
-import io.lab27.githubuser.network.UserResponse
+import io.lab27.githubuser.data.model.UserResponse
 import io.lab27.githubuser.util.Result
 import io.reactivex.Single
 import retrofit2.Call
-import retrofit2.Response
 
 interface UserRepository {
     fun fetchUserList(query: String) : Single<UserResponse>

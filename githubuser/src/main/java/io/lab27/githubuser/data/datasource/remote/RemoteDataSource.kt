@@ -1,8 +1,7 @@
 package io.lab27.githubuser.data.datasource.remote
 
-import androidx.lifecycle.LiveData
-import io.lab27.githubuser.data.dao.User
-import io.lab27.githubuser.network.UserResponse
+import io.lab27.githubuser.data.model.NewsResponse
+import io.lab27.githubuser.data.model.UserResponse
 import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.Response
@@ -14,4 +13,6 @@ interface RemoteDataSource {
     suspend fun getUser_coroutines(query: String): UserResponse
     suspend fun getUser_coroutines_p(query: String, page: Int): UserResponse
     suspend fun getUser_coroutine_result(query: String): Response<UserResponse>
+
+    suspend fun fetchNewsHeadLines() : NewsResponse
 }

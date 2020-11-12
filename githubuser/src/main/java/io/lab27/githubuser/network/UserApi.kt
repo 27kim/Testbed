@@ -1,7 +1,6 @@
 package io.lab27.githubuser.network
 
-import androidx.lifecycle.LiveData
-import io.lab27.githubuser.data.dao.User
+import io.lab27.githubuser.data.model.UserResponse
 import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.Response

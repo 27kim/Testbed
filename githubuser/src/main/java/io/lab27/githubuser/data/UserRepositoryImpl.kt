@@ -5,12 +5,9 @@ import androidx.lifecycle.MediatorLiveData
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.data.datasource.local.LocalDataSource
 import io.lab27.githubuser.data.datasource.remote.RemoteDataSource
-import io.lab27.githubuser.network.UserResponse
-import io.lab27.githubuser.util.L
+import io.lab27.githubuser.data.model.UserResponse
 import io.lab27.githubuser.util.Result
 import retrofit2.Call
-import retrofit2.Response
-import java.io.IOException
 import java.lang.Exception
 
 class UserRepositoryImpl constructor(
@@ -52,23 +49,4 @@ class UserRepositoryImpl constructor(
         }
         return Result.Error(Exception("Error occured"))
     }
-
-    /**
-     * temp
-     * */
-
-}
-
-fun <T, K, R> LiveData<T>.combineWith(
-    liveData: LiveData<K>,
-    block: (T?, K?) -> R
-): LiveData<R> {
-    val result = MediatorLiveData<R>()
-    result.addSource(this) {
-        result.value = block(this.value, liveData.value)
-    }
-    result.addSource(liveData) {
-        result.value = block(this.value, liveData.value)
-    }
-    return result
 }

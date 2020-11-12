@@ -9,21 +9,23 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ConcatAdapter
-import androidx.recyclerview.widget.DividerItemDecoration
 import io.lab27.githubuser.R
-import io.lab27.githubuser.adapter.FooterAdapter
-import io.lab27.githubuser.adapter.HeaderAdapter
-import io.lab27.githubuser.adapter.RemoteAdapter
+import io.lab27.githubuser.adapter.*
 import io.lab27.githubuser.base.BaseFragment
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.databinding.FragmentRemoteBinding
+import io.lab27.githubuser.util.L
+import io.lab27.githubuser.viewmodel.NewsViewModel
 import io.lab27.githubuser.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.fragment_remote.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RemoteFragment : BaseFragment() {
     val userViewModel: UserViewModel by sharedViewModel()
+    private val newsViewModel: NewsViewModel by viewModel()
     private val remoteAdapter: RemoteAdapter by lazy { RemoteAdapter(viewLifecycleOwner) }
+    private val newsAdapter: NewsAdapter by lazy { NewsAdapter(viewLifecycleOwner) }
     private lateinit var searchView: SearchView
     private lateinit var queryTextListener: SearchView.OnQueryTextListener
     private lateinit var binding: FragmentRemoteBinding
@@ -57,26 +59,36 @@ class RemoteFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initRecyclerView()
+        observe()
+    }
 
+    private fun initRecyclerView() {
         val githubHeader = HeaderAdapter(viewLifecycleOwner, "Github user lists")
         val githubFooter = FooterAdapter(this, "Add Article") {
             userViewModel.fetchUserListCoroutines_paging("asdf")
         }
         val newsHeader = HeaderAdapter(viewLifecycleOwner, "News lists")
 
+        val horizontalAdapter = HorizontalContainerAdapter(
+            viewLifecycleOwner,
+            BannerAdapter(viewLifecycleOwner, newsViewModel)
+        )
+
         val concatAdapter = ConcatAdapter(
             ConcatAdapter.Config.Builder().setIsolateViewTypes(false).build(),
-            githubHeader,
-            remoteAdapter,
-            githubFooter,
-            newsHeader
+            githubHeader
+//            ,
+//            remoteAdapter,
+//            githubFooter,
+//            newsHeader
+//            ,
+//            horizontalAdapter
         )
 
         recyclerView.apply {
             adapter = concatAdapter
-//            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
         }
-        observe()
     }
 
     private fun observe() {
@@ -84,6 +96,12 @@ class RemoteFragment : BaseFragment() {
         observeLoadingStatus()
         observeError()
         observeFinishState()
+        newsViewModel.fetchNews()
+
+//        newsViewModel.newsResponse.observe(viewLifecycleOwner, Observer { news ->
+//            L.i("newsList ? $news")
+//            newsAdapter.submitList(news)
+//        })
     }
 
     private fun observeFinishState() {
@@ -126,15 +144,15 @@ class RemoteFragment : BaseFragment() {
         }
     }
 
-    override fun onPause() {
-        userViewModel.mediatorLiveData.removeObservers(viewLifecycleOwner)
-        super.onPause()
-    }
-
     private fun observeLoadingStatus() {
         userViewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
             binding.isLoading = isLoading
         })
+    }
+
+    override fun onPause() {
+        userViewModel.mediatorLiveData.removeObservers(viewLifecycleOwner)
+        super.onPause()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
