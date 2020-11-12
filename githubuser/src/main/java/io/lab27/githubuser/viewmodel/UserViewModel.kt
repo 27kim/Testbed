@@ -9,7 +9,6 @@ import io.lab27.githubuser.data.UserRepository
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.data.datasource.remote.RemoteDataSourceImpl
 import io.lab27.githubuser.util.L
-import io.lab27.githubuser.util.Result
 import io.lab27.githubuser.util.UserDataSource
 import io.reactivex.BackpressureStrategy
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -17,7 +16,6 @@ import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class UserViewModel(private val userRepository: UserRepository) : BaseViewModel() {
     private var _localUserList = userRepository.queryAllUsers()
@@ -46,6 +44,7 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
     val query: LiveData<String>
         get() = _query
 
+    private var page = 1
     init {
         backPressSubject
             .toFlowable(BackpressureStrategy.BUFFER)
@@ -105,6 +104,7 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
                 val remoteUser =
                     async(Dispatchers.IO) {
                         userRepository.fetchUserList_coroutines(query)?.items ?: emptyList()
+//                        userRepository.fetchUserList_coroutines(query)?.items ?: emptyList()
                     }.await()
                 val localUser =
                     async(Dispatchers.IO) { userRepository.queryUserLists_coroutines() }.await()
@@ -121,6 +121,50 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
                     }
                 } else {
                     _userList.value = remoteUser
+                }
+            } catch (t: Throwable) {
+                _isLoading.value = false
+                _error.value = t.message
+                L.e("fetchUserListCoroutines catch : ${t.message}")
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun fetchUserListCoroutines_paging(query: String) {
+        viewModelScope.launch {
+            try {
+                _isLoading.value = true
+
+                /**
+                 * async 사용
+                 * */
+                val remoteUser =
+                    async(Dispatchers.IO) {
+                        userRepository.fetchUserList_coroutines_p(query, page++)?.items ?: emptyList()
+                    }.await()
+                val localUser =
+                    async(Dispatchers.IO) { userRepository.queryUserLists_coroutines() }.await()
+
+                val list = arrayListOf<User>().apply{
+                    addAll(_userList.value ?: arrayListOf())
+                }
+
+                list.addAll(remoteUser)
+
+                if (localUser.isNotEmpty()) {
+                    localUser?.forEach { l ->
+                        if (l.isFavorite) {
+                            val idx = getUserIndex(list, l)
+                            if (idx > -1) {
+                                list[idx].isFavorite = true
+                            }
+                        }
+                    }
+                    _userList.value = list
+                } else {
+                    _userList.value = list
                 }
             } catch (t: Throwable) {
                 _isLoading.value = false

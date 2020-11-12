@@ -8,13 +8,15 @@ import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DividerItemDecoration
 import io.lab27.githubuser.R
+import io.lab27.githubuser.adapter.FooterAdapter
+import io.lab27.githubuser.adapter.HeaderAdapter
 import io.lab27.githubuser.adapter.RemoteAdapter
 import io.lab27.githubuser.base.BaseFragment
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.databinding.FragmentRemoteBinding
-import io.lab27.githubuser.util.L
 import io.lab27.githubuser.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.fragment_remote.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -55,9 +57,24 @@ class RemoteFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val githubHeader = HeaderAdapter(viewLifecycleOwner, "Github user lists")
+        val githubFooter = FooterAdapter(this, "Add Article") {
+            userViewModel.fetchUserListCoroutines_paging("asdf")
+        }
+        val newsHeader = HeaderAdapter(viewLifecycleOwner, "News lists")
+
+        val concatAdapter = ConcatAdapter(
+            ConcatAdapter.Config.Builder().setIsolateViewTypes(false).build(),
+            githubHeader,
+            remoteAdapter,
+            githubFooter,
+            newsHeader
+        )
+
         recyclerView.apply {
-            adapter = remoteAdapter
-            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+            adapter = concatAdapter
+//            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
         }
         observe()
     }

@@ -21,13 +21,16 @@ interface UserApi {
 
     @GET("search/users")
     suspend fun getUser_coroutines(
-        @Query("q") q: String?
+        @Query("q") q: String?,
+        @Query("per_page") page : Int = 3
+
     ): UserResponse
 
     @GET("search/users")
     suspend fun getUser_coroutines_p(
         @Query("q") q: String?,
-        @Query("page") p : Int
+        @Query("page") p : Int,
+        @Query("per_page") page : Int = 3
     ): UserResponse
 
     @GET("search/users")
