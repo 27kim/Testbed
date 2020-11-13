@@ -25,7 +25,7 @@ class RemoteFragment : BaseFragment() {
     val userViewModel: UserViewModel by sharedViewModel()
     private val newsViewModel: NewsViewModel by viewModel()
     private val remoteAdapter: RemoteAdapter by lazy { RemoteAdapter(viewLifecycleOwner) }
-    private val newsAdapter: NewsAdapter by lazy { NewsAdapter(viewLifecycleOwner) }
+    private val bannerAdapter: BannerAdapter by lazy { BannerAdapter(viewLifecycleOwner) }
     private lateinit var searchView: SearchView
     private lateinit var queryTextListener: SearchView.OnQueryTextListener
     private lateinit var binding: FragmentRemoteBinding
@@ -72,18 +72,16 @@ class RemoteFragment : BaseFragment() {
 
         val horizontalAdapter = HorizontalContainerAdapter(
             viewLifecycleOwner,
-            BannerAdapter(viewLifecycleOwner, newsViewModel)
+            bannerAdapter
         )
 
         val concatAdapter = ConcatAdapter(
             ConcatAdapter.Config.Builder().setIsolateViewTypes(false).build(),
-            githubHeader
-//            ,
-//            remoteAdapter,
-//            githubFooter,
-//            newsHeader
-//            ,
-//            horizontalAdapter
+            newsHeader,
+            horizontalAdapter,
+            githubHeader,
+            remoteAdapter,
+            githubFooter
         )
 
         recyclerView.apply {
@@ -98,10 +96,10 @@ class RemoteFragment : BaseFragment() {
         observeFinishState()
         newsViewModel.fetchNews()
 
-//        newsViewModel.newsResponse.observe(viewLifecycleOwner, Observer { news ->
-//            L.i("newsList ? $news")
-//            newsAdapter.submitList(news)
-//        })
+        newsViewModel.newsResponse.observe(viewLifecycleOwner, Observer { news ->
+            L.i("newsList ? $news")
+            bannerAdapter.submitList(news)
+        })
     }
 
     private fun observeFinishState() {
