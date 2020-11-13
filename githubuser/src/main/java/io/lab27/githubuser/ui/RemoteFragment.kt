@@ -64,21 +64,18 @@ class RemoteFragment : BaseFragment() {
     }
 
     private fun initRecyclerView() {
+        val newsHeader = HeaderAdapter(viewLifecycleOwner, "News lists")
+        val newsAdapter = HorizontalContainerAdapter(viewLifecycleOwner, bannerAdapter)
+
         val githubHeader = HeaderAdapter(viewLifecycleOwner, "Github user lists")
         val githubFooter = FooterAdapter(this, "Add Article") {
             userViewModel.fetchUserListCoroutines_paging("asdf")
         }
-        val newsHeader = HeaderAdapter(viewLifecycleOwner, "News lists")
-
-        val horizontalAdapter = HorizontalContainerAdapter(
-            viewLifecycleOwner,
-            bannerAdapter
-        )
 
         val concatAdapter = ConcatAdapter(
-            ConcatAdapter.Config.Builder().setIsolateViewTypes(false).build(),
+            ConcatAdapter.Config.Builder().build(),
             newsHeader,
-            horizontalAdapter,
+            newsAdapter,
             githubHeader,
             remoteAdapter,
             githubFooter
@@ -94,8 +91,11 @@ class RemoteFragment : BaseFragment() {
         observeLoadingStatus()
         observeError()
         observeFinishState()
-        newsViewModel.fetchNews()
+        observeNews()
+    }
 
+    private fun observeNews() {
+        newsViewModel.fetchNews()
         newsViewModel.newsResponse.observe(viewLifecycleOwner, Observer { news ->
             L.i("newsList ? $news")
             bannerAdapter.submitList(news)

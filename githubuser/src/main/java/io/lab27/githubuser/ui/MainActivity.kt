@@ -19,6 +19,9 @@ class MainActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        /**
+         * keyStore sample
+         * */
         val keyStore = java.security.KeyStore.getInstance("AndroidKeyStore")
 
         val sharedPreferences = getSharedPreferences("myHyundai", Context.MODE_PRIVATE)
@@ -31,6 +34,10 @@ class MainActivity : AppCompatActivity(){
 
         L.i("testing title ? $title")
         L.i("testing flag ? $flag")
+
+        /**
+         * keyStore sample
+         * */
 
         mainViewPager.apply {
             adapter = ViewPagerAdapter(

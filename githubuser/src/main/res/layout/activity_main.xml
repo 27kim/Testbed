@@ -7,6 +7,10 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
+<!--    <FrameLayout-->
+<!--        android:id="@+id/fragment_container"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"/>-->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
@@ -20,7 +24,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/mainViewPager"
         />
-
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/mainViewPager"
         android:layout_width="match_parent"

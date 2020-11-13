@@ -32,6 +32,7 @@ class RetrofitManager {
                 val originalHttpUrl = chain.request().url
                 val url = originalHttpUrl.newBuilder().addQueryParameter("apiKey", "f3ee20613c7146af89a6476cb643914f")
                     .addQueryParameter("country", "us")
+                    .addQueryParameter("pageSize", "3")
                     .build()
                 request.url(url)
                 val response = chain.proceed(request.build())
