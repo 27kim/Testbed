@@ -10,6 +10,10 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.recyclerview.selection.SelectionPredicates
+import androidx.recyclerview.selection.SelectionTracker
+import androidx.recyclerview.selection.StableIdKeyProvider
+import androidx.recyclerview.selection.StorageStrategy
 import io.lab27.photogallery.adapter.PhotoAdapter
 import io.lab27.photogallery.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,21 +27,59 @@ class MainActivity : AppCompatActivity() {
         "android.permission.WRITE_EXTERNAL_STORAGE"
     )
     private val photoViewModel: PhotoViewModel by viewModel()
+    lateinit var tracker: SelectionTracker<Long>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this@MainActivity, R.layout.activity_main)
         binding.apply {
             lifecycleOwner = lifecycleOwner
         }
+
         var photoAdapter = PhotoAdapter()
 
         photoRecyclerView.adapter = photoAdapter
+        tracker = SelectionTracker.Builder<Long>(
+            "photoSelection",
+            photoRecyclerView,
+            StableIdKeyProvider(photoRecyclerView),
+            PhotoAdapter.PhotoDetailsLookup(photoRecyclerView),
+            StorageStrategy.createLongStorage()
+        ).withSelectionPredicate(
+            SelectionPredicates.createSelectSingleAnything()
+        ).build()
 
+        tracker.addObserver( object : SelectionTracker.SelectionObserver<Long>() {
+            override fun onSelectionChanged() {
+                Log.i("activity ", "clicked?")
+//                val nItems: Int? = tracker?.selection?.size()
+//
+//                if (nItems != null && nItems > 0) {
+//
+//                    // Change title and color of action bar
+//
+//                    title = "$nItems items selected"
+//                    supportActionBar?.setBackgroundDrawable(
+//                        ColorDrawable(Color.parseColor("#ef6c00"))
+//                    )
+//                } else {
+//
+//                    // Reset color and title to default values
+//
+//                    title = "RVSelection"
+//                    supportActionBar?.setBackgroundDrawable(
+//                        ColorDrawable(Color.parseColor("#126c00"))
+//                    )
+//                }
+            }
+        })
+        photoAdapter.tracker = tracker
         photoViewModel.retrievePhotoList()
         photoViewModel.photoList.observe(this, Observer { list ->
             Log.i("list", "list ? $list")
             photoAdapter.submitList(list)
         })
+
     }
 
     fun checkPerms() {
