@@ -69,7 +69,7 @@ class RemoteFragment : BaseFragment() {
 
         val githubHeader = HeaderAdapter(viewLifecycleOwner, "Github user lists")
         val githubFooter = FooterAdapter(this, "Add Article") {
-            userViewModel.fetchUserListCoroutines_paging("asdf")
+            userViewModel.fetchUserList()
         }
 
         val concatAdapter = ConcatAdapter(
@@ -111,6 +111,7 @@ class RemoteFragment : BaseFragment() {
     }
 
     private fun observeUserList() {
+        userViewModel.fetchUserList()
         userViewModel.userList.observe(viewLifecycleOwner, userListObserver())
     }
 
@@ -169,7 +170,7 @@ class RemoteFragment : BaseFragment() {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     query?.let {
                         Log.i("onQueryTextSubmit", query)
-                        userViewModel.fetchUserListCoroutines(query)
+                        userViewModel.setQuery(query)
                     }
                     it.onActionViewCollapsed()
                     return false

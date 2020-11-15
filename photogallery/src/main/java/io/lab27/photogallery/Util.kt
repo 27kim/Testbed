@@ -26,7 +26,7 @@ fun setUriImageResource(view : ImageView, uri : Uri?){
     uri?.let {
         Glide.with(view.context)
             .load(uri)
-            .centerCrop()
+            .centerInside()
             .listener(requestListener(view))
             .into(view)
     }

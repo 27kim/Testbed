@@ -10,12 +10,10 @@ import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.data.datasource.remote.RemoteDataSourceImpl
 import io.lab27.githubuser.util.L
 import io.lab27.githubuser.util.UserDataSource
-import io.reactivex.BackpressureStrategy
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import org.koin.core.qualifier._q
 
 class UserViewModel(private val userRepository: UserRepository) : BaseViewModel() {
     private var _localUserList = userRepository.queryAllUsers()
@@ -33,33 +31,35 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
     val userList: LiveData<List<User>?>
         get() = _userList
 
-    private val backPressSubject =
-        BehaviorSubject.createDefault(0L)
+//    val userList = query.switchMap { query ->
+//        if (query == "") {
+//            fetchUserList("asdf")
+//        } else {
+//            fetchUserList(query)
+//        }
+//    }
+
 
     private val _finishState = MutableLiveData<Boolean>()
     val finishState: LiveData<Boolean>
         get() = _finishState
 
-    private var _query = MutableLiveData<String>()
+    private var _query = MutableLiveData<String>("")
     val query: LiveData<String>
         get() = _query
 
-    private var page = 1
-    init {
-        backPressSubject
-            .toFlowable(BackpressureStrategy.BUFFER)
-            .observeOn(AndroidSchedulers.mainThread())
-            .buffer(2, 1)
-            .map { it[0] to it[1] }
-            .subscribe(
-                {
-                    _finishState.value = it.second - it.first < TOAST_DURATION
-                },
-                {
-                    _error.value = it.message
-                }
-            ).also { compositeDisposable.add(it) }
+    fun setQuery(query: String) {
+        if (_query.value != query) {
+            _userList.value = emptyList()
+            page = 1
+        }
+        _query.value = query
+
+        fetchUserList()
+
     }
+
+    private var page = 1
 
     fun updateUser(user: User) {
         L.i("is favorite ? ${user.isFavorite} / user : $user")
@@ -93,19 +93,29 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
         compositeDisposable.clear()
     }
 
-    fun fetchUserListCoroutines(query: String) {
+    fun fetchUserList() {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
 
-                /**
-                 * async 사용
-                 * */
-                val remoteUser =
-                    async(Dispatchers.IO) {
-                        userRepository.fetchUserList_coroutines(query)?.items ?: emptyList()
-//                        userRepository.fetchUserList_coroutines(query)?.items ?: emptyList()
-                    }.await()
+                val queryStr = if (query.value == "") "asdf" else query.value!!
+
+                val remoteUser = mutableListOf<User>().apply {
+                    val list = _userList.value
+                    list?.forEach { user ->
+                        this.add(user)
+                    }
+                }
+
+                remoteUser.addAll(async(Dispatchers.IO) {
+                    userRepository.fetchUserList_coroutines_p(queryStr, page++)?.items
+                }.await())
+
+//                val remoteUser = async(Dispatchers.IO) {
+//                    userRepository.fetchUserList_coroutines_p(queryStr, page)?.items
+//                        ?: emptyList()
+//                }.await()
+
                 val localUser =
                     async(Dispatchers.IO) { userRepository.queryUserLists_coroutines() }.await()
 
@@ -117,8 +127,8 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
                                 remoteUser[idx].isFavorite = true
                             }
                         }
-                        _userList.value = remoteUser
                     }
+                    _userList.value = remoteUser
                 } else {
                     _userList.value = remoteUser
                 }
@@ -142,12 +152,13 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
                  * */
                 val remoteUser =
                     async(Dispatchers.IO) {
-                        userRepository.fetchUserList_coroutines_p(query, page++)?.items ?: emptyList()
+                        userRepository.fetchUserList_coroutines_p(query, page++)?.items
+                            ?: emptyList()
                     }.await()
                 val localUser =
                     async(Dispatchers.IO) { userRepository.queryUserLists_coroutines() }.await()
 
-                val list = arrayListOf<User>().apply{
+                val list = arrayListOf<User>().apply {
                     addAll(_userList.value ?: arrayListOf())
                 }
 
@@ -210,11 +221,4 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
         }
             .flow
             .cachedIn(viewModelScope)
-
-    /**
-     * temp
-     * */
-    private val tempList = Transformations.map(query) {
-        fetchUserListCoroutines(it)
-    }
 }
