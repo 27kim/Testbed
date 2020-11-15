@@ -2,6 +2,7 @@ package io.lab27.githubuser.util
 
 import android.R
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -15,6 +16,16 @@ fun setImageResource(view : ImageView, url : String?){
     url?.let {
         Glide.with(view.context)
             .load(url)
+            .listener(requestListener(view))
+            .into(view)
+    }
+}
+
+@BindingAdapter("imageUri")
+fun setUriImageResource(view : ImageView, uri : Uri?){
+    uri?.let {
+        Glide.with(view.context)
+            .load(uri)
             .listener(requestListener(view))
             .into(view)
     }
