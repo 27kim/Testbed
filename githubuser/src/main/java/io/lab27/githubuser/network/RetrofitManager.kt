@@ -30,13 +30,28 @@ class RetrofitManager {
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
                 val originalHttpUrl = chain.request().url
-                val url = originalHttpUrl.newBuilder().addQueryParameter("apiKey", "f3ee20613c7146af89a6476cb643914f")
+                val url = originalHttpUrl.newBuilder()
+                    .addQueryParameter("apiKey", "f3ee20613c7146af89a6476cb643914f")
                     .addQueryParameter("country", "us")
                     .addQueryParameter("pageSize", "3")
                     .build()
                 request.url(url)
-                val response = chain.proceed(request.build())
-                return@addInterceptor response
+                return@addInterceptor chain.proceed(request.build())
+            }
+            .connectTimeout(15, TimeUnit.MINUTES)
+            .readTimeout(15, TimeUnit.SECONDS)
+            .writeTimeout(15, TimeUnit.SECONDS)
+            .build()
+
+    private val authClient =
+        OkHttpClient.Builder()
+            .addInterceptor(interceptor)
+            .addInterceptor { chain ->
+                val newRequest = chain.request().newBuilder()
+                    .addHeader("Authorization", "Basic Bd96aMYBFL6k9Hm2mMSQrPui vSoE7Xmsl6oIp4yJwmJpE5Ec8pOk86dgkyWOwpUGVYiumYLp")
+//                    .addHeader("Content-Type", "multipart/form-data; boundary=WebAppBoundary")
+                    .build();
+                chain.proceed (newRequest)
             }
             .connectTimeout(15, TimeUnit.MINUTES)
             .readTimeout(15, TimeUnit.SECONDS)
@@ -62,6 +77,15 @@ class RetrofitManager {
             .client(newsClient)
     }
 
+    private fun authBuilder(baseUrl: String?): Retrofit.Builder {
+        L.d("newsBuilder ($baseUrl) is called.")
+        requireNotNull(baseUrl) { "baseUrl is null." }
+        require(baseUrl.isNotEmpty()) { "baseUrl is empty." }
+        return Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(authClient)
+    }
+
     //github user api
     val userApi: UserApi by lazy {
         val baseUrl = "https://api.github.com/"
@@ -77,6 +101,14 @@ class RetrofitManager {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(NewsApi::class.java)
+    }
+
+    val authApi: AuthApi by lazy {
+        val baseUrl = "http://35.216.37.218:21549/"
+        authBuilder(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(AuthApi::class.java)
     }
 
     companion object {

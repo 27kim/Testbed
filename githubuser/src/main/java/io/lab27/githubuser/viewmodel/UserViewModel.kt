@@ -44,7 +44,17 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
     val query: LiveData<String>
         get() = _query
 
+    val temp = Transformations.map(query) { query ->
+        fetchUserList()
+    }
+
+    fun setQuery(query: String){
+        _query.value = query
+        fetchUserList()
+    }
+
     private var page = 1
+
     init {
         backPressSubject
             .toFlowable(BackpressureStrategy.BUFFER)
@@ -93,6 +103,42 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
         compositeDisposable.clear()
     }
 
+    fun fetchUserList() {
+        val param = _query.value ?: "google"
+        viewModelScope.launch {
+            try {
+                _isLoading.value = true
+
+                val remoteUser =
+                    async(Dispatchers.IO) {
+                        userRepository.fetchUserList_coroutines(param)?.items ?: emptyList()
+                    }.await()
+                val localUser =
+                    async(Dispatchers.IO) { userRepository.queryUserLists_coroutines() }.await()
+
+                if (localUser.isNotEmpty()) {
+                    localUser?.forEach { l ->
+                        if (l.isFavorite) {
+                            val idx = getUserIndex(remoteUser, l)
+                            if (idx > -1) {
+                                remoteUser[idx].isFavorite = true
+                            }
+                        }
+                    }
+                    _userList.value = remoteUser
+                } else {
+                    _userList.value = remoteUser
+                }
+            } catch (t: Throwable) {
+                _isLoading.value = false
+                _error.value = t.message
+                L.e("fetchUserListCoroutines catch : ${t.message}")
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
     fun fetchUserListCoroutines(query: String) {
         viewModelScope.launch {
             try {
@@ -132,7 +178,7 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
         }
     }
 
-    fun fetchUserListCoroutines_paging(query: String) {
+    fun fetchUserListCoroutines_paging() {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
@@ -142,12 +188,13 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
                  * */
                 val remoteUser =
                     async(Dispatchers.IO) {
-                        userRepository.fetchUserList_coroutines_p(query, page++)?.items ?: emptyList()
+                        userRepository.fetchUserList_coroutines_p(_query.value?:"", page++)?.items
+                            ?: emptyList()
                     }.await()
                 val localUser =
                     async(Dispatchers.IO) { userRepository.queryUserLists_coroutines() }.await()
 
-                val list = arrayListOf<User>().apply{
+                val list = arrayListOf<User>().apply {
                     addAll(_userList.value ?: arrayListOf())
                 }
 
@@ -210,11 +257,4 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
         }
             .flow
             .cachedIn(viewModelScope)
-
-    /**
-     * temp
-     * */
-    private val tempList = Transformations.map(query) {
-        fetchUserListCoroutines(it)
-    }
 }

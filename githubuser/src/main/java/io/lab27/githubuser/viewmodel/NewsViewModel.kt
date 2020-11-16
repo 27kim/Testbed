@@ -17,24 +17,20 @@ class NewsViewModel(private val newsRepository: NewsRepository) : ViewModel() {
     val isLoading : LiveData<Boolean>
         get() = _isLoading
 
-    fun fetchNews(){
-        _bannerItems.value = arrayListOf<String>().apply {
-            for (i in 0 until 10) {
-                add("Banner:$i")
-            }
-        }
+    private var _token = MutableLiveData<String>()
+    val token : LiveData<String>
+        get() = _token
 
+    fun fetchNews(){
         viewModelScope.launch {
             _isLoading.value = true
             val response = newsRepository.fetchNewsHeadLines()
             _newsResponse.value = response?.articles
             _isLoading.value = false
+
+            _token.value     = newsRepository.getAuth()
         }
     }
 
     private val _bannerItems = MutableLiveData(listOf<String>())
-    val bannerItem: LiveData<List<String>>
-        get() {
-            return _bannerItems
-        }
 }

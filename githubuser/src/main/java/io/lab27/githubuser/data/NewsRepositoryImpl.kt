@@ -25,4 +25,13 @@ class NewsRepositoryImpl constructor(
             null
         }
     }
+
+    override suspend fun getAuth(): String {
+        return try{
+            remote.getAuth()
+        }catch (e : Exception){
+            L.e("TOKEN EXCEPTION ${e.message}")
+            ""
+        }
+    }
 }

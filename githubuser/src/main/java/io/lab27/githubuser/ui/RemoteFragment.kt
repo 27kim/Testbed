@@ -61,6 +61,13 @@ class RemoteFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         observe()
+        /**
+         * 토큰 가져오기 샘플
+         * //        newsViewModel.token.observe(viewLifecycleOwner, Observer {token ->
+        //            L.i("TOKEN RESULT : $token")
+        //        })
+         * */
+
     }
 
     private fun initRecyclerView() {
@@ -69,7 +76,7 @@ class RemoteFragment : BaseFragment() {
 
         val githubHeader = HeaderAdapter(viewLifecycleOwner, "Github user lists")
         val githubFooter = FooterAdapter(this, "Add Article") {
-            userViewModel.fetchUserListCoroutines_paging("asdf")
+            userViewModel.fetchUserListCoroutines_paging()
         }
 
         val concatAdapter = ConcatAdapter(
@@ -111,6 +118,7 @@ class RemoteFragment : BaseFragment() {
     }
 
     private fun observeUserList() {
+        userViewModel.fetchUserList()
         userViewModel.userList.observe(viewLifecycleOwner, userListObserver())
     }
 
@@ -169,7 +177,7 @@ class RemoteFragment : BaseFragment() {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     query?.let {
                         Log.i("onQueryTextSubmit", query)
-                        userViewModel.fetchUserListCoroutines(query)
+                        userViewModel.setQuery(query)
                     }
                     it.onActionViewCollapsed()
                     return false

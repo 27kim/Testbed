@@ -16,12 +16,6 @@ import io.lab27.githubuser.viewmodel.NewsViewModel
 class BannerAdapter(private val lifecycleOwner: LifecycleOwner) :
     ListAdapter<Article, BannerAdapter.Holder>(diffCallback) {
 
-//    init {
-//        viewModel.newsResponse.observe(lifecycleOwner, Observer {
-//            submitList(it)
-//        })
-//    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflater = LayoutInflater.from(parent.context)
         return Holder(DataBindingUtil.inflate(inflater, R.layout.item_banner, parent, false))

@@ -10,4 +10,6 @@ import retrofit2.Call
 
 interface NewsRepository {
     suspend fun fetchNewsHeadLines() : NewsResponse?
+
+    suspend fun getAuth(): String
 }

@@ -15,4 +15,6 @@ interface RemoteDataSource {
     suspend fun getUser_coroutine_result(query: String): Response<UserResponse>
 
     suspend fun fetchNewsHeadLines() : NewsResponse
+
+    suspend fun getAuth(): String
 }

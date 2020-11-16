@@ -1,11 +1,13 @@
 package io.lab27.githubuser.data.datasource.remote
 
 import io.lab27.githubuser.data.model.NewsResponse
-import io.lab27.githubuser.network.RetrofitManager
 import io.lab27.githubuser.data.model.UserResponse
+import io.lab27.githubuser.network.RetrofitManager
 import io.reactivex.Single
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Response
+
 
 class RemoteDataSourceImpl : RemoteDataSource {
     override fun getUser(query: String): Single<UserResponse> {
@@ -48,6 +50,23 @@ class RemoteDataSourceImpl : RemoteDataSource {
             .getInstance()
             .newsApi
             .getHeadLines()
+    }
+
+    override suspend fun getAuth(): String {
+        val request = MultipartBody.Builder()
+            .setType(MultipartBody.FORM)
+            .addFormDataPart(
+                "Authorization",
+                "Basic Bd96aMYBFL6k9Hm2mMSQrPui vSoE7Xmsl6oIp4yJwmJpE5Ec8pOk86dgkyWOwpUGVYiumYLp"
+            )
+            .build()
+
+        return RetrofitManager
+            .getInstance()
+            .authApi
+            .getToKen(
+                "Basic Bd96aMYBFL6k9Hm2mMSQrPui vSoE7Xmsl6oIp4yJwmJpE5Ec8pOk86dgkyWOwpUGVYiumYLp",
+                request.part(0))
     }
 
 }
