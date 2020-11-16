@@ -1,4 +1,4 @@
-package io.lab27.githubuser.util
+package io.lab27.photogallery
 
 import android.R
 import android.graphics.drawable.Drawable
@@ -16,7 +16,6 @@ fun setImageResource(view : ImageView, url : String?){
     url?.let {
         Glide.with(view.context)
             .load(url)
-            .centerCrop()
             .listener(requestListener(view))
             .into(view)
     }
@@ -27,6 +26,7 @@ fun setUriImageResource(view : ImageView, uri : Uri?){
     uri?.let {
         Glide.with(view.context)
             .load(uri)
+            .centerInside()
             .listener(requestListener(view))
             .into(view)
     }
