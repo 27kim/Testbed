@@ -1,7 +1,6 @@
 package io.lab27.githubuser.data.datasource.remote
 
-import io.lab27.githubuser.data.model.NewsResponse
-import io.lab27.githubuser.data.model.UserResponse
+import io.lab27.githubuser.data.model.*
 import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.Response
@@ -16,5 +15,10 @@ interface RemoteDataSource {
 
     suspend fun fetchNewsHeadLines() : NewsResponse
 
-    suspend fun getAuth(): String
+    suspend fun fetchMe(code : String) : FetchMeResponse
+    suspend fun fetchToken(
+        header: String,
+        body: HashMap<String, String>
+    ) : TokenResponse
+    suspend fun fetchEvent() : List<EventResponse>
 }

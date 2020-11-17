@@ -1,6 +1,7 @@
 package io.lab27.githubuser.ui
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,7 +15,7 @@ import io.lab27.githubuser.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -40,10 +41,7 @@ class MainActivity : AppCompatActivity(){
          * */
 
         mainViewPager.apply {
-            adapter = ViewPagerAdapter(
-                this@MainActivity,
-                3
-            )
+            adapter = ViewPagerAdapter(this@MainActivity, 5)
         }
 
         TabLayoutMediator(tabLayout, mainViewPager) { tab, position ->
@@ -51,7 +49,19 @@ class MainActivity : AppCompatActivity(){
                 0 -> tab.text = "API"
                 1 -> tab.text = "LOCAL"
                 2 -> tab.text = "PAGING"
+                3 -> tab.text = "AUTH"
+                4 -> tab.text = "EVENT"
             }
         }.attach()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        if (intent != null) {
+            val uri = getIntent().data
+            val data = uri?.getQueryParameter("code")?:"empty!"
+            L.i("onNewIntent ? $data")
+        }
     }
 }

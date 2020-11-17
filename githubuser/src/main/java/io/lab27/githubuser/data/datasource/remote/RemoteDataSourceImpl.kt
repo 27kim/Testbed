@@ -1,7 +1,6 @@
 package io.lab27.githubuser.data.datasource.remote
 
-import io.lab27.githubuser.data.model.NewsResponse
-import io.lab27.githubuser.data.model.UserResponse
+import io.lab27.githubuser.data.model.*
 import io.lab27.githubuser.network.RetrofitManager
 import io.reactivex.Single
 import okhttp3.MultipartBody
@@ -52,21 +51,28 @@ class RemoteDataSourceImpl : RemoteDataSource {
             .getHeadLines()
     }
 
-    override suspend fun getAuth(): String {
-        val request = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart(
-                "Authorization",
-                "Basic Bd96aMYBFL6k9Hm2mMSQrPui vSoE7Xmsl6oIp4yJwmJpE5Ec8pOk86dgkyWOwpUGVYiumYLp"
-            )
-            .build()
-
+    override suspend fun fetchMe(token: String): FetchMeResponse {
         return RetrofitManager
             .getInstance()
             .authApi
-            .getToKen(
-                "Basic Bd96aMYBFL6k9Hm2mMSQrPui vSoE7Xmsl6oIp4yJwmJpE5Ec8pOk86dgkyWOwpUGVYiumYLp",
-                request.part(0))
+            .fetchMe(token)
+    }
+
+    override suspend fun fetchToken(
+        header: String,
+        body: HashMap<String, String>
+    ): TokenResponse {
+        return RetrofitManager
+            .getInstance()
+            .authApi
+            .fetchToken(header, body)
+    }
+
+    override suspend fun fetchEvent(): List<EventResponse> {
+        return RetrofitManager
+            .getInstance()
+            .mhApi
+            .fetchEvent()
     }
 
 }

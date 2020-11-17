@@ -46,13 +46,6 @@ class RetrofitManager {
     private val authClient =
         OkHttpClient.Builder()
             .addInterceptor(interceptor)
-            .addInterceptor { chain ->
-                val newRequest = chain.request().newBuilder()
-                    .addHeader("Authorization", "Basic Bd96aMYBFL6k9Hm2mMSQrPui vSoE7Xmsl6oIp4yJwmJpE5Ec8pOk86dgkyWOwpUGVYiumYLp")
-//                    .addHeader("Content-Type", "multipart/form-data; boundary=WebAppBoundary")
-                    .build();
-                chain.proceed (newRequest)
-            }
             .connectTimeout(15, TimeUnit.MINUTES)
             .readTimeout(15, TimeUnit.SECONDS)
             .writeTimeout(15, TimeUnit.SECONDS)
@@ -109,6 +102,14 @@ class RetrofitManager {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(AuthApi::class.java)
+    }
+
+    val mhApi: MHApi by lazy {
+        val baseUrl = "https://test.happ.hyundai.com/"
+        authBuilder(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(MHApi::class.java)
     }
 
     companion object {

@@ -98,7 +98,7 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
             try {
                 _isLoading.value = true
 
-                val queryStr = if (query.value == "") "asdf" else query.value!!
+                val queryStr = if (query.value == "") "google" else query.value!!
 
                 val remoteUser = mutableListOf<User>().apply {
                     val list = _userList.value

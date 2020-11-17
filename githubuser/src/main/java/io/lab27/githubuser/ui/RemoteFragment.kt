@@ -111,6 +111,7 @@ class RemoteFragment : BaseFragment() {
     }
 
     private fun observeUserList() {
+        userViewModel.fetchUserList()
         userViewModel.userList.observe(viewLifecycleOwner, userListObserver())
     }
 
