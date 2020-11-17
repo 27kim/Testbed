@@ -7,17 +7,16 @@ import kotlinx.coroutines.launch
 
 class MHViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
-    val _token = MutableLiveData<String>()
-    val token: LiveData<String>
-        get() = _token
-
-    val _event = MutableLiveData<List<EventResponse>>()
+    private val _event = MutableLiveData<List<EventResponse>>()
     val event: LiveData<List<EventResponse>>
         get() = _event
 
     fun fetchEvent() {
         viewModelScope.launch {
             _event.value = authRepository.fetchEvent()
+            authRepository.fetchEvent().map {
+
+            }
         }
     }
 }

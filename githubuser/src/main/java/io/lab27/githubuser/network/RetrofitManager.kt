@@ -1,13 +1,14 @@
 package io.lab27.githubuser.network
 
+import io.lab27.githubuser.network.api.AuthApi
+import io.lab27.githubuser.network.api.MHApi
+import io.lab27.githubuser.network.api.NewsApi
+import io.lab27.githubuser.network.api.UserApi
 import io.lab27.githubuser.util.L
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 
@@ -79,6 +80,15 @@ class RetrofitManager {
             .client(authClient)
     }
 
+    private fun mhBuilder(baseUrl: String?): Retrofit.Builder {
+        L.d("newsBuilder ($baseUrl) is called.")
+        requireNotNull(baseUrl) { "baseUrl is null." }
+        require(baseUrl.isNotEmpty()) { "baseUrl is empty." }
+        return Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(UnsafeOkHttpClient.getUnsafeOkHttpClient())
+    }
+
     //github user api
     val userApi: UserApi by lazy {
         val baseUrl = "https://api.github.com/"
@@ -106,7 +116,7 @@ class RetrofitManager {
 
     val mhApi: MHApi by lazy {
         val baseUrl = "https://test.happ.hyundai.com/"
-        authBuilder(baseUrl)
+        mhBuilder(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(MHApi::class.java)

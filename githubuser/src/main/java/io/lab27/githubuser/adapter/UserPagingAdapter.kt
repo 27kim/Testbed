@@ -3,7 +3,6 @@ package io.lab27.githubuser.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -11,7 +10,7 @@ import com.bumptech.glide.Glide
 import io.lab27.githubuser.R
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.databinding.FragmentPagingBinding
-import kotlinx.android.synthetic.main.layout_recyclerview.view.*
+import kotlinx.android.synthetic.main.item_user.view.*
 
 class UserPagingAdapter : PagingDataAdapter<User, UserPagingAdapter.PagingViewHolder>(DataDiff) {
     lateinit var binding : FragmentPagingBinding
@@ -25,7 +24,7 @@ class UserPagingAdapter : PagingDataAdapter<User, UserPagingAdapter.PagingViewHo
         return PagingViewHolder(
             LayoutInflater
                 .from(parent.context)
-                .inflate(R.layout.layout_recyclerview, parent, false)
+                .inflate(R.layout.item_user, parent, false)
         )
     }
 

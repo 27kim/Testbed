@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.R
 import io.lab27.githubuser.data.dao.User
-import io.lab27.githubuser.databinding.LayoutRecyclerviewBinding
+import io.lab27.githubuser.databinding.ItemUserBinding
 
 class RemoteAdapter (private val lifecycleOwner: LifecycleOwner):
     ListAdapter<User, RemoteAdapter.Holder>(UserPagingAdapter.DataDiff) {
@@ -17,7 +17,7 @@ class RemoteAdapter (private val lifecycleOwner: LifecycleOwner):
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflater = LayoutInflater.from(parent.context)
-        return Holder(DataBindingUtil.inflate(inflater, R.layout.layout_recyclerview, parent, false))
+        return Holder(DataBindingUtil.inflate(inflater, R.layout.item_user, parent, false))
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
@@ -32,8 +32,8 @@ class RemoteAdapter (private val lifecycleOwner: LifecycleOwner):
     }
 
     override fun getItemViewType(position: Int): Int {
-        return R.layout.layout_recyclerview
+        return R.layout.item_user
     }
 
-    class Holder(val binding: LayoutRecyclerviewBinding) : RecyclerView.ViewHolder(binding.root)
+    class Holder(val binding: ItemUserBinding) : RecyclerView.ViewHolder(binding.root)
 }

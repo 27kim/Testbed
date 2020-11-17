@@ -14,7 +14,7 @@ import io.lab27.githubuser.viewmodel.UserViewModel
 import io.lab27.githubuser.base.BaseFragment
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.databinding.FragmentRemoteBinding
-import io.lab27.githubuser.databinding.LayoutRecyclerviewBinding
+import io.lab27.githubuser.databinding.ItemUserBinding
 import io.lab27.githubuser.util.L
 import kotlinx.android.synthetic.main.fragment_remote.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -145,11 +145,11 @@ class LocalAdapter :
     RecyclerView.Adapter<LocalAdapter.LocalViewHolder>() {
     private var items = mutableListOf<User>()
     var onItemClick: ((User) -> Unit)? = null
-    lateinit var itemBinding: LayoutRecyclerviewBinding
+    lateinit var itemBinding: ItemUserBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocalViewHolder {
         itemBinding =
-            LayoutRecyclerviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
         return LocalViewHolder(itemBinding)
     }
@@ -168,7 +168,7 @@ class LocalAdapter :
         notifyDataSetChanged()
     }
 
-    inner class LocalViewHolder(private val binding: LayoutRecyclerviewBinding) :
+    inner class LocalViewHolder(private val binding: ItemUserBinding) :
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener {

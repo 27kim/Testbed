@@ -11,7 +11,6 @@ import io.lab27.githubuser.R
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.data.model.Article
 import io.lab27.githubuser.databinding.ItemNewsBinding
-import io.lab27.githubuser.databinding.LayoutRecyclerviewBinding
 
 class NewsAdapter (private val lifecycleOwner: LifecycleOwner):
     ListAdapter<Article, NewsAdapter.Holder>(DataDiff) {

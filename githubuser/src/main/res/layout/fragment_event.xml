@@ -6,6 +6,9 @@
 
     <data>
         <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="io.lab27.githubuser.viewmodel.MHViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +22,7 @@
            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
            android:orientation="vertical"
            tools:listitem="@layout/item_event"
+           android:background="@color/temp_Seashell"
            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

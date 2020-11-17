@@ -1,4 +1,4 @@
-package io.lab27.githubuser.network
+package io.lab27.githubuser.network.api
 
 import io.lab27.githubuser.data.model.UserResponse
 import io.reactivex.Single

@@ -1,11 +1,15 @@
 package io.lab27.githubuser.viewmodel
 
 import android.util.Base64
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import io.lab27.githubuser.data.AuthRepository
 import io.lab27.githubuser.data.model.TokenResponse
-import io.lab27.githubuser.util.L
 import kotlinx.coroutines.launch
+import kotlin.collections.HashMap
+import kotlin.collections.set
 
 class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
 
@@ -24,16 +28,9 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     fun fetchAuthCode(authCode: String) {
         viewModelScope.launch {
             _isLoading.value = true
-            L.i("token? 1.authCode : $authCode")
-
             val tokenResponse = fetchToken(authCode)
             _token.value = tokenResponse.access_token
-            L.i("token? 2.tokenResponse  $tokenResponse")
-
-            val bearerToken = "Bearer ${tokenResponse.access_token}"
-            val fetchMe = authRepository.fetchMe(bearerToken)
-            L.i("token? 3.fetchMe  $fetchMe")
-
+            val fetchMe = authRepository.fetchMe("Bearer ${tokenResponse.access_token}")
             _me.value = fetchMe.toString()
 
             _isLoading.value = false

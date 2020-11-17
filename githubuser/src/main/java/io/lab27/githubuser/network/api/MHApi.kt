@@ -1,4 +1,4 @@
-package io.lab27.githubuser.network
+package io.lab27.githubuser.network.api
 
 import io.lab27.githubuser.data.model.EventResponse
 import io.lab27.githubuser.data.model.NewsResponse
@@ -8,7 +8,7 @@ import okhttp3.RequestBody
 import retrofit2.http.*
 
 interface MHApi {
-    @POST("api/menu/event/0")
+    @POST("/api/menu/event/0")
     suspend fun fetchEvent(
     ): List<EventResponse>
 }

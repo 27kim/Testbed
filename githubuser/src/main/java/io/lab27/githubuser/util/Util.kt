@@ -8,6 +8,7 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.module.GlideModule
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 
@@ -16,6 +17,20 @@ fun setImageResource(view : ImageView, url : String?){
     url?.let {
         Glide.with(view.context)
             .load(url)
+            .centerCrop()
+            .listener(requestListener(view))
+            .into(view)
+    }
+}
+
+@BindingAdapter("mhImageUrl")
+fun setMhImageResource(view : ImageView, url : String?){
+    val imgUrl = "https://test.happ.hyundai.com$url"
+    L.i("mhImageUrl? $imgUrl")
+    url?.let {
+        Glide
+            .with(view.context)
+            .load("$imgUrl")
             .centerCrop()
             .listener(requestListener(view))
             .into(view)
@@ -41,6 +56,7 @@ private fun requestListener(view: ImageView): RequestListener<Drawable> {
             isFirstResource: Boolean
         ): Boolean {
             view.setImageResource(R.drawable.stat_notify_error)
+            L.e("imageUrl exception ${e?.localizedMessage}")
             return true
         }
 
