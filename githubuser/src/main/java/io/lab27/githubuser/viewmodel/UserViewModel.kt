@@ -8,14 +8,16 @@ import io.lab27.githubuser.base.BaseViewModel
 import io.lab27.githubuser.data.UserRepository
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.data.datasource.remote.RemoteDataSourceImpl
+import io.lab27.githubuser.network.api.UserApi
 import io.lab27.githubuser.util.L
 import io.lab27.githubuser.util.UserDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import org.koin.core.qualifier._q
+import org.koin.core.component.inject
 
 class UserViewModel(private val userRepository: UserRepository) : BaseViewModel() {
+    val userApi : UserApi by inject()
     private var _localUserList = userRepository.queryAllUsers()
     val localUserList: LiveData<List<User>>
         get() = _localUserList
@@ -30,15 +32,6 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
     private var _userList = MutableLiveData<List<User>?>()
     val userList: LiveData<List<User>?>
         get() = _userList
-
-//    val userList = query.switchMap { query ->
-//        if (query == "") {
-//            fetchUserList("asdf")
-//        } else {
-//            fetchUserList(query)
-//        }
-//    }
-
 
     private val _finishState = MutableLiveData<Boolean>()
     val finishState: LiveData<Boolean>
@@ -217,7 +210,7 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
 
     val listData =
         Pager(PagingConfig(pageSize = 15)) {
-            UserDataSource(RemoteDataSourceImpl(), "asdf")
+            UserDataSource(RemoteDataSourceImpl(userApi), "asdf")
         }
             .flow
             .cachedIn(viewModelScope)

@@ -3,6 +3,11 @@
     package="io.lab27.githubuser">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <meta-data
+        android:name="io.lab27.githubuser.network.UnsafeOkHttpClient"
+        android:value="MyGlideModule" />
+
     <application
         android:name=".base.BaseApplication"
         android:allowBackup="true"
@@ -12,13 +17,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
+        <activity android:name=".ui.WebViewActivity"></activity>
         <activity android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -32,8 +37,5 @@
         </activity>
         <activity android:name=".ui.UserDetailActivity" />
     </application>
-    <meta-data
-        android:name="io.lab27.githubuser.network.UnsafeOkHttpClient"
-        android:value="MyGlideModule" />
-</manifest>
 
+</manifest>

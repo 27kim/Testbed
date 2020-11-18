@@ -2,6 +2,7 @@ package io.lab27.githubuser.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
@@ -16,7 +17,7 @@ import io.lab27.githubuser.databinding.ItemUserBinding
 class EventAdapter (private val lifecycleOwner: LifecycleOwner):
     ListAdapter<EventResponse, EventAdapter.Holder>(DataDiff) {
 
-    var onItemClick: ((User, Int) -> Unit)? = null
+    var onItemClick: ((EventResponse) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflater = LayoutInflater.from(parent.context)
@@ -26,6 +27,10 @@ class EventAdapter (private val lifecycleOwner: LifecycleOwner):
     override fun onBindViewHolder(holder: Holder, position: Int) {
         holder.binding.lifecycleOwner = lifecycleOwner
         holder.binding.event = getItem(position)
+        holder.binding.root.setOnClickListener {
+            onItemClick?.invoke(getItem(position))
+        }
+        R.drawable.ic_hyundai
     }
 
     override fun getItemViewType(position: Int): Int {

@@ -1,6 +1,5 @@
 package io.lab27.githubuser.util
 
-import android.R
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
@@ -11,6 +10,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.module.GlideModule
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import io.lab27.githubuser.R
 
 @BindingAdapter("imageUrl")
 fun setImageResource(view : ImageView, url : String?){
@@ -55,7 +55,7 @@ private fun requestListener(view: ImageView): RequestListener<Drawable> {
             target: Target<Drawable>?,
             isFirstResource: Boolean
         ): Boolean {
-            view.setImageResource(R.drawable.stat_notify_error)
+            view.setImageDrawable(view.context.resources.getDrawable(R.drawable.ic_hyundai))
             L.e("imageUrl exception ${e?.localizedMessage}")
             return true
         }

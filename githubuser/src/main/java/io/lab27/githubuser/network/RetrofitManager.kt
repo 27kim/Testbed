@@ -89,14 +89,14 @@ class RetrofitManager {
             .client(UnsafeOkHttpClient.getUnsafeOkHttpClient())
     }
 
-    //github user api
+/*    //github user api
     val userApi: UserApi by lazy {
         val baseUrl = "https://api.github.com/"
         defaultBuilder(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(UserApi::class.java)
-    }
+    }*/
 
     val newsApi: NewsApi by lazy {
         val baseUrl = "https://newsapi.org/"

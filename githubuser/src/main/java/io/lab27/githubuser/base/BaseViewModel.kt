@@ -7,8 +7,9 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
+import org.koin.core.component.KoinComponent
 
-abstract class BaseViewModel : ViewModel() {
+abstract class BaseViewModel : ViewModel(), KoinComponent {
     protected val compositeDisposable by lazy { CompositeDisposable() }
 
     protected val _loadingState = MutableLiveData<Boolean>()
