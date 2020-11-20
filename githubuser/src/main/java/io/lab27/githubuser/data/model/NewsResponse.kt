@@ -1,9 +1,9 @@
 package io.lab27.githubuser.data.model
 
 data class NewsResponse (
-    val status: String,
-    val totalResults: Long,
-    val articles: List<Article>
+    val status: String = "",
+    val totalResults: Long = 0L,
+    val articles: List<Article> = emptyList()
 )
 
 data class Article (

@@ -7,7 +7,7 @@ import androidx.paging.cachedIn
 import io.lab27.githubuser.base.BaseViewModel
 import io.lab27.githubuser.data.UserRepository
 import io.lab27.githubuser.data.dao.User
-import io.lab27.githubuser.data.datasource.remote.RemoteDataSourceImpl
+import io.lab27.githubuser.data.datasource.remote.UserDataSourceImpl
 import io.lab27.githubuser.network.api.UserApi
 import io.lab27.githubuser.util.L
 import io.lab27.githubuser.util.UserDataSource
@@ -15,9 +15,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
+import org.koin.core.qualifier.named
 
 class UserViewModel(private val userRepository: UserRepository) : BaseViewModel() {
-    val userApi : UserApi by inject()
+    val userApi : UserApi by inject(named("userApi"))
     private var _localUserList = userRepository.queryAllUsers()
     val localUserList: LiveData<List<User>>
         get() = _localUserList
@@ -210,7 +211,7 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
 
     val listData =
         Pager(PagingConfig(pageSize = 15)) {
-            UserDataSource(RemoteDataSourceImpl(userApi), "asdf")
+            UserDataSource(UserDataSourceImpl(userApi), "asdf")
         }
             .flow
             .cachedIn(viewModelScope)

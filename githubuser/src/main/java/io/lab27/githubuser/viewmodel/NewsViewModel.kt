@@ -25,6 +25,4 @@ class NewsViewModel(private val newsRepository: NewsRepository) : ViewModel() {
             _isLoading.value = false
         }
     }
-
-    private val _bannerItems = MutableLiveData(listOf<String>())
 }

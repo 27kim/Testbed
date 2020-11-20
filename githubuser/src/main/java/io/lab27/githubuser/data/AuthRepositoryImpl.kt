@@ -1,15 +1,14 @@
 package io.lab27.githubuser.data
 
 import io.lab27.githubuser.data.datasource.local.LocalDataSource
-import io.lab27.githubuser.data.datasource.remote.RemoteDataSource
-import io.lab27.githubuser.data.model.EventResponse
+import io.lab27.githubuser.data.datasource.remote.AuthDataSource
 import io.lab27.githubuser.data.model.FetchMeResponse
 import io.lab27.githubuser.data.model.TokenResponse
 import io.lab27.githubuser.util.L
-import java.lang.Exception
+
 
 class AuthRepositoryImpl constructor(
-    private val remote: RemoteDataSource,
+    private val remote: AuthDataSource,
     private val local: LocalDataSource
 ) :
     AuthRepository {
@@ -17,9 +16,9 @@ class AuthRepositoryImpl constructor(
         header: String,
         body: HashMap<String, String>
     ): TokenResponse {
-        return try{
+        return try {
             remote.fetchToken(header, body)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             L.e("fetchToken exception ${e.message}")
             TokenResponse()
         }
@@ -34,14 +33,5 @@ class AuthRepositoryImpl constructor(
         }
 
     }
-
-    override suspend fun fetchEvent(): List<EventResponse> {
-        return try {
-            remote.fetchEvent()
-        } catch (e: Exception) {
-            L.e("fetchEvent exception ${e.message}")
-            emptyList<EventResponse>()
-        }
-    }
-
 }
+

@@ -11,5 +11,5 @@ interface AuthRepository {
     ): TokenResponse
 
     suspend fun fetchMe(token: String): FetchMeResponse
-    suspend fun fetchEvent(): List<EventResponse>
+//    suspend fun fetchEvent(): List<EventResponse>
 }

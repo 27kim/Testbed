@@ -2,8 +2,6 @@ package io.lab27.githubuser.network
 
 import io.lab27.githubuser.network.api.AuthApi
 import io.lab27.githubuser.network.api.MHApi
-import io.lab27.githubuser.network.api.NewsApi
-import io.lab27.githubuser.network.api.UserApi
 import io.lab27.githubuser.util.L
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -89,22 +87,13 @@ class RetrofitManager {
             .client(UnsafeOkHttpClient.getUnsafeOkHttpClient())
     }
 
-/*    //github user api
-    val userApi: UserApi by lazy {
-        val baseUrl = "https://api.github.com/"
-        defaultBuilder(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(UserApi::class.java)
-    }*/
-
-    val newsApi: NewsApi by lazy {
-        val baseUrl = "https://newsapi.org/"
-        newsBuilder(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(NewsApi::class.java)
-    }
+//    val newsApi: NewsApi by lazy {
+//        val baseUrl = "https://newsapi.org/"
+//        newsBuilder(baseUrl)
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build()
+//            .create(NewsApi::class.java)
+//    }
 
     val authApi: AuthApi by lazy {
         val baseUrl = "http://35.216.37.218:21549/"

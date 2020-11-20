@@ -30,7 +30,6 @@ class EventAdapter (private val lifecycleOwner: LifecycleOwner):
         holder.binding.root.setOnClickListener {
             onItemClick?.invoke(getItem(position))
         }
-        R.drawable.ic_hyundai
     }
 
     override fun getItemViewType(position: Int): Int {
