@@ -2,6 +2,7 @@ package io.lab27.githubuser.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -16,6 +17,7 @@ import io.lab27.githubuser.viewmodel.NewsViewModel
 class BannerAdapter(private val lifecycleOwner: LifecycleOwner) :
     ListAdapter<Article, BannerAdapter.Holder>(diffCallback) {
 
+    var action : ((Article) -> Unit?)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflater = LayoutInflater.from(parent.context)
         return Holder(DataBindingUtil.inflate(inflater, R.layout.item_banner, parent, false))
@@ -24,6 +26,10 @@ class BannerAdapter(private val lifecycleOwner: LifecycleOwner) :
     override fun onBindViewHolder(holder: Holder, position: Int) {
         holder.binding.lifecycleOwner = lifecycleOwner
         holder.binding.article = getItem(position)
+        holder.binding.root.setOnClickListener {
+            Toast.makeText(it.context, "$position", Toast.LENGTH_SHORT).show()
+            action?.invoke(getItem(position))
+        }
     }
 
     override fun getItemViewType(position: Int): Int {

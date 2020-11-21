@@ -27,17 +27,13 @@ val viewModelModule = module {
 }
 
 val repositoryModule = module {
-    single<UserRepository> { UserRepositoryImpl(get(), get()) }
-    single<NewsRepository> { NewsRepositoryImpl(get(), get()) }
-    single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
-    single<EventRepository> { EventRepositoryImpl(get(), get()) }
+    single<UserRepository> { UserRepositoryImpl(get(named("userApi")), get()) }
+    single<NewsRepository> { NewsRepositoryImpl(get(named("newsApi")), get()) }
+    single<AuthRepository> { AuthRepositoryImpl(get(named("authApi")), get()) }
+    single<EventRepository> { EventRepositoryImpl(get(named("mhApi")), get()) }
 }
 
 val dataSourceModule = module {
-//    single<UserDataSource> { UserDataSourceImpl(get(named("userApi"))) }
-//    single<NewsDataSource> { NewsDataSourceImpl(get(named("newsApi"))) }
-//    single<AuthDataSource> { AuthDataSourceImpl(get(named("authApi"))) }
-//    single<EventDataSource> { EventDataSourceImpl(get(named("mhApi"))) }
     single<LocalDataSource> { LocalDataSourceImpl(get()) }
     single<UserDataBase> {
         Room.databaseBuilder(

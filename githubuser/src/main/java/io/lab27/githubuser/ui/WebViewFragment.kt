@@ -4,26 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.navArgs
 import io.lab27.githubuser.base.BaseFragment
 import io.lab27.githubuser.databinding.FragmentWebviewBinding
+import kotlinx.android.synthetic.main.fragment_webview.*
 
 class WebViewFragment : BaseFragment() {
-    private lateinit var binding: FragmentWebviewBinding
+    private val args : WebViewFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentWebviewBinding.inflate(inflater).apply {
-            lifecycleOwner = viewLifecycleOwner
-        }
-        return binding.root
-    }
+    ): View? = FragmentWebviewBinding
+        .inflate(inflater).apply { lifecycleOwner = viewLifecycleOwner }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val args = arguments?.getString(ARG_STR)
+        newsWebView.loadUrl(args.newsUrl)
     }
 
     companion object {

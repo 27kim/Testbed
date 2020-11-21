@@ -8,6 +8,7 @@ import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import io.lab27.githubuser.R
 import io.lab27.githubuser.adapter.*
@@ -66,7 +67,10 @@ class RemoteFragment : BaseFragment() {
     private fun initRecyclerView() {
         val newsHeader = HeaderAdapter(viewLifecycleOwner, "News lists")
         val newsAdapter = HorizontalContainerAdapter(viewLifecycleOwner, bannerAdapter)
-
+        bannerAdapter.action = {article ->
+            val action  = RemoteFragmentDirections.actionWebview(article.url)
+            findNavController().navigate(action)
+        }
         val githubHeader = HeaderAdapter(viewLifecycleOwner, "Github user lists")
         val githubFooter = FooterAdapter(this, "Add Article") {
             userViewModel.fetchUserList()
