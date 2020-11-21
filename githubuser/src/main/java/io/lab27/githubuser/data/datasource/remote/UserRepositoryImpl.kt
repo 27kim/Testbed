@@ -12,22 +12,22 @@ import java.lang.Exception
 
 
 interface UserRepository {
-    fun fetchUserList(query: String) : Single<UserResponse>
-    fun fetchUserList_live(query: String) : Call<UserResponse>
+    fun fetchUserList(query: String): Single<UserResponse>
+    fun fetchUserListLive(query: String): Call<UserResponse>
 
     fun queryAllUsers(): LiveData<List<User>>
-    fun addFavorite(user : User)
-    fun deleteFavorite(user : User)
+    fun addFavorite(user: User)
+    fun deleteFavorite(user: User)
 
     //coroutines test
-    suspend fun fetchUserList_coroutines(query: String) : UserResponse?
-    suspend fun fetchUserList_coroutines_p(query: String, page : Int) : UserResponse
-    suspend fun queryUserLists_coroutines(): List<User>
+    suspend fun fetchUserListCoroutines(query: String): UserResponse?
+    suspend fun fetchUserListCoroutinesPaging(query: String, page: Int): UserResponse
+    suspend fun queryUserListsCoroutines(): List<User>
 
     /**
      * testing
      * */
-    suspend fun fetchUserList_Result(query: String) : Result<UserResponse>
+    suspend fun fetchUserListResult(query: String): Result<UserResponse>
 }
 
 class UserRepositoryImpl constructor(
@@ -40,11 +40,11 @@ class UserRepositoryImpl constructor(
     override fun addFavorite(user: User) = local.addFavorite(user)
     override fun deleteFavorite(user: User) = local.deleteFavorite(user)
 
-    override fun fetchUserList_live(query: String): Call<UserResponse> {
+    override fun fetchUserListLive(query: String): Call<UserResponse> {
         return userApi.getUser_live(query)
     }
 
-    override suspend fun fetchUserList_coroutines(query: String): UserResponse? {
+    override suspend fun fetchUserListCoroutines(query: String): UserResponse? {
         return try {
             userApi.getUser_coroutines(query)
         } catch (t: Throwable) {
@@ -52,7 +52,7 @@ class UserRepositoryImpl constructor(
         }
     }
 
-    override suspend fun fetchUserList_coroutines_p(query: String, page: Int): UserResponse {
+    override suspend fun fetchUserListCoroutinesPaging(query: String, page: Int): UserResponse {
         return try {
             userApi.getUser_coroutines_p(query, page)
         } catch (e: Exception) {
@@ -60,9 +60,9 @@ class UserRepositoryImpl constructor(
         }
     }
 
-    override suspend fun queryUserLists_coroutines() = local.queryAllUsers_c()
+    override suspend fun queryUserListsCoroutines() = local.queryAllUsers_c()
 
-    override suspend fun fetchUserList_Result(query: String): Result<UserResponse> {
+    override suspend fun fetchUserListResult(query: String): Result<UserResponse> {
         val response = userApi.getUser_coroutines_result(query)
         if (response.isSuccessful) {
             return Result.Success(response.body()!!)

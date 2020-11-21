@@ -101,7 +101,7 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
                 }
 
                 remoteUser.addAll(async(Dispatchers.IO) {
-                    userRepository.fetchUserList_coroutines_p(queryStr, page++)?.items
+                    userRepository.fetchUserListCoroutinesPaging(queryStr, page++)?.items
                 }.await())
 
 //                val remoteUser = async(Dispatchers.IO) {
@@ -110,7 +110,7 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
 //                }.await()
 
                 val localUser =
-                    async(Dispatchers.IO) { userRepository.queryUserLists_coroutines() }.await()
+                    async(Dispatchers.IO) { userRepository.queryUserListsCoroutines() }.await()
 
                 if (localUser.isNotEmpty()) {
                     localUser?.forEach { l ->
@@ -145,11 +145,11 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
                  * */
                 val remoteUser =
                     async(Dispatchers.IO) {
-                        userRepository.fetchUserList_coroutines_p(query, page++)?.items
+                        userRepository.fetchUserListCoroutinesPaging(query, page++)?.items
                             ?: emptyList()
                     }.await()
                 val localUser =
-                    async(Dispatchers.IO) { userRepository.queryUserLists_coroutines() }.await()
+                    async(Dispatchers.IO) { userRepository.queryUserListsCoroutines() }.await()
 
                 val list = arrayListOf<User>().apply {
                     addAll(_userList.value ?: arrayListOf())
