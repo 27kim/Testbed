@@ -20,8 +20,7 @@ class BaseApplication : Application() {
             // modules
             modules(
                 listOf(
-                    viewModelModule, repositoryModule, dataSourceModule,
-                    clientModule, retrofitModule, apiModule
+                    viewModelModule, repositoryModule, dataSourceModule, apiModule
                 )
             )
         }
