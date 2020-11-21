@@ -15,7 +15,7 @@ class UserDataSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, User> {
         try {
             val currentLoadingPageKey = params.key ?: 1
-            val response = userApi.getUser_coroutines_p(query, currentLoadingPageKey)
+            val response = userApi.getUserCoroutinesPaging(query, currentLoadingPageKey)
             val responseData = mutableListOf<User>()
             val data = response.items ?: emptyList()
             responseData.addAll(data)
@@ -45,7 +45,7 @@ class UserPagingSource(
         try {
             // Start refresh at page 1 if undefined.
             val nextPageNumber = params.key ?: 1
-            val response = userApi.getUser_coroutines_p(query, nextPageNumber)
+            val response = userApi.getUserCoroutinesPaging(query, nextPageNumber)
             return LoadResult.Page(
                 data = response.items,
                 prevKey = null, // Only paging forward.

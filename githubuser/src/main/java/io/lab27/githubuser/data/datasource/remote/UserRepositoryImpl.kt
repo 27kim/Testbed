@@ -41,12 +41,12 @@ class UserRepositoryImpl constructor(
     override fun deleteFavorite(user: User) = local.deleteFavorite(user)
 
     override fun fetchUserListLive(query: String): Call<UserResponse> {
-        return userApi.getUser_live(query)
+        return userApi.getUserLive(query)
     }
 
     override suspend fun fetchUserListCoroutines(query: String): UserResponse? {
         return try {
-            userApi.getUser_coroutines(query)
+            userApi.getUserCoroutines(query)
         } catch (t: Throwable) {
             null
         }
@@ -54,7 +54,7 @@ class UserRepositoryImpl constructor(
 
     override suspend fun fetchUserListCoroutinesPaging(query: String, page: Int): UserResponse {
         return try {
-            userApi.getUser_coroutines_p(query, page)
+            userApi.getUserCoroutinesPaging(query, page)
         } catch (e: Exception) {
             UserResponse()
         }
@@ -63,7 +63,7 @@ class UserRepositoryImpl constructor(
     override suspend fun queryUserListsCoroutines() = local.queryAllUsers_c()
 
     override suspend fun fetchUserListResult(query: String): Result<UserResponse> {
-        val response = userApi.getUser_coroutines_result(query)
+        val response = userApi.getUserCoroutinesResult(query)
         if (response.isSuccessful) {
             return Result.Success(response.body()!!)
         }

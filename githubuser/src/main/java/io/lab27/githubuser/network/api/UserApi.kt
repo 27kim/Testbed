@@ -14,26 +14,26 @@ interface UserApi {
     ): Single<UserResponse>
 
     @GET("search/users")
-    fun getUser_live(
+    fun getUserLive(
         @Query("q") q: String?
     ): Call<UserResponse>
 
     @GET("search/users")
-    suspend fun getUser_coroutines(
+    suspend fun getUserCoroutines(
         @Query("q") q: String?,
         @Query("per_page") page : Int = 3
 
     ): UserResponse
 
     @GET("search/users")
-    suspend fun getUser_coroutines_p(
+    suspend fun getUserCoroutinesPaging(
         @Query("q") q: String?,
         @Query("page") p : Int,
         @Query("per_page") page : Int = 3
     ): UserResponse
 
     @GET("search/users")
-    suspend fun getUser_coroutines_result(
+    suspend fun getUserCoroutinesResult(
         @Query("q") q: String?
     ): Response<UserResponse>
 
