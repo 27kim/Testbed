@@ -5,9 +5,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import io.lab27.githubuser.base.BaseViewModel
-import io.lab27.githubuser.data.UserRepository
+import io.lab27.githubuser.data.datasource.remote.UserRepository
 import io.lab27.githubuser.data.dao.User
-import io.lab27.githubuser.data.datasource.remote.UserDataSourceImpl
 import io.lab27.githubuser.network.api.UserApi
 import io.lab27.githubuser.util.L
 import io.lab27.githubuser.util.UserDataSource
@@ -211,7 +210,7 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
 
     val listData =
         Pager(PagingConfig(pageSize = 15)) {
-            UserDataSource(UserDataSourceImpl(userApi), "asdf")
+            UserDataSource(userApi, "asdf")
         }
             .flow
             .cachedIn(viewModelScope)

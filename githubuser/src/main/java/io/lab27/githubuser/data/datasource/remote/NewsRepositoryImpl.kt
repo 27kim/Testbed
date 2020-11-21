@@ -1,11 +1,14 @@
-package io.lab27.githubuser.data
+package io.lab27.githubuser.data.datasource.remote
 
 import io.lab27.githubuser.data.datasource.local.LocalDataSource
-import io.lab27.githubuser.data.datasource.remote.NewsDataSource
 import io.lab27.githubuser.data.model.NewsResponse
 import io.lab27.githubuser.network.api.NewsApi
 import io.lab27.githubuser.util.L
 import java.lang.Exception
+
+interface NewsRepository {
+    suspend fun fetchNewsHeadLines() : NewsResponse?
+}
 
 class NewsRepositoryImpl constructor(
     private val newsApi: NewsApi,

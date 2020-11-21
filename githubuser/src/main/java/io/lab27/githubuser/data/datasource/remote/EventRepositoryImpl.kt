@@ -1,23 +1,23 @@
-package io.lab27.githubuser.data
+package io.lab27.githubuser.data.datasource.remote
 
 import io.lab27.githubuser.data.datasource.local.LocalDataSource
-import io.lab27.githubuser.data.datasource.remote.AuthDataSource
-import io.lab27.githubuser.data.datasource.remote.EventDataSource
 import io.lab27.githubuser.data.model.EventResponse
-import io.lab27.githubuser.data.model.FetchMeResponse
-import io.lab27.githubuser.data.model.TokenResponse
-import io.lab27.githubuser.util.L
+import io.lab27.githubuser.network.api.MHApi
 import java.lang.Exception
 
 
+interface EventRepository {
+    suspend fun fetchEvent(): List<EventResponse>
+}
+
 class EventRepositoryImpl constructor(
-    private val remote: EventDataSource,
+    private val mhApi: MHApi,
     private val local: LocalDataSource
 ) :
     EventRepository {
     override suspend fun fetchEvent(): List<EventResponse> {
         return try {
-            remote.fetchEvent()
+            mhApi.fetchEvent()
         }catch (e : Exception){
             emptyList()
         }
