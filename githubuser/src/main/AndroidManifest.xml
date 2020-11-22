@@ -34,8 +34,11 @@
                     android:host="auth_data"
                     android:scheme="oauth2" />
             </intent-filter>
+            <nav-graph android:value="@navigation/nav_graph" />
         </activity>
         <activity android:name=".ui.UserDetailActivity" />
+        <meta-data android:name="android.app.shortcuts"
+            android:resource="@xml/shortcuts" />
     </application>
 
 </manifest>

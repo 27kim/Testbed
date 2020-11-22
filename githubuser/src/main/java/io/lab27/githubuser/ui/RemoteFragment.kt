@@ -1,13 +1,18 @@
 package io.lab27.githubuser.ui
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.SearchManager
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.core.app.NotificationCompat
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -32,6 +37,7 @@ class RemoteFragment : BaseFragment() {
     private lateinit var searchView: SearchView
     private lateinit var queryTextListener: SearchView.OnQueryTextListener
     private lateinit var binding: FragmentRemoteBinding
+    val channelId = "channelSample"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,13 +81,44 @@ class RemoteFragment : BaseFragment() {
             userViewModel.fetchUserList()
         }
 
+        val deepLinkHeader = HeaderAdapter(viewLifecycleOwner, "Hit to test deep link")
+        deepLinkHeader.deeplink = {
+            var args = Bundle()
+            args.putString("arg", "I just came from deep link :)")
+            val deeplink = Navigation.findNavController(binding.root).createDeepLink()
+                .setDestination(R.id.aboutFragment)
+                .setArguments(args)
+                .createPendingIntent()
+
+            val notificationManager =
+                requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                notificationManager.createNotificationChannel(
+                    NotificationChannel(
+                        channelId, "Deep Links", NotificationManager.IMPORTANCE_HIGH
+                    )
+                )
+            }
+            val builder = NotificationCompat.Builder(
+                requireContext(), channelId
+            )
+                .setContentTitle("Navigation")
+                .setContentText("Deep link to Android")
+                .setSmallIcon(R.drawable.ic_hyundai)
+                .setContentIntent(deeplink)
+                .setAutoCancel(true)
+            notificationManager.notify(0, builder.build())
+
+        }
+
         val concatAdapter = ConcatAdapter(
             ConcatAdapter.Config.Builder().build(),
             newsHeader,
             newsAdapter,
             githubHeader,
             remoteAdapter,
-            githubFooter
+            githubFooter,
+            deepLinkHeader
         )
 
         recyclerView.apply {
