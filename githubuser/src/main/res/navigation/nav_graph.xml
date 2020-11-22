@@ -13,18 +13,30 @@
 
         <action
             android:id="@+id/action_webview"
-            app:destination="@id/webViewFragment">
-        </action>
+            app:destination="@id/webViewFragment"/>
     </fragment>
 
     <fragment
         android:id="@+id/webViewFragment"
         android:name="io.lab27.githubuser.ui.WebViewFragment"
-        android:label="WebViewFragment">
+        android:label="WebViewFragment"
+        tools:layout="@layout/fragment_webview">
 
         <argument
             android:name="newsUrl"
-            app:argType="string"
-            android:defaultValue="url" />
+            android:defaultValue="url"
+            app:argType="string" />
     </fragment>
+
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="io.lab27.githubuser.ui.AboutFragment"
+        android:label="AboutFragment"
+        tools:layout="@layout/fragment_about" />
+    <fragment
+        android:id="@+id/rulesFragment"
+        android:name="io.lab27.githubuser.ui.RulesFragment"
+        android:label="RulesFragment"
+        tools:layout="@layout/fragment_rules"
+        />
 </navigation>

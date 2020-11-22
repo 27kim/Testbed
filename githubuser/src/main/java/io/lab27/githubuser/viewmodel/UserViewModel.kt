@@ -49,7 +49,6 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
         _query.value = query
 
         fetchUserList()
-
     }
 
     private var page = 1

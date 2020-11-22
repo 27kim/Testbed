@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.navigation.fragment.navArgs
 import io.lab27.githubuser.base.BaseFragment
 import io.lab27.githubuser.databinding.FragmentWebviewBinding
@@ -21,7 +23,15 @@ class WebViewFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        newsWebView.loadUrl(args.newsUrl)
+        newsWebView.apply {
+            webViewClient = object : WebViewClient() {
+                override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+                    return false
+                }
+            }
+            loadUrl(args.newsUrl)
+        }
+
     }
 
     companion object {

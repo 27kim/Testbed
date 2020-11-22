@@ -8,7 +8,9 @@ import android.view.*
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.ConcatAdapter
 import io.lab27.githubuser.R
 import io.lab27.githubuser.adapter.*
@@ -40,10 +42,12 @@ class RemoteFragment : BaseFragment() {
         return binding.root
     }
 
+
     private fun initView(inflater: LayoutInflater) {
         binding = FragmentRemoteBinding.inflate(inflater).apply {
             lifecycleOwner = viewLifecycleOwner
         }
+        setHasOptionsMenu(true)
 
         remoteAdapter.apply {
             onItemClick = { user, position ->
@@ -51,11 +55,6 @@ class RemoteFragment : BaseFragment() {
                 userViewModel.updateUser(user)
             }
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,8 +66,8 @@ class RemoteFragment : BaseFragment() {
     private fun initRecyclerView() {
         val newsHeader = HeaderAdapter(viewLifecycleOwner, "News lists")
         val newsAdapter = HorizontalContainerAdapter(viewLifecycleOwner, bannerAdapter)
-        bannerAdapter.action = {article ->
-            val action  = RemoteFragmentDirections.actionWebview(article.url)
+        bannerAdapter.action = { article ->
+            val action = RemoteFragmentDirections.actionWebview(article.url)
             findNavController().navigate(action)
         }
         val githubHeader = HeaderAdapter(viewLifecycleOwner, "Github user lists")
@@ -160,7 +159,8 @@ class RemoteFragment : BaseFragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.main_menu, menu)
+        inflater.inflate(R.menu.options_menu, menu)
+//        inflater.inflate(R.menu.main_menu, menu)
         val searchItem = menu.findItem(R.id.actionSearch)
         val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
 
@@ -191,11 +191,13 @@ class RemoteFragment : BaseFragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.actionSearch -> return false
-        }
-        searchView.setOnQueryTextListener(queryTextListener)
-        return super.onOptionsItemSelected(item)
+        return NavigationUI.onNavDestinationSelected(item, requireView().findNavController())
+                || super.onOptionsItemSelected(item)
+//        when (item.itemId) {
+//            R.id.actionSearch -> return false
+//        }
+//        searchView.setOnQueryTextListener(queryTextListener)
+//        return super.onOptionsItemSelected(item)
     }
 
     companion object {
