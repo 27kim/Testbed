@@ -27,7 +27,6 @@ class BannerAdapter(private val lifecycleOwner: LifecycleOwner) :
         holder.binding.lifecycleOwner = lifecycleOwner
         holder.binding.article = getItem(position)
         holder.binding.root.setOnClickListener {
-            Toast.makeText(it.context, "$position", Toast.LENGTH_SHORT).show()
             action?.invoke(getItem(position))
         }
     }
