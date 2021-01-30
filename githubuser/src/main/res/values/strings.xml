@@ -9,6 +9,7 @@
     <string name="about">About</string>
     <string name="rules_text">Select the answer from the options given. Each time you get an answer correct, you advance to the next question.\n\nIf you get the answer wrong, your game ends! You can return to the title screen using up or back from within the game screen, and this will also end your game.</string>
     <string name="rules">Rules</string>
+    <string name="deep_link">DeepLink</string>
     <string name="static_shortcut_label_short">label</string>
     <string name="static_shortcut_label_long">sample label</string>
     <string name="static_shortcut_disabled_message">disabled</string>

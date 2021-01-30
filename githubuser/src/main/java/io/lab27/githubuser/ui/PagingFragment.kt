@@ -5,12 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
-import androidx.paging.LoadState
 import io.lab27.githubuser.adapter.UserLoadStateAdapter
 import io.lab27.githubuser.adapter.UserPagingAdapter
 import io.lab27.githubuser.base.BaseFragment
 import io.lab27.githubuser.databinding.FragmentPagingBinding
-import io.lab27.githubuser.util.L
 import io.lab27.githubuser.viewmodel.UserViewModel
 import kotlinx.android.synthetic.main.fragment_paging.*
 import kotlinx.coroutines.flow.collect
@@ -33,7 +31,7 @@ class PagingFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView.adapter = pagingAdapter.withLoadStateHeaderAndFooter(
+        mainRecyclerView.adapter = pagingAdapter.withLoadStateHeaderAndFooter(
             /**
              * footer/ header
              * */

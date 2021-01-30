@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/remoteFragment"
-        android:name="io.lab27.githubuser.ui.RemoteFragment"
-        android:label="RemoteFragment"
-        tools:layout="@layout/fragment_remote">
+        android:name="io.lab27.githubuser.ui.main.MainFragment"
+        android:label=""
+        tools:layout="@layout/fragment_main">
 
         <action
             android:id="@+id/action_webview"
@@ -19,7 +19,7 @@
     <fragment
         android:id="@+id/webViewFragment"
         android:name="io.lab27.githubuser.ui.WebViewFragment"
-        android:label="WebViewFragment"
+        android:label=""
         tools:layout="@layout/fragment_webview">
 
         <argument
@@ -30,13 +30,17 @@
 
     <fragment
         android:id="@+id/aboutFragment"
-        android:name="io.lab27.githubuser.ui.AboutFragment"
-        android:label="AboutFragment"
-        tools:layout="@layout/fragment_about">
-    </fragment>
+        android:name="io.lab27.githubuser.ui.about.AboutFragment"
+        android:label=""
+        tools:layout="@layout/fragment_about" />
     <fragment
         android:id="@+id/rulesFragment"
         android:name="io.lab27.githubuser.ui.RulesFragment"
         android:label="RulesFragment"
         tools:layout="@layout/fragment_rules" />
+    <fragment
+        android:id="@+id/deepLinkFragment"
+        android:name="io.lab27.githubuser.ui.deeplink.DeepLinkFragment"
+        android:label="DeepLinkFragment"
+        tools:layout="@layout/fragment_deep_link" />
 </navigation>

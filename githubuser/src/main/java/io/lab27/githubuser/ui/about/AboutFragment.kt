@@ -1,11 +1,10 @@
-package io.lab27.githubuser.ui
+package io.lab27.githubuser.ui.about
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.lab27.githubuser.R
 import io.lab27.githubuser.databinding.FragmentAboutBinding
 import kotlinx.android.synthetic.main.fragment_about.*
 

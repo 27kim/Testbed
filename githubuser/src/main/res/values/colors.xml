@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#616161</color>
     <color name="colorAccent">#212121</color>
 
+    <color name="white">#FFFFFF</color>
     <color name="temp_White">#FFFFFF</color>
     <color name="temp_Ivory">#FFFFF0</color>
     <color name="temp_LightYellow">#FFFFE0</color>

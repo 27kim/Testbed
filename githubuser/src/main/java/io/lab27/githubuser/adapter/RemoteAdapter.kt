@@ -13,7 +13,7 @@ import io.lab27.githubuser.databinding.ItemUserBinding
 class RemoteAdapter (private val lifecycleOwner: LifecycleOwner):
     ListAdapter<User, RemoteAdapter.Holder>(UserPagingAdapter.DataDiff) {
 
-    var onItemClick: ((User, Int) -> Unit)? = null
+    var onClick: ((User, Int) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflater = LayoutInflater.from(parent.context)
@@ -26,7 +26,7 @@ class RemoteAdapter (private val lifecycleOwner: LifecycleOwner):
         holder.binding.isStarred.setOnClickListener {
             val user = getItem(position)
             user.isFavorite = !user.isFavorite
-            onItemClick?.invoke(user, position)
+            onClick?.invoke(user, position)
             holder.binding.user = user
         }
     }

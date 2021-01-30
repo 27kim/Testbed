@@ -10,4 +10,8 @@
         android:id="@+id/aboutFragment"
         android:icon="@drawable/rules"
         android:title="@string/about" />
+    <item
+        android:id="@+id/deepLinkFragment"
+        android:icon="@drawable/rules"
+        android:title="@string/deep_link" />
 </menu>

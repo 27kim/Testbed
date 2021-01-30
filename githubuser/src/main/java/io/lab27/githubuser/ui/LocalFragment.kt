@@ -7,16 +7,14 @@ import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.R
 import io.lab27.githubuser.viewmodel.UserViewModel
 import io.lab27.githubuser.base.BaseFragment
 import io.lab27.githubuser.data.dao.User
-import io.lab27.githubuser.databinding.FragmentRemoteBinding
+import io.lab27.githubuser.databinding.FragmentMainBinding
 import io.lab27.githubuser.databinding.ItemUserBinding
 import io.lab27.githubuser.util.L
-import kotlinx.android.synthetic.main.fragment_remote.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class LocalFragment : BaseFragment() {
@@ -24,7 +22,7 @@ class LocalFragment : BaseFragment() {
     private val localAdapter: LocalAdapter by lazy { LocalAdapter() }
     private lateinit var searchView: SearchView
     private lateinit var queryTextListener: SearchView.OnQueryTextListener
-    private lateinit var binding: FragmentRemoteBinding
+    private lateinit var binding: FragmentMainBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,7 +34,7 @@ class LocalFragment : BaseFragment() {
     }
 
     private fun initView(inflater: LayoutInflater) {
-        binding = FragmentRemoteBinding.inflate(inflater).apply {
+        binding = FragmentMainBinding.inflate(inflater).apply {
             lifecycleOwner = viewLifecycleOwner
         }
         localAdapter.apply {
@@ -54,7 +52,7 @@ class LocalFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView.apply {
+        binding.mainRecyclerView.apply {
             adapter = localAdapter
         }
         observe()
@@ -73,11 +71,11 @@ class LocalFragment : BaseFragment() {
                 .also { list ->
                     if (result.isNotEmpty()) {
                         localAdapter.submitList(list)
-                        tvListEmpty.visibility = View.GONE
-                        recyclerView.visibility = View.VISIBLE
+                        binding.tvListEmpty.visibility = View.GONE
+                        binding.mainRecyclerView.visibility = View.VISIBLE
                     } else {
-                        tvListEmpty.visibility = View.VISIBLE
-                        recyclerView.visibility = View.GONE
+                        binding.tvListEmpty.visibility = View.VISIBLE
+                        binding.mainRecyclerView.visibility = View.GONE
                     }
                 }
         })

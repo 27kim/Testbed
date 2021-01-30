@@ -10,12 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.R
 import io.lab27.githubuser.databinding.ItemFooterBinding
 
-class FooterAdapter(
-    val lifecycleOwner: LifecycleOwner,
-    private val label: String,
-    private val actionAll: () -> Unit
-) :
+class FooterAdapter(val lifecycleOwner: LifecycleOwner) :
     ListAdapter<String, FooterAdapter.Holder>(diffCallback) {
+
+    var onClick: (() -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflater = LayoutInflater.from(parent.context)
@@ -26,9 +24,9 @@ class FooterAdapter(
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         holder.binding.lifecycleOwner = lifecycleOwner
-        holder.binding.lblAction.text = label
+        holder.binding.lblAction.text = "Add Article"
         holder.binding.container.setOnClickListener {
-            actionAll.invoke()
+            onClick?.invoke()
         }
     }
 

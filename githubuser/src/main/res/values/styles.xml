@@ -1,11 +1,17 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-<!--    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">-->
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="drawerArrowStyle">@style/ToolbarArrow</item>
+        <item name="colorControlNormal">@color/temp_Black</item>
     </style>
 
+    <style name="ToolbarArrow" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/temp_Black</item>
+    </style>
 </resources>
