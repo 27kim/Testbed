@@ -1,4 +1,4 @@
-package io.lab27.githubuser.adapter
+package io.lab27.githubuser.ui.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,6 +7,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.R
+import io.lab27.githubuser.adapter.UserPagingAdapter
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.databinding.ItemUserBinding
 

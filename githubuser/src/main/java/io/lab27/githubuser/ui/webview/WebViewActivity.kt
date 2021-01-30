@@ -1,11 +1,10 @@
-package io.lab27.githubuser.ui
+package io.lab27.githubuser.ui.webview
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import io.lab27.githubuser.R
 import io.lab27.githubuser.databinding.ActivityWebViewBinding
-import org.koin.android.ext.android.bind
 
 class WebViewActivity : AppCompatActivity() {
     lateinit var binding: ActivityWebViewBinding

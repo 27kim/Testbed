@@ -4,12 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.R
-import io.lab27.githubuser.adapter.NewsAdapter.Companion.diffCallback
+import io.lab27.githubuser.ui.main.NewsAdapter.Companion.diffCallback
 import io.lab27.githubuser.data.model.Article
 import io.lab27.githubuser.databinding.ItemHorizontalContainerBinding
 

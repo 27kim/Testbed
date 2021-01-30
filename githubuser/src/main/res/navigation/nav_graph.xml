@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/webViewFragment"
-        android:name="io.lab27.githubuser.ui.WebViewFragment"
+        android:name="io.lab27.githubuser.ui.webview.WebViewFragment"
         android:label=""
         tools:layout="@layout/fragment_webview">
 

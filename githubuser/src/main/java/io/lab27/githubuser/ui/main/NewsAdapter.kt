@@ -1,4 +1,4 @@
-package io.lab27.githubuser.adapter
+package io.lab27.githubuser.ui.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

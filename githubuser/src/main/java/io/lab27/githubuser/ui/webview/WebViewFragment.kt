@@ -1,4 +1,4 @@
-package io.lab27.githubuser.ui
+package io.lab27.githubuser.ui.webview
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import android.webkit.WebViewClient
 import androidx.navigation.fragment.navArgs
 import io.lab27.githubuser.base.BaseFragment
 import io.lab27.githubuser.databinding.FragmentWebviewBinding
+import io.lab27.githubuser.ui.WebViewFragmentArgs
 import kotlinx.android.synthetic.main.fragment_webview.*
 
 class WebViewFragment : BaseFragment() {
