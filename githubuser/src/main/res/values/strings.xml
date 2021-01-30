@@ -13,4 +13,6 @@
     <string name="static_shortcut_label_short">label</string>
     <string name="static_shortcut_label_long">sample label</string>
     <string name="static_shortcut_disabled_message">disabled</string>
+    <string name="notification_channel_id" translatable="false">testbed_channel</string>
+    <string name="notification_channel_name">testbed</string>
 </resources>
