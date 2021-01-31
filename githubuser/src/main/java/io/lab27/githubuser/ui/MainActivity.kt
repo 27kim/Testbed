@@ -29,10 +29,8 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
         appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
-        toolbar.setupWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
-        
-        //신규 브랜치 없이 여기를 수정 했는데 이걸 stash 해 놓은 상태로 신규 branch 생성 후 거기에 합쳐 놓고 싶음
-        L.i("일단 샘플 코드 변경")
+        binding.mainToolBar.setupWithNavController(navController, appBarConfiguration)
+        binding.navView.setupWithNavController(navController)
+        binding.bottomNavigationView.setupWithNavController(navController)
     }
 }

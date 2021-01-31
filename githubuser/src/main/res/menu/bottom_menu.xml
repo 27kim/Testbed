@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/mainFragment"
+        android:icon="@android:drawable/ic_media_play"
+        android:orderInCategory="1"
+        android:title="Main"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/localFragment"
+        android:icon="@android:drawable/ic_media_play"
+        android:orderInCategory="2"
+        android:title="Local"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/pagingFragment"
+        android:icon="@android:drawable/ic_media_ff"
+        android:orderInCategory="3"
+        android:title="Paging"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/eventFragment"
+        android:icon="@android:drawable/ic_media_next"
+        android:orderInCategory="4"
+        android:title="Event"
+        app:showAsAction="always" />
+</menu>
