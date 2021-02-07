@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.R
 import io.lab27.githubuser.databinding.LayoutMenuBinding
 
-class MenuAdapter(private val lifeCycleOwner: LifecycleOwner) : RecyclerView.Adapter<MenuAdapter.ViewHolder>() {
+class MenuAdapter(private val lifeCycleOwner: LifecycleOwner) :
+    RecyclerView.Adapter<MenuAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(
             DataBindingUtil.inflate(
@@ -25,6 +26,8 @@ class MenuAdapter(private val lifeCycleOwner: LifecycleOwner) : RecyclerView.Ada
         }
 
     override fun getItemCount(): Int = 1
+
+    override fun getItemViewType(position: Int): Int = R.layout.layout_menu
 
     inner class ViewHolder(val binding: LayoutMenuBinding) : RecyclerView.ViewHolder(binding.root)
 }

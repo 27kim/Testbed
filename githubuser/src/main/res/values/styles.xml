@@ -14,4 +14,10 @@
     <style name="ToolbarArrow" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="color">@color/temp_Black</item>
     </style>
+
+    <style name="LayoutMenu" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="layout_constraintTop_toTopOf">parent</item>
+        <item name="layout_constraintBottom_toBottomOf">parent</item>
+    </style>
+
 </resources>
