@@ -23,9 +23,9 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/eventFragment"
+        android:id="@+id/moreMainFragment"
         android:icon="@android:drawable/ic_media_next"
         android:orderInCategory="4"
-        android:title="Event"
+        android:title="More"
         app:showAsAction="always" />
 </menu>

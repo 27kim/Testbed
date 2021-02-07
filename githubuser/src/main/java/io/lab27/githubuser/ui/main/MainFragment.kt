@@ -59,19 +59,18 @@ class MainFragment : BaseFragment() {
         val newsHeader = HeaderAdapter(viewLifecycleOwner, "News lists")
         val githubHeader = HeaderAdapter(viewLifecycleOwner, "Github user lists")
 
-        val concatAdapter = ConcatAdapter(ConcatAdapter.Config.Builder().build())
+        ConcatAdapter(ConcatAdapter.Config.Builder().build())
             .apply {
                 addAdapter((newsHeader))
                 addAdapter(HorizontalContainerAdapter(viewLifecycleOwner, newsAdapter))
                 addAdapter(githubHeader)
                 addAdapter(remoteAdapter)
                 addAdapter(footerAdapter)
+            }.also {
+                binding.mainRecyclerView.adapter = it
             }
-
-        binding.mainRecyclerView.apply {
-            adapter = concatAdapter
-        }
     }
+
 
     private fun observe() {
         observeUserList()

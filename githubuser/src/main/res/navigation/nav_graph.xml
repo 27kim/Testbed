@@ -62,5 +62,9 @@
         android:label="EventFragment"
         tools:layout="@layout/fragment_event"
         />
+    <fragment
+        android:id="@+id/moreMainFragment"
+        android:name="io.lab27.githubuser.ui.more.MoreMainFragment"
+        android:label="MoreMainFragment" />
 
 </navigation>
