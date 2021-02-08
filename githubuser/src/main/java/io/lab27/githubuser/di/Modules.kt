@@ -10,6 +10,7 @@ import io.lab27.githubuser.network.api.AuthApi
 import io.lab27.githubuser.network.api.MHApi
 import io.lab27.githubuser.network.api.NewsApi
 import io.lab27.githubuser.network.api.UserApi
+import io.lab27.githubuser.ui.more.MoreViewModel
 import io.lab27.githubuser.viewmodel.AuthViewModel
 import io.lab27.githubuser.viewmodel.MHViewModel
 import io.lab27.githubuser.viewmodel.NewsViewModel
@@ -24,6 +25,7 @@ val viewModelModule = module {
     viewModel { NewsViewModel(get()) }
     viewModel { AuthViewModel(get()) }
     viewModel { MHViewModel(get()) }
+    viewModel { MoreViewModel(get()) }
 }
 
 val repositoryModule = module {
@@ -31,6 +33,7 @@ val repositoryModule = module {
     single<NewsRepository> { NewsRepositoryImpl(get(named("newsApi")), get()) }
     single<AuthRepository> { AuthRepositoryImpl(get(named("authApi")), get()) }
     single<EventRepository> { EventRepositoryImpl(get(named("mhApi")), get()) }
+    single<MoreRepository> { MoreRepositoryImpl(get(named("moreApi"))) }
 }
 
 val dataSourceModule = module {
@@ -47,4 +50,5 @@ val apiModule = module {
     single(named("newsApi")) { getNewsSource().create(NewsApi::class.java) }
     single(named("authApi")) { getAuthSource().create(AuthApi::class.java) }
     single(named("mhApi")) { getUnsafeSource().create(MHApi::class.java) }
+    single(named("moreApi")) { getUnsafeSource().create(MHApi::class.java) }
 }

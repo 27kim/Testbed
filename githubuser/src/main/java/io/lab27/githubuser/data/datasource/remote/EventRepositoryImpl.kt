@@ -13,12 +13,11 @@ interface EventRepository {
 class EventRepositoryImpl constructor(
     private val mhApi: MHApi,
     private val local: LocalDataSource
-) :
-    EventRepository {
+) : EventRepository {
     override suspend fun fetchEvent(): List<EventResponse> {
         return try {
             mhApi.fetchEvent()
-        }catch (e : Exception){
+        } catch (e: Exception) {
             emptyList()
         }
     }

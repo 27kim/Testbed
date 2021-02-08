@@ -61,7 +61,7 @@ class MainFragment : BaseFragment() {
 
         ConcatAdapter(ConcatAdapter.Config.Builder().build())
             .apply {
-                addAdapter((newsHeader))
+                addAdapter(newsHeader)
                 addAdapter(HorizontalContainerAdapter(viewLifecycleOwner, newsAdapter))
                 addAdapter(githubHeader)
                 addAdapter(remoteAdapter)

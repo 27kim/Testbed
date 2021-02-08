@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -9,37 +10,61 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        app:cardCornerRadius="10dp"
         app:cardBackgroundColor="@color/temp_CadetBlue"
+        app:cardCornerRadius="10dp"
+        android:layout_marginBottom="10dp"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            >
+            android:padding="10dp">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/userTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 android:layout_margin="10dp"
-                android:text="안녕하세요, ㅇㅇㅇ님" />
+                android:text="고객님 안녕하세요?"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/userComment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/userTitle"
                 android:layout_margin="10dp"
+                android:text="myHyundai 를 즐겨보세요!"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:text="myHyundai 2.0" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/userTitle" />
 
+            <com.google.android.material.chip.Chip
+                android:id="@+id/userLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                app:chipCornerRadius="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/userSetting"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="로그인"
+                app:chipStrokeColor="@color/temp_Black"
+                app:chipStrokeWidth="1dp"
+                android:layout_margin="10dp"
+                />
+
+            <ImageView
+                android:id="@+id/userSetting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_popup_sync"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+
+                />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
