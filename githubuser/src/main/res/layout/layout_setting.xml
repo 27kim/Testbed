@@ -6,14 +6,16 @@
     <data>
         <variable
             name="item"
-            type="String" />
+            type="io.lab27.githubuser.data.datasource.remote.MenuModel" />
     </data>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/temp_LightSalmon"
-        app:cardCornerRadius="10dp">
+        app:cardCornerRadius="10dp"
+        android:layout_margin="2dp"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -24,7 +26,7 @@
                 android:id="@+id/more_setting_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{item}"
+                android:text="@{item.text}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

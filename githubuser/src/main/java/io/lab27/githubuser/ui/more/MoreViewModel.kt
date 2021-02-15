@@ -3,18 +3,26 @@ package io.lab27.githubuser.ui.more
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.lab27.githubuser.data.datasource.remote.MenuItem
+import io.lab27.githubuser.data.datasource.remote.MenuModel
 import io.lab27.githubuser.data.datasource.remote.MoreRepository
 
 class MoreViewModel(private val moreRepository: MoreRepository) : ViewModel() {
-    private var _settingList = MutableLiveData<List<String>>()
-    val settingList: LiveData<List<String>>
+    private var _mainList = MutableLiveData<List<MenuModel>>()
+    val mainList: LiveData<List<MenuModel>>
+        get() = _mainList
+
+    private var _settingList = MutableLiveData<List<MenuModel>>()
+    val settingList: LiveData<List<MenuModel>>
         get() = _settingList
 
-    private var _usageList = MutableLiveData<List<String>>()
-    val usageList: LiveData<List<String>>
-        get() = _usageList
+    private var _appList = MutableLiveData<List<MenuItem>>()
+    val appList: LiveData<List<MenuItem>>
+        get() = _appList
+
     fun init() {
+        _mainList.value = moreRepository.fetchMainMenu()
         _settingList.value = moreRepository.fetchSettingMenu()
-        _usageList.value = moreRepository.fetchUsageMenu()
+        _appList.value = moreRepository.fetchAppList()
     }
 }

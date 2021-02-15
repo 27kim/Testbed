@@ -6,31 +6,28 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.R
-import io.lab27.githubuser.databinding.LayoutUserBinding
+import io.lab27.githubuser.databinding.LayoutMenuBinding
 
-class UserAdapter(private val lifeCycleOwner: LifecycleOwner) :
-    RecyclerView.Adapter<UserAdapter.ViewHolder>() {
-
+class TopMenuIconAdapter(private val lifeCycleOwner: LifecycleOwner) :
+    RecyclerView.Adapter<TopMenuIconAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(
             DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
-                R.layout.layout_user,
+                R.layout.layout_menu,
                 parent,
                 false
             )
         )
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
         with(holder.binding) {
-            lifecycleOwner = lifeCycleOwner
+            this.lifecycleOwner = lifeCycleOwner
         }
-    }
 
     override fun getItemCount(): Int = 1
 
-    override fun getItemViewType(position: Int): Int = R.layout.layout_user
+    override fun getItemViewType(position: Int): Int = R.layout.layout_menu
 
-
-    inner class ViewHolder(val binding: LayoutUserBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(val binding: LayoutMenuBinding) : RecyclerView.ViewHolder(binding.root)
 }

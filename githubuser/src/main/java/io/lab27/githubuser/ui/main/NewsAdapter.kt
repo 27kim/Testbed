@@ -25,7 +25,6 @@ class NewsAdapter(private val lifecycleOwner: LifecycleOwner) :
         holder.binding.lifecycleOwner = lifecycleOwner
         holder.binding.article = getItem(position)
         holder.binding.root.setOnClickListener {
-            Toast.makeText(it.context, "$position", Toast.LENGTH_SHORT).show()
             onClick?.invoke(getItem(position))
         }
     }

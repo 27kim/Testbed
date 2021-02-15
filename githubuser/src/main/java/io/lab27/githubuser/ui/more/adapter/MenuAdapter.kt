@@ -1,33 +1,48 @@
 package io.lab27.githubuser.ui.more.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.R
-import io.lab27.githubuser.databinding.LayoutMenuBinding
+import io.lab27.githubuser.data.datasource.remote.MenuItem
+import kotlinx.android.synthetic.main.layout_horizontal.view.*
 
-class MenuAdapter(private val lifeCycleOwner: LifecycleOwner) :
-    RecyclerView.Adapter<MenuAdapter.ViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-        ViewHolder(
-            DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.layout_menu,
-                parent,
-                false
-            )
-        )
+class MenuAdapter() : BaseAdapter() {
+    private var itemList = listOf<MenuItem>()
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) =
-        with(holder.binding) {
-            this.lifecycleOwner = lifeCycleOwner
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseConcatHolder<*> {
+        val itemWidth: Int = parent.width / itemList.size
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_horizontal, parent, false)
+        val layoutParams: ViewGroup.LayoutParams = view.layoutParams
+        layoutParams.width = itemWidth
+        view.layoutParams = layoutParams
+        return ViewHolder(view)
+    }
+
+    override fun getItemCount(): Int = if (itemList.isNotEmpty()) itemList.size else 0
+
+    fun setList(list: List<MenuItem>) {
+        this.itemList = list
+        notifyDataSetChanged()
+    }
+
+    override fun onBindViewHolder(holder: BaseConcatHolder<*>, position: Int) {
+        val item = itemList[position]
+        when (holder) {
+            is ViewHolder -> holder.bind(item)
+            else -> throw IllegalArgumentException("No viewholder to show this data, did you forgot to add it to the onBindViewHolder?")
         }
+    }
 
-    override fun getItemCount(): Int = 1
+    inner class ViewHolder(itemView: View) : BaseConcatHolder<MenuItem>(itemView) {
+        override fun bind(item: MenuItem) {
+            itemView.menuItem.text = item.title
+        }
+    }
+}
 
-    override fun getItemViewType(position: Int): Int = R.layout.layout_menu
-
-    inner class ViewHolder(val binding: LayoutMenuBinding) : RecyclerView.ViewHolder(binding.root)
+abstract class BaseViewHolder<T>(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    abstract fun bind(item: T, position: Int)
 }
