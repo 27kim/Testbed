@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.R
 import io.lab27.githubuser.databinding.LayoutUserBinding
@@ -24,6 +25,9 @@ class UserAdapter(private val lifeCycleOwner: LifecycleOwner) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder.binding) {
             lifecycleOwner = lifeCycleOwner
+            userSetting.setOnClickListener {view ->
+                view.findNavController().navigate(R.id.moreSettingFragment)
+            }
         }
     }
 
