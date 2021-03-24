@@ -18,7 +18,7 @@ class MoreSettingAdapter(private val lifecycleOwner: LifecycleOwner) :
             MenuModel.TITLE -> TitleViewHolder(
                 DataBindingUtil.inflate(
                     LayoutInflater.from(parent.context),
-                    R.layout.layout_header,
+                    R.layout.layout_title,
                     parent,
                     false
                 )

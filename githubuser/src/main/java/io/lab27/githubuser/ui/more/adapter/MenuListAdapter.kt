@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.R
 import io.lab27.githubuser.data.datasource.remote.MenuModel
-import io.lab27.githubuser.databinding.LayoutHeaderBinding
-import io.lab27.githubuser.databinding.LayoutSettingBinding
+import io.lab27.githubuser.databinding.LayoutMenu1Binding
+import io.lab27.githubuser.databinding.LayoutTitleBinding
 
 class MenuListAdapter(private val lifeCycleOwner: LifecycleOwner) :
     ListAdapter<MenuModel, MenuListAdapter.CommonViewHolder>(diffUtil) {
@@ -21,7 +21,7 @@ class MenuListAdapter(private val lifeCycleOwner: LifecycleOwner) :
             MenuModel.TITLE -> TitleViewHolder(
                 DataBindingUtil.inflate(
                     LayoutInflater.from(parent.context),
-                    R.layout.layout_header,
+                    R.layout.layout_title,
                     parent,
                     false
                 )
@@ -29,7 +29,7 @@ class MenuListAdapter(private val lifeCycleOwner: LifecycleOwner) :
             MenuModel.TYPE_MENU_1 -> MenuViewHolder(
                 DataBindingUtil.inflate(
                     LayoutInflater.from(parent.context),
-                    R.layout.layout_setting,
+                    R.layout.layout_menu_1,
                     parent,
                     false
                 )
@@ -60,8 +60,8 @@ class MenuListAdapter(private val lifeCycleOwner: LifecycleOwner) :
     open class CommonViewHolder(open val binding: ViewDataBinding) :
         RecyclerView.ViewHolder(binding.root)
 
-    class TitleViewHolder(override val binding: LayoutHeaderBinding) : CommonViewHolder(binding)
-    class MenuViewHolder(override val binding: LayoutSettingBinding) : CommonViewHolder(binding)
+    class TitleViewHolder(override val binding: LayoutTitleBinding) : CommonViewHolder(binding)
+    class MenuViewHolder(override val binding: LayoutMenu1Binding) : CommonViewHolder(binding)
 
     companion object {
         val diffUtil by lazy {

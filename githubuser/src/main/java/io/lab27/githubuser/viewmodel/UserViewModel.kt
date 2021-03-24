@@ -3,6 +3,7 @@ package io.lab27.githubuser.viewmodel
 import androidx.lifecycle.*
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.lab27.githubuser.base.BaseViewModel
 import io.lab27.githubuser.data.datasource.remote.UserRepository
@@ -12,6 +13,7 @@ import io.lab27.githubuser.util.L
 import io.lab27.githubuser.util.UserDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.core.component.inject
 import org.koin.core.qualifier.named
@@ -207,7 +209,7 @@ class UserViewModel(private val userRepository: UserRepository) : BaseViewModel(
         return result
     }
 
-    val listData =
+    val listData: Flow<PagingData<User>> =
         Pager(PagingConfig(pageSize = 15)) {
             UserDataSource(userApi, "asdf")
         }

@@ -6,7 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.R
-import io.lab27.githubuser.databinding.LayoutMenuBinding
+import io.lab27.githubuser.databinding.LayoutTopMenuBinding
 
 class TopMenuIconAdapter(private val lifeCycleOwner: LifecycleOwner) :
     RecyclerView.Adapter<TopMenuIconAdapter.ViewHolder>() {
@@ -14,7 +14,7 @@ class TopMenuIconAdapter(private val lifeCycleOwner: LifecycleOwner) :
         ViewHolder(
             DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
-                R.layout.layout_menu,
+                R.layout.layout_top_menu,
                 parent,
                 false
             )
@@ -27,7 +27,7 @@ class TopMenuIconAdapter(private val lifeCycleOwner: LifecycleOwner) :
 
     override fun getItemCount(): Int = 1
 
-    override fun getItemViewType(position: Int): Int = R.layout.layout_menu
+    override fun getItemViewType(position: Int): Int = R.layout.layout_top_menu
 
-    inner class ViewHolder(val binding: LayoutMenuBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class ViewHolder(val binding: LayoutTopMenuBinding) : RecyclerView.ViewHolder(binding.root)
 }
