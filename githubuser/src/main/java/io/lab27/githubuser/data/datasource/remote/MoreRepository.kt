@@ -29,7 +29,7 @@ class MoreRepositoryImpl(moreApi: MHApi) : MoreRepository {
 
     override fun fetchSettingMenu(): List<MenuModel> = listOf(
         MenuModel(TITLE, "로그인 기본 설정"),
-        MenuModel(TYPE_MENU_2, "김현대"),
+        MenuModel(TYPE_MENU_1, "김현대"),
         MenuModel(TYPE_MENU_1, "회원 정보 수정"),
         MenuModel(TYPE_MENU_1, "서비스 탈퇴"),
         MenuModel(TITLE, "앱 위치 정보 서비스"),
@@ -61,7 +61,6 @@ class MoreRepositoryImpl(moreApi: MHApi) : MoreRepository {
 data class MenuModel(val type: Int, val text: String) {
     companion object {
         const val TITLE = 0
-        const val TYPE_MENU_0 = 0 //메인 메뉴 - 텍스트 only
         const val TYPE_MENU_1 = 1 //메인 메뉴 - >
         const val TYPE_MENU_2 = 2 //메인 메뉴 - 버튼
         const val TYPE_MENU_3 = 3 //메인 메뉴 - 스위치

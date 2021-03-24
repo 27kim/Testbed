@@ -66,5 +66,9 @@
         android:id="@+id/moreMainFragment"
         android:name="io.lab27.githubuser.ui.more.MoreMainFragment"
         android:label="MoreMainFragment" />
+    <fragment
+        android:id="@+id/moreSettingFragment"
+        android:name="io.lab27.githubuser.ui.more.setting.MoreSettingFragment"
+        android:label="MoreSettingFragment" />
 
 </navigation>

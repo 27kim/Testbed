@@ -29,13 +29,5 @@
             android:text="@{item.text}"
             tools:text="TITLE" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            app:layout_constraintTop_toBottomOf="@id/title"
-            android:background="@color/temp_DarkBlue"
-            android:layout_margin="10dp"
-            />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

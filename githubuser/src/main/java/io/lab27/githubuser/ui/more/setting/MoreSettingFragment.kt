@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import io.lab27.githubuser.R
 import io.lab27.githubuser.databinding.FragmentMoreSettingBinding
 import io.lab27.githubuser.ui.more.MoreViewModel
 import io.lab27.githubuser.ui.more.adapter.MoreSettingAdapter
@@ -32,8 +33,11 @@ class MoreSettingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.moreSettingRecyclerview.adapter = moreSettingAdapter
+        binding = FragmentMoreSettingBinding.bind(view).apply {
+            lifecycleOwner = viewLifecycleOwner
+        }
 
+        binding.moreSettingRecyclerview.adapter = moreSettingAdapter
         viewModel.settingList.observe(viewLifecycleOwner, Observer { list ->
             moreSettingAdapter.submitList(list)
         })
