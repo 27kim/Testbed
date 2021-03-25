@@ -8,7 +8,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.ListAdapter
 import io.lab27.githubuser.R
 import io.lab27.githubuser.data.datasource.remote.MenuModel
-import io.lab27.githubuser.databinding.LayoutHeaderBinding
+import io.lab27.githubuser.databinding.LayoutMenuHeaderBinding
 import io.lab27.githubuser.databinding.LayoutMenuItemBinding
 import io.lab27.githubuser.ui.more.adapter.MenuListAdapter.Companion.diffUtil
 
@@ -54,6 +54,6 @@ class MoreSettingAdapter(private val lifecycleOwner: LifecycleOwner) :
     inner class MenuViewHolder(override val binding: LayoutMenuItemBinding) :
         MenuListAdapter.CommonViewHolder(binding)
 
-    inner class TitleViewHolder(override val binding: LayoutHeaderBinding) :
+    inner class TitleViewHolder(override val binding: LayoutMenuHeaderBinding) :
         MenuListAdapter.CommonViewHolder(binding)
 }
