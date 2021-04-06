@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.R
-import io.lab27.githubuser.data.datasource.remote.MenuItem
+import io.lab27.githubuser.datasource.remote.MenuItem
 import kotlinx.android.synthetic.main.layout_horizontal.view.*
 
 class MenuAdapter() : BaseAdapter() {

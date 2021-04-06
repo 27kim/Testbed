@@ -14,4 +14,8 @@
         android:id="@+id/deepLinkFragment"
         android:icon="@drawable/rules"
         android:title="@string/deep_link" />
+    <item
+        android:id="@+id/dataFilterFragment"
+        android:icon="@drawable/rules"
+        android:title="@string/date_filter" />
 </menu>

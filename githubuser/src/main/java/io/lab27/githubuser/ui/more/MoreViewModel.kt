@@ -3,9 +3,9 @@ package io.lab27.githubuser.ui.more
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import io.lab27.githubuser.data.datasource.remote.MenuItem
-import io.lab27.githubuser.data.datasource.remote.MenuModel
-import io.lab27.githubuser.data.datasource.remote.MoreRepository
+import io.lab27.githubuser.datasource.remote.MenuItem
+import io.lab27.githubuser.datasource.remote.MenuModel
+import io.lab27.githubuser.datasource.remote.MoreRepository
 
 class MoreViewModel(private val moreRepository: MoreRepository) : ViewModel() {
     private var _mainList = MutableLiveData<List<MenuModel>>()

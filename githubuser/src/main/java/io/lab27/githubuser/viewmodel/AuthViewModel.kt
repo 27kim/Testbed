@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.lab27.githubuser.data.datasource.remote.AuthRepository
+import io.lab27.githubuser.datasource.remote.AuthRepository
 import io.lab27.githubuser.data.model.TokenResponse
 import kotlinx.coroutines.launch
 import kotlin.collections.HashMap

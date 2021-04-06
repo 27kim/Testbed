@@ -1,6 +1,6 @@
-package io.lab27.githubuser.data.datasource.remote
+package io.lab27.githubuser.datasource.remote
 
-import io.lab27.githubuser.data.datasource.local.LocalDataSource
+import io.lab27.githubuser.datasource.local.LocalDataSource
 import io.lab27.githubuser.data.model.FetchMeResponse
 import io.lab27.githubuser.data.model.TokenResponse
 import io.lab27.githubuser.network.api.AuthApi

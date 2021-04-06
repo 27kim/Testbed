@@ -1,10 +1,11 @@
-package io.lab27.githubuser.data.datasource.remote
+package io.lab27.githubuser.datasource.remote
 
-import io.lab27.githubuser.data.datasource.remote.MenuModel.Companion.TITLE
-import io.lab27.githubuser.data.datasource.remote.MenuModel.Companion.TYPE_MENU_1
-import io.lab27.githubuser.data.datasource.remote.MenuModel.Companion.TYPE_MENU_2
-import io.lab27.githubuser.data.datasource.remote.MenuModel.Companion.TYPE_MENU_3
-import io.lab27.githubuser.data.datasource.remote.MenuModel.Companion.TYPE_MENU_4
+import android.R
+import io.lab27.githubuser.datasource.remote.MenuModel.Companion.TITLE
+import io.lab27.githubuser.datasource.remote.MenuModel.Companion.TYPE_MENU_1
+import io.lab27.githubuser.datasource.remote.MenuModel.Companion.TYPE_MENU_2
+import io.lab27.githubuser.datasource.remote.MenuModel.Companion.TYPE_MENU_3
+import io.lab27.githubuser.datasource.remote.MenuModel.Companion.TYPE_MENU_4
 import io.lab27.githubuser.network.api.MHApi
 
 interface MoreRepository {
@@ -46,10 +47,10 @@ class MoreRepositoryImpl(moreApi: MHApi) : MoreRepository {
     )
 
     override fun fetchAppList(): List<MenuItem> = listOf(
-        MenuItem("블루링크", android.R.drawable.ic_menu_camera),
-        MenuItem("디지털키", android.R.drawable.ic_menu_add),
-        MenuItem("셀렉션", android.R.drawable.ic_menu_zoom),
-        MenuItem("카페이", android.R.drawable.ic_menu_save)
+        MenuItem("블루링크", R.drawable.ic_menu_camera),
+        MenuItem("디지털키", R.drawable.ic_menu_add),
+        MenuItem("셀렉션", R.drawable.ic_menu_zoom),
+        MenuItem("카페이", R.drawable.ic_menu_save)
     )
 
     override fun fetchUsageMenu(): List<String> = listOf(

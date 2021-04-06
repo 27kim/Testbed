@@ -70,5 +70,9 @@
         android:id="@+id/moreSettingFragment"
         android:name="io.lab27.githubuser.ui.more.setting.MoreSettingFragment"
         android:label="MoreSettingFragment" />
+    <fragment
+        android:id="@+id/dataFilterFragment"
+        android:name="io.lab27.githubuser.ui.date.DataFilterFragment"
+        android:label="DataFilterFragment" />
 
 </navigation>

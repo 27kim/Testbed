@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.R
-import io.lab27.githubuser.data.datasource.remote.MenuModel
+import io.lab27.githubuser.datasource.remote.MenuModel
 import io.lab27.githubuser.databinding.LayoutMenu1Binding
 import io.lab27.githubuser.databinding.LayoutTitleBinding
 
