@@ -31,6 +31,7 @@ val viewModelModule = module {
     viewModel { MHViewModel(get()) }
     viewModel { MoreViewModel(get()) }
     viewModel { RulesViewModel() }
+    viewModel { RulesViewModel() }
 }
 
 val repositoryModule = module {
@@ -39,6 +40,7 @@ val repositoryModule = module {
     single<AuthRepository> { AuthRepositoryImpl(get(named("authApi")), get()) }
     single<EventRepository> { EventRepositoryImpl(get(named("mhApi")), get()) }
     single<MoreRepository> { MoreRepositoryImpl(get(named("moreApi"))) }
+
 }
 
 val dataSourceModule = module {

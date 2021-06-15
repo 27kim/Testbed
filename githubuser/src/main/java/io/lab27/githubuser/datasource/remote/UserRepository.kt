@@ -1,8 +1,8 @@
-package io.lab27.githubuser.data.datasource.remote
+package io.lab27.githubuser.datasource.remote
 
 import androidx.lifecycle.LiveData
 import io.lab27.githubuser.data.dao.User
-import io.lab27.githubuser.data.datasource.local.LocalDataSource
+import io.lab27.githubuser.datasource.local.LocalDataSource
 import io.lab27.githubuser.data.model.UserResponse
 import io.lab27.githubuser.network.api.UserApi
 import io.lab27.githubuser.util.Result

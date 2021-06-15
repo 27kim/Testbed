@@ -3,14 +3,16 @@ package io.lab27.githubuser.util
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.module.GlideModule
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import io.lab27.githubuser.R
+import java.text.SimpleDateFormat
+import java.util.*
 
 @BindingAdapter("imageUrl")
 fun setImageResource(view : ImageView, url : String?){
@@ -47,6 +49,11 @@ fun setUriImageResource(view : ImageView, uri : Uri?){
     }
 }
 
+@BindingAdapter("setDate")
+fun setDate(view : AppCompatTextView, date : Date){
+    view.text = date.formatString()
+}
+
 private fun requestListener(view: ImageView): RequestListener<Drawable> {
     return object : RequestListener<Drawable> {
         override fun onLoadFailed(
@@ -71,4 +78,17 @@ private fun requestListener(view: ImageView): RequestListener<Drawable> {
             return true
         }
     }
+}
+
+/**
+ * Date to String w/ type
+ */
+fun Date.formatString(type: String = "-"): String {
+    val format = when (type) {
+        "" -> "yyyyMMdd"
+        "." -> "yyyy.MM.dd"
+        "-" -> "yyyy-MM-dd"
+        else -> "yyyyMMdd"
+    }
+    return SimpleDateFormat(format, Locale.getDefault()).format(this)
 }

@@ -1,4 +1,4 @@
-package io.lab27.githubuser.data.datasource
+package io.lab27.githubuser.datasource
 
 import android.content.Context
 import androidx.room.Database

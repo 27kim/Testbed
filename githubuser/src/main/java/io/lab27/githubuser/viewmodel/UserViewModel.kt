@@ -6,7 +6,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import io.lab27.githubuser.base.BaseViewModel
-import io.lab27.githubuser.data.datasource.remote.UserRepository
+import io.lab27.githubuser.datasource.remote.UserRepository
 import io.lab27.githubuser.data.dao.User
 import io.lab27.githubuser.network.api.UserApi
 import io.lab27.githubuser.util.L

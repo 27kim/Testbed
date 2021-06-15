@@ -1,7 +1,7 @@
 package io.lab27.githubuser.viewmodel
 
 import androidx.lifecycle.*
-import io.lab27.githubuser.data.datasource.remote.EventRepository
+import io.lab27.githubuser.datasource.remote.EventRepository
 import io.lab27.githubuser.data.model.EventResponse
 import kotlinx.coroutines.launch
 

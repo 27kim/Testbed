@@ -6,7 +6,7 @@
     <data>
         <variable
             name="item"
-            type="io.lab27.githubuser.data.datasource.remote.MenuModel" />
+            type="io.lab27.githubuser.datasource.remote.MenuModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
