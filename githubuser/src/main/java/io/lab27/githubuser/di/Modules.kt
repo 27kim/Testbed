@@ -5,12 +5,16 @@ import io.lab27.githubuser.data.datasource.UserDataBase
 import io.lab27.githubuser.data.datasource.local.LocalDataSource
 import io.lab27.githubuser.data.datasource.local.LocalDataSourceImpl
 import io.lab27.githubuser.data.datasource.remote.*
-import io.lab27.githubuser.network.*
 import io.lab27.githubuser.network.api.AuthApi
 import io.lab27.githubuser.network.api.MHApi
 import io.lab27.githubuser.network.api.NewsApi
 import io.lab27.githubuser.network.api.UserApi
+import io.lab27.githubuser.network.getAuthSource
+import io.lab27.githubuser.network.getNewsSource
+import io.lab27.githubuser.network.getUnsafeSource
+import io.lab27.githubuser.network.getUserSource
 import io.lab27.githubuser.ui.more.MoreViewModel
+import io.lab27.githubuser.ui.rules.RulesViewModel
 import io.lab27.githubuser.viewmodel.AuthViewModel
 import io.lab27.githubuser.viewmodel.MHViewModel
 import io.lab27.githubuser.viewmodel.NewsViewModel
@@ -26,6 +30,7 @@ val viewModelModule = module {
     viewModel { AuthViewModel(get()) }
     viewModel { MHViewModel(get()) }
     viewModel { MoreViewModel(get()) }
+    viewModel { RulesViewModel() }
 }
 
 val repositoryModule = module {

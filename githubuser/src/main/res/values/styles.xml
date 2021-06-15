@@ -11,11 +11,11 @@
         <item name="colorControlNormal">@color/temp_Black</item>
 
         <!--custom font-family 적용-->
-        <item name="android:textViewStyle">@style/customTextViewFontStyle</item>
-        <item name="android:buttonStyle">@style/customButtonFontStyle</item>
-        <item name="android:editTextStyle">@style/customEditTextFontStyle</item>
-        <item name="android:radioButtonStyle">@style/customRadioButtonFontStyle</item>
-        <item name="android:checkboxStyle">@style/customCheckboxFontStyle</item>
+<!--        <item name="android:textViewStyle">@style/customTextViewFontStyle</item>-->
+<!--        <item name="android:buttonStyle">@style/customButtonFontStyle</item>-->
+<!--        <item name="android:editTextStyle">@style/customEditTextFontStyle</item>-->
+<!--        <item name="android:radioButtonStyle">@style/customRadioButtonFontStyle</item>-->
+<!--        <item name="android:checkboxStyle">@style/customCheckboxFontStyle</item>-->
     </style>
 
     <style name="ToolbarArrow" parent="Widget.AppCompat.DrawerArrowToggle">
@@ -25,6 +25,14 @@
     <style name="LayoutMenu" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="layout_constraintTop_toTopOf">parent</item>
         <item name="layout_constraintBottom_toBottomOf">parent</item>
+    </style>
+
+    <style name="BottomSheetItem">
+        <item name="android:textSize">20sp</item>
+        <item name="android:drawablePadding">20dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">15dp</item>
     </style>
 
 </resources>

@@ -35,9 +35,9 @@
         tools:layout="@layout/fragment_about" />
     <fragment
         android:id="@+id/rulesFragment"
-        android:name="io.lab27.githubuser.ui.RulesFragment"
-        android:label="RulesFragment"
-        tools:layout="@layout/fragment_rules" />
+        android:name="io.lab27.githubuser.ui.rules.RecyclerViewSingleItemFragment"
+        android:label="RecyclerViewSingleItemFragment"
+        tools:layout="@layout/fragment_single_item" />
     <fragment
         android:id="@+id/deepLinkFragment"
         android:name="io.lab27.githubuser.ui.deeplink.DeepLinkFragment"
@@ -70,5 +70,9 @@
         android:id="@+id/moreSettingFragment"
         android:name="io.lab27.githubuser.ui.more.setting.MoreSettingFragment"
         android:label="MoreSettingFragment" />
+    <fragment
+        android:id="@+id/bottomSheetFragment"
+        android:name="io.lab27.githubuser.ui.bottomSheet.MainFragment"
+        android:label="BottomSheetFragment" />
 
 </navigation>
