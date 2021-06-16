@@ -6,10 +6,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import io.lab27.githubuser.databinding.ItemRecyclerviewTestBinding
 
-class ItemAdapter : ListAdapter<RvTest, ItemAdapter.ViewHolder>(RvTest.diffUtil) {
+class ItemAdapter(private val clickListener: ((RvTest) -> Unit)) :
+    ListAdapter<RvTest, ItemAdapter.ViewHolder>(RvTest.diffUtil) {
     var selectedPosition = -1
 
-    var clickListener: ((RvTest) -> Unit)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
         ItemRecyclerviewTestBinding
             .inflate(
@@ -21,22 +21,59 @@ class ItemAdapter : ListAdapter<RvTest, ItemAdapter.ViewHolder>(RvTest.diffUtil)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.binding.item = getItem(position)
+
         holder.binding.title.setOnClickListener {
-            holder.binding.title.isChecked = !holder.binding.title.isChecked
-            clickListener?.let {
-                it.invoke(getItem(position))
-                notifyItemChanged(position)
-                if (selectedPosition >= 0) {
-                    it.invoke(getItem(selectedPosition))
-                    notifyItemChanged(selectedPosition)
-                }
-                selectedPosition = position
+            getItem(position).isChecked = !getItem(position).isChecked
+            notifyItemChanged(position)
+
+            if (position !=selectedPosition && selectedPosition >= 0) {
+                getItem(selectedPosition).isChecked = !getItem(selectedPosition).isChecked
+                notifyItemChanged(selectedPosition)
+            }
+
+            selectedPosition = if (position == selectedPosition) {
+                -1
+            } else {
+                position
             }
         }
     }
 
+//    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+//        holder.binding.item = getItem(position)
+//
+//        holder.binding.title.setOnClickListener {
+//            clickListener?.let {
+//                Log.i(
+//                    "logging",
+//                    "current : $position selected : $selectedPosition should change : ${position != selectedPosition}"
+//                )
+//
+//                clickListener.invoke(getItem(position))
+//                notifyItemChanged(position)
+//
+//                position
+//                    .takeIf { position != selectedPosition }
+//                    ?.apply {
+//                        selectedPosition.takeIf { selectedPosition != -1 }?.let {
+//                            clickListener.invoke(getItem(selectedPosition))
+//                            notifyItemChanged(selectedPosition)
+//                        }
+//                        selectedPosition = position
+//                        Log.i("logging", "selectedPosition chaneged: $selectedPosition")
+//                    }
+//                    ?: run {
+//                        selectedPosition = -1
+//                        Log.i("logging", "selectedPosition init: $selectedPosition")
+//                    }
+//            }
+//        }
+//    }
+
     class ViewHolder(val binding: ItemRecyclerviewTestBinding) :
-        RecyclerView.ViewHolder(binding.root)
+        RecyclerView.ViewHolder(binding.root) {
+
+    }
 }
 
 

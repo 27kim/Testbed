@@ -1,10 +1,10 @@
 package io.lab27.githubuser.di
 
 import androidx.room.Room
-import io.lab27.githubuser.data.datasource.UserDataBase
-import io.lab27.githubuser.data.datasource.local.LocalDataSource
-import io.lab27.githubuser.data.datasource.local.LocalDataSourceImpl
-import io.lab27.githubuser.data.datasource.remote.*
+import io.lab27.githubuser.datasource.UserDataBase
+import io.lab27.githubuser.datasource.local.LocalDataSource
+import io.lab27.githubuser.datasource.local.LocalDataSourceImpl
+import io.lab27.githubuser.datasource.remote.*
 import io.lab27.githubuser.network.api.AuthApi
 import io.lab27.githubuser.network.api.MHApi
 import io.lab27.githubuser.network.api.NewsApi
@@ -30,7 +30,6 @@ val viewModelModule = module {
     viewModel { AuthViewModel(get()) }
     viewModel { MHViewModel(get()) }
     viewModel { MoreViewModel(get()) }
-    viewModel { RulesViewModel() }
     viewModel { RulesViewModel() }
 }
 

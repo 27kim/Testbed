@@ -1,5 +1,6 @@
 package io.lab27.githubuser.ui.rules
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,8 +12,6 @@ class RulesViewModel : ViewModel() {
 
     val _details = MutableLiveData<List<RvTest>>()
     val details: LiveData<List<RvTest>> get() = _details
-
-    private var isOneOn = true
 
     init {
         load()
@@ -28,19 +27,18 @@ class RulesViewModel : ViewModel() {
             RvTest("item1-6 title", "item desc6", false),
         )
         _details.value = listOf(
-            RvTest("details1 title", "details desc1", false),
-            RvTest("details1 title", "details desc2", false),
-            RvTest("details1 title", "details desc3", false),
-            RvTest("details1 title", "details desc4", false),
-            RvTest("details1 title", "details desc5", false),
-            RvTest("details1 title", "details desc6", false),
+            RvTest("details1-1 title", "details desc1", false),
+            RvTest("details1-2 title", "details desc2", false),
+            RvTest("details1-3 title", "details desc3", false),
+            RvTest("details1-4 title", "details desc4", false),
+            RvTest("details1-5 title", "details desc5", false),
+            RvTest("details1-6 title", "details desc6", false),
         )
     }
 
-    fun changeData() {
-        isOneOn = !isOneOn
-        when (isOneOn) {
-            true -> {
+    fun changeData(i: Int) {
+        when (i) {
+            1 -> {
                 _items.value = listOf(
                     RvTest("item1-1 title", "item desc1", false),
                     RvTest("item1-2 title", "item desc2", false),
@@ -58,7 +56,7 @@ class RulesViewModel : ViewModel() {
                     RvTest("details1-6 title", "details desc6", false),
                 )
             }
-            false -> {
+            2 -> {
                 _items.value = listOf(
                     RvTest("details2-1 title", "details desc1", false),
                     RvTest("details2-2 title", "details desc2", false),
@@ -81,6 +79,7 @@ class RulesViewModel : ViewModel() {
     }
 
     fun update(rvTest: RvTest) {
+        Log.i("logging", "viewmodel: $rvTest")
         _items.value?.find { it == rvTest }?.isChecked = !rvTest.isChecked
     }
 }
